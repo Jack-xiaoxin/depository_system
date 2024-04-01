@@ -2,8 +2,12 @@ package com.example.depository_system;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -17,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_main);
 
         username = findViewById(R.id.username);
@@ -28,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
             String passwordText = password.getText().toString();
             if(login(usernameText, passwordText)) {
                 Log.d("java", "login success");
+                Intent intent = new Intent(this, MainInterface.class);
+                startActivity(intent);
             } else {
                 Log.d("java", "login failed");
             }
