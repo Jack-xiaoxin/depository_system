@@ -4,9 +4,19 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/projects/depository_system/app/src/main/res/layout/activity_main.xml" value="0.22" />
+        <entry key="..\:/projects/depository_system/app/src/main/res/layout/activity_main_interface.xml" value="0.29739583333333336" />
+        <entry key="..\:/projects/depository_system/app/src/main/res/layout/chachuku_fragment.xml" value="0.20208333333333334" />
+        <entry key="..\:/projects/depository_system/app/src/main/res/layout/charuku_fragment.xml" value="0.20208333333333334" />
+        <entry key="..\:/projects/depository_system/app/src/main/res/layout/chuku_fragment.xml" value="0.20208333333333334" />
+        <entry key="..\:/projects/depository_system/app/src/main/res/layout/kucun_fragment.xml" value="0.20208333333333334" />
+        <entry key="..\:/projects/depository_system/app/src/main/res/layout/ruku_fragment.xml" value="0.20208333333333334" />
+        <entry key="..\:/projects/depository_system/app/src/main/res/menu/menu.xml" value="0.3619791666666667" />
         <entry key="..\:/projects/depository_system2/app/src/main/res/layout/activity_main.xml" value="0.2884963768115942" />
       </map>
     </option>
+  </component>
+  <component name="ProjectResources">
+    <resource url="http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" location="$PROJECT_DIR$" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
