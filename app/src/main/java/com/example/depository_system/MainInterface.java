@@ -1,10 +1,13 @@
 package com.example.depository_system;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,6 +33,8 @@ public class MainInterface extends AppCompatActivity {
 
     private Fragment displayedFragment;
     private View displayedView;
+
+    private static final int CAMERA_PERMISSIOS_REQUEST_CODE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,5 +116,15 @@ public class MainInterface extends AppCompatActivity {
         originView.setBackgroundColor(Color.argb(255, 255,255,255));
         dstView.setBackgroundColor(Color.argb(255, 208,208,208));
         this.displayedView = dstView;
+    }
+
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(requestCode == CAMERA_PERMISSIOS_REQUEST_CODE) {
+            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                rukuFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            } else {
+
+            }
+        }
     }
 }
