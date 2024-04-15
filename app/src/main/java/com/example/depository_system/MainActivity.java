@@ -6,17 +6,18 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.example.depository_system.service.TestClass;
 
 public class MainActivity extends AppCompatActivity {
 
     Button loginBtn;
     EditText username;
     EditText password;
+    Button testBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +40,13 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("java", "login failed");
             }
         });
+
+        testBtn = findViewById(R.id.test_btn);
+        testBtn.setOnClickListener(view->{
+            String usernameText = username.getText().toString();
+            String passwordText = password.getText().toString();
+            testRequest(usernameText, passwordText);
+        });
     }
 
     private boolean login(String username, String password) {
@@ -52,5 +60,12 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "用户名或密码不对", Toast.LENGTH_SHORT).show();
             return false;
         }
+    }
+
+    private boolean testRequest(String username, String password) {
+
+        TestClass tc = new TestClass();
+        tc.test(username);
+        return true;
     }
 }
