@@ -4,11 +4,14 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.depository_system.informs.RukuInform;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 
 import okhttp3.FormBody;
 import okhttp3.MediaType;
@@ -82,5 +85,15 @@ public class TestClass {
             throw new RuntimeException(e);
         }
 
+    }
+
+    public int insertBase(String url, String method, JSONObject jsonObject) {
+        return 0;
+    }
+
+    public int insertRuku(String url, RukuInform inform) {
+        // hashmap  => json
+//        insertBase()
+        return 0;
     }
 }
