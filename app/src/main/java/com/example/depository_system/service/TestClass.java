@@ -1,9 +1,22 @@
 package com.example.depository_system.service;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
+import okhttp3.FormBody;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
+import okio.BufferedSink;
 
 
 public class TestClass {
@@ -25,11 +38,29 @@ public class TestClass {
         }
 
         OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder()
-                .url("http://baidu.com")
-                .build();
 
-        new Thread(new Runnable() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("new_goods", false);
+            jsonObject.put("goods_id", 10);
+            jsonObject.put("goods_name", "aaa");
+            jsonObject.put("goods_model","bbb");
+            jsonObject.put("factory_name", "Manabox 2");
+            jsonObject.put("receiver", "receiver");
+            jsonObject.put("checker", "checker");
+            jsonObject.put("project_name", "project_name");
+            jsonObject.put("goods_number", 5);
+            jsonObject.put("images", "[\"img1.jpg\", \"img2.jpg\", \"img3.jpg\"]");
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        RequestBody body = RequestBody.create(MediaType.parse("application/json;charset=utf-8"), String.valueOf(jsonObject));
+        Request request = new Request.Builder()
+                .url("http://117.50.194.115:8090/inbound")
+                .method("POST", body)
+                .header("Content-Type", "application/json")
+                .build();
+        Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try (Response response = client.newCall(request).execute()) {
@@ -42,7 +73,14 @@ public class TestClass {
                     e.printStackTrace();
                 }
             }
-        }).start();
+        });
+
+        thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 }
