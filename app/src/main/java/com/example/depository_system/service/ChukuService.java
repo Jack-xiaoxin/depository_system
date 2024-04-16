@@ -1,11 +1,16 @@
 package com.example.depository_system.service;
 
 import com.example.depository_system.informs.ChukuActionInform;
+import com.example.depository_system.informs.ChukuRecordInform;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Date;
+import java.util.List;
+
 public class ChukuService {
+
     public String action(ChukuActionInform chukuInform){
         ServiceBase serviceBase = new ServiceBase();
 
@@ -26,4 +31,8 @@ public class ChukuService {
         String response = serviceBase.HttpBase("/outbound", "POST", jsonObject);
         return response;
     }
+
+//    public List<ChukuRecordInform> getChukuRecordListByDateOrFactory(String date, String factoryName) {
+//
+//    }
 }

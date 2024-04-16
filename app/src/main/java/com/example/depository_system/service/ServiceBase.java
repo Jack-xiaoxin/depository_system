@@ -41,8 +41,8 @@ public class ServiceBase {
 
             } catch (Exception e) {
                 e.printStackTrace();
-                return null;
             }
+            return null;
         };
 
         FutureTask<String> futureTask = new FutureTask<String>(task);
