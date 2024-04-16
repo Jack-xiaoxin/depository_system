@@ -12,6 +12,9 @@ import android.widget.Toast;
 
 import com.example.depository_system.service.TestClass;
 
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+
 public class MainActivity extends AppCompatActivity {
 
     Button loginBtn;
@@ -45,7 +48,10 @@ public class MainActivity extends AppCompatActivity {
         testBtn.setOnClickListener(view->{
             String usernameText = username.getText().toString();
             String passwordText = password.getText().toString();
-            testRequest(usernameText, passwordText);
+
+            String res = testRequest(usernameText, passwordText);
+            Log.d("java", res);
+
         });
     }
 
@@ -62,10 +68,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private boolean testRequest(String username, String password) {
+    private String testRequest(String username, String password) {
 
         TestClass tc = new TestClass();
-        tc.test(username);
-        return true;
+        String res = tc.test(username);
+        System.out.println("基础类：" +  res);
+        return res;
     }
 }

@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.concurrent.ExecutionException;
 
 import okhttp3.FormBody;
 import okhttp3.MediaType;
@@ -19,13 +20,14 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import okio.BufferedSink;
 
 
 public class TestClass {
     // 构造函数，用于显式初始化
     public TestClass() {
-        System.out.println("类的实例化完成。");
+        System.out.println("测试类实例化完成。");
     }
 
     /**
@@ -33,14 +35,16 @@ public class TestClass {
      *
      * @param content 需要打印的字符串内容
      */
-    public void test(String content) {
+    public String test(String content){
         if (content != null && !content.isEmpty()) {
             System.out.println(content);
         } else {
             System.out.println("传入的字符串为空或null。");
         }
 
-        OkHttpClient client = new OkHttpClient();
+        ServiceBase serviceBase = new ServiceBase();
+
+//        OkHttpClient client = new OkHttpClient();
 
         JSONObject jsonObject = new JSONObject();
         try {
@@ -57,33 +61,38 @@ public class TestClass {
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
-        RequestBody body = RequestBody.create(MediaType.parse("application/json;charset=utf-8"), String.valueOf(jsonObject));
-        Request request = new Request.Builder()
-                .url("http://117.50.194.115:8090/inbound")
-                .method("POST", body)
-                .header("Content-Type", "application/json")
-                .build();
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try (Response response = client.newCall(request).execute()) {
-                    if (response.isSuccessful()) {
-                        System.out.println("网络输出" + response.body().string());
-                    } else {
-                        System.out.println("Request not successful");
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
 
-        thread.start();
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+
+        String body = serviceBase.HttpBase("/inbound", "POST", jsonObject);
+
+        return body;
+//        RequestBody body = RequestBody.create(MediaType.parse("application/json;charset=utf-8"), String.valueOf(jsonObject));
+//        Request request = new Request.Builder()
+//                .url("http://117.50.194.115:8090/inbound")
+//                .method("POST", body)
+//                .header("Content-Type", "application/json")
+//                .build();
+//        Thread thread = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try (Response response = client.newCall(request).execute()) {
+//                    if (response.isSuccessful()) {
+//                        System.out.println("网络输出" + response.body().string());
+//                    } else {
+//                        System.out.println("Request not successful");
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
+//
+//        thread.start();
+//        try {
+//            thread.join();
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
 
     }
 
@@ -93,7 +102,7 @@ public class TestClass {
 
     public int insertRuku(String url, RukuInform inform) {
         // hashmap  => json
-//        insertBase()
+        //insertBase()
         return 0;
     }
 }
