@@ -2,9 +2,117 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="chuku"></TextView>
+    android:background="@color/mainBg"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_toolbar_header_title" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/lin_parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_options"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorBgSticky"
+                android:paddingLeft="15dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="@string/ruku_tips"
+                android:textColor="@color/colorTextLinItem"
+                android:textSize="12sp" />
+
+            <include layout="@layout/layout_base_chuku" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorBgSticky"
+                android:paddingLeft="15dp"
+                android:paddingTop="20dp"
+                android:paddingBottom="10dp"
+                android:text="@string/ruku_image_tips"
+                android:textColor="@color/colorTextLinItem"
+                android:textSize="12sp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:orientation="horizontal"
+                android:background="@drawable/border">
+                <ImageView
+                    android:id="@+id/ruku_image1"
+                    android:layout_width="60dp"
+                    android:layout_height="80dp"></ImageView>
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"></Space>
+                <ImageView
+                    android:id="@+id/ruku_image2"
+                    android:layout_width="60dp"
+                    android:layout_height="80dp"></ImageView>
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"></Space>
+                <ImageView
+                    android:id="@+id/ruku_image3"
+                    android:layout_width="60dp"
+                    android:layout_height="80dp"></ImageView>
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"></Space>
+                <ImageView
+                    android:id="@+id/ruku_image4"
+                    android:layout_width="60dp"
+                    android:layout_height="80dp"></ImageView>
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"></Space>
+                <ImageView
+                    android:id="@+id/ruku_image5"
+                    android:layout_width="60dp"
+                    android:layout_height="80dp"></ImageView>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/bt_photo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/conor_button_green"
+                android:clickable="false"
+                android:text="@string/upload_photo"
+                android:textColor="@color/colorTextWhite"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/bt_next"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/conor_button_green"
+                android:clickable="false"
+                android:text="@string/upload"
+                android:textColor="@color/colorTextWhite"
+                android:textSize="18sp" />
+        </LinearLayout>
+    </ScrollView>
+
+
 </LinearLayout>

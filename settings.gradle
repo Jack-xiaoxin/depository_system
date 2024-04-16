@@ -8,3 +8,6 @@ dependencyResolutionManagement {
 }
 rootProject.name = "depository_system"
 include ':app'
+include ':library:pickerview'
+include ':library:calendarLibrary'
+include ':library:leafchart'

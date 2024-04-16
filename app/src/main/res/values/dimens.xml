@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="ruku_testSzie">12dp</dimen>
-    <dimen name="ruku_marginBottom">20dp</dimen>
+    <dimen name="ruku_testSzie">15dp</dimen>
+    <dimen name="ruku_marginBottom">10dp</dimen>
+    <dimen name="card_add_item_margin_right">30dp</dimen>
+    <dimen name="activity_horizontal_margin">15dp</dimen>
+    <dimen name="itemCardAddHeight">40dp</dimen>
+    <dimen name="item_card">111dp</dimen>
 </resources>

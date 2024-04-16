@@ -1,19 +1,16 @@
 package com.example.depository_system;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
-import com.example.depository_system.fragments.rukuFragment;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 public class MainInterface extends AppCompatActivity {
 
@@ -33,6 +30,8 @@ public class MainInterface extends AppCompatActivity {
 
     private Fragment displayedFragment;
     private View displayedView;
+
+    private Toolbar titleToolbar;
 
     private static final int CAMERA_PERMISSIOS_REQUEST_CODE = 100;
 
@@ -58,6 +57,8 @@ public class MainInterface extends AppCompatActivity {
         chachukuFragment = fragmentManager.findFragmentById(R.id.chachukuFragment);
         kucunFragment = fragmentManager.findFragmentById(R.id.kucunFragment);
 
+        titleToolbar = findViewById(R.id.tb_base_title);
+
         ruKuView.setOnClickListener(view -> {
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.hide(displayedFragment);
@@ -65,6 +66,7 @@ public class MainInterface extends AppCompatActivity {
             fragmentTransaction.commit();
             setBackGroundColor(displayedView, ruKuView);
             displayedFragment = rukuFragment;
+            titleToolbar.setTitle("入库信息填写");
         });
         chuKuView.setOnClickListener(view -> {
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -73,6 +75,7 @@ public class MainInterface extends AppCompatActivity {
             fragmentTransaction.commit();
             setBackGroundColor(displayedView, chuKuView);
             displayedFragment = chukuFragment;
+            titleToolbar.setTitle("出库信息填写");
         });
         chaRukuView.setOnClickListener(view -> {
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +15,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.annotation.LongDef;
-import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -26,12 +23,10 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import com.example.depository_system.R;
-import com.example.depository_system.informs.RukuInform;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.time.Duration;
 import java.util.Date;
 
 public class rukuFragment extends Fragment {
@@ -74,39 +69,39 @@ public class rukuFragment extends Fragment {
             root = inflater.inflate(R.layout.ruku_fragment, container, false);
         }
 
-        depotNameEditText = root.findViewById(R.id.depotName);
-        materialIdentifierEditText = root.findViewById(R.id.material_identifier);
-        factoryNameEditText = root.findViewById(R.id.factory_name);
-        timeEditText = root.findViewById(R.id.ruku_time);
-        projectNameEditText = root.findViewById(R.id.project_name);
-        receiverEditText = root.findViewById(R.id.receiver);
-        acceptorEditText = root.findViewById(R.id.acceptor);
-        imageView = root.findViewById(R.id.imageview_photo);
+//        depotNameEditText = root.findViewById(R.id.depotName);
+//        materialIdentifierEditText = root.findViewById(R.id.material_identifier);
+//        factoryNameEditText = root.findViewById(R.id.factory_name);
+//        timeEditText = root.findViewById(R.id.ruku_time);
+//        projectNameEditText = root.findViewById(R.id.project_name);
+//        receiverEditText = root.findViewById(R.id.receiver);
+//        acceptorEditText = root.findViewById(R.id.acceptor);
+//        imageView = root.findViewById(R.id.imageview_photo);
+//
+//        photoBtn = root.findViewById(R.id.photo);
+//        uploadBtn = root.findViewById(R.id.upload);
 
-        photoBtn = root.findViewById(R.id.photo);
-        uploadBtn = root.findViewById(R.id.upload);
-
-        photoBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                requestCameraPermission();
-            }
-        });
-
-        uploadBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Todo 判断必选项
-                RukuInform rukuInform = new RukuInform();
-                rukuInform.depotName = depotNameEditText.getText().toString();
-                rukuInform.materialIdentifer = materialIdentifierEditText.getText().toString();
-                rukuInform.factoryName = factoryNameEditText.getText().toString();
-                rukuInform.time = timeEditText.getText().toString();
-                rukuInform.projectName = projectNameEditText.getText().toString();
-                rukuInform.receiver = receiverEditText.getText().toString();
-                rukuInform.acceptor = acceptorEditText.getText().toString();
-            }
-        });
+//        photoBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                requestCameraPermission();
+//            }
+//        });
+//
+//        uploadBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //Todo 判断必选项
+//                RukuInform rukuInform = new RukuInform();
+//                rukuInform.depotName = depotNameEditText.getText().toString();
+//                rukuInform.materialIdentifer = materialIdentifierEditText.getText().toString();
+//                rukuInform.factoryName = factoryNameEditText.getText().toString();
+//                rukuInform.time = timeEditText.getText().toString();
+//                rukuInform.projectName = projectNameEditText.getText().toString();
+//                rukuInform.receiver = receiverEditText.getText().toString();
+//                rukuInform.acceptor = acceptorEditText.getText().toString();
+//            }
+//        });
 
         return root;
     }
