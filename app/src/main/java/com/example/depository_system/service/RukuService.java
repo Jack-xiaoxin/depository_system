@@ -1,11 +1,15 @@
 package com.example.depository_system.service;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.depository_system.informs.RukuInform;
 import com.example.depository_system.informs.RukuRecordInform;
+import com.example.depository_system.informs.RukuRecordItemInform;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -57,8 +61,49 @@ public class RukuService {
         String bodyString = serviceBase.HttpBase("/inboundHistory", "POST", jsonObject);
         try {
             JSONObject bodyDict = new JSONObject(bodyString);
-            System.out.println(bodyDict);
-            return null;
+            JSONArray dataArray = bodyDict.getJSONArray("data");
+            for (int i = 0; i < dataArray.length(); i++) {
+                JSONObject singleObject = dataArray.getJSONObject(i);
+                RukuRecordInform rukuRecordInform = new RukuRecordInform();
+
+                rukuRecordInform.inboundId = singleObject.getString("inbound_id");
+                rukuRecordInform.inboundDate = singleObject.getString("inbound_date");
+                rukuRecordInform.factoryName = singleObject.getString("factory_name");
+
+                List<RukuRecordItemInform> itemInformList = new ArrayList<>();
+                Iterator<String> keys = singleObject.getJSONObject("inbound_record").keys();
+                for (Iterator<String> it = keys; it.hasNext(); ) {
+                    RukuRecordItemInform itemInform = new RukuRecordItemInform();
+
+                    String key = it.next();
+                    itemInform.id = key;
+                    JSONObject valueObject = (JSONObject) singleObject.getJSONObject("inbound_record").get(key);
+
+                    itemInform.checker = valueObject.getString("checker");
+                    itemInform.receiver = valueObject.getString("receiver");
+                    itemInform.materialId = valueObject.getString("goods_id");
+                    itemInform.materialName = valueObject.getString("goods_name");
+                    itemInform.materialModel = valueObject.getString("goods_model");
+                    itemInform.factoryName = valueObject.getString("factory_name");
+                    itemInform.number = valueObject.getInt("goods_number");
+                    itemInform.inboundTime = valueObject.getString("inbound_time");
+                    itemInform.projectName = valueObject.getString("project_name");
+
+                    JSONArray imageArray = valueObject.getJSONArray("images");
+                    List<String> imgList = new ArrayList<>();
+                    for (int j = 0; j < imageArray.length(); j++) {
+                        imgList.add(imageArray.getString(j));
+                    }
+                    itemInform.images = imgList;
+
+                    itemInformList.add(itemInform);
+                }
+                rukuRecordInform.itemList = itemInformList;
+
+                rukuRecordInformList.add(rukuRecordInform);
+            }
+
+            return rukuRecordInformList;
         } catch (JSONException e) {
             e.printStackTrace();
         }

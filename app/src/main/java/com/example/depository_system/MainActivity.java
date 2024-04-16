@@ -71,8 +71,10 @@ public class MainActivity extends AppCompatActivity {
     private String testRequest(String username, String password) {
 
         TestClass tc = new TestClass();
-        String res = tc.test(username);
-        System.out.println("基础类：" +  res);
-        return res;
+//        String res = tc.test(username);
+//        System.out.println("基础类：" +  res);
+//        return res;
+        tc.test2();
+        return null;
     }
 }

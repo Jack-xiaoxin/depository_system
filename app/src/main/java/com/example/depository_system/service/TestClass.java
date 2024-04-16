@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.depository_system.informs.RukuInform;
+import com.example.depository_system.informs.RukuRecordInform;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,6 +13,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import okhttp3.FormBody;
@@ -35,6 +37,7 @@ public class TestClass {
      *
      * @param content 需要打印的字符串内容
      */
+
     public String test(String content){
         if (content != null && !content.isEmpty()) {
             System.out.println(content);
@@ -94,6 +97,12 @@ public class TestClass {
 //            throw new RuntimeException(e);
 //        }
 
+    }
+
+    public void test2(){
+        RukuService rukuService = new RukuService();
+        List<RukuRecordInform> res = rukuService.getRukuRecordListByDateOrFactory("2024-04-14", "Manabox 2");
+        System.out.println(res);
     }
 
     public int insertBase(String url, String method, JSONObject jsonObject) {
