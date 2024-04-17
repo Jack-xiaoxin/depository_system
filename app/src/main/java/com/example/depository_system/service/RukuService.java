@@ -30,6 +30,7 @@ public class RukuService {
             jsonObject.put("goods_name", rukuInform.materialName);
             jsonObject.put("goods_model", rukuInform.materialModel);
             jsonObject.put("depository_name", rukuInform.depotName);
+            jsonObject.put("depository_id", rukuInform.depotId);
             jsonObject.put("factory_name", rukuInform.factoryName);
             jsonObject.put("receiver", rukuInform.receiver);
             jsonObject.put("checker", rukuInform.acceptor);

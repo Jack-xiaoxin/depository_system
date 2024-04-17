@@ -30,4 +30,6 @@ public class RukuInform {
 
     public String materialModel;
 
+    public String depotId;
+
 }

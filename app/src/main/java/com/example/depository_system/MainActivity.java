@@ -74,7 +74,8 @@ public class MainActivity extends AppCompatActivity {
 //        String res = tc.test(username);
 //        System.out.println("基础类：" +  res);
 //        return res;
-        tc.test2();
+//        tc.test2();
+        tc.test3();
         return null;
     }
 }

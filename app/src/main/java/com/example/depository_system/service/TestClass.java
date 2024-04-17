@@ -1,11 +1,16 @@
 package com.example.depository_system.service;
+
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.depository_system.informs.ChukuRecordInform;
+import com.example.depository_system.informs.DepositoryInform;
+import com.example.depository_system.informs.MaterialInform;
 import com.example.depository_system.informs.RukuInform;
 import com.example.depository_system.informs.RukuRecordInform;
+import com.example.depository_system.informs.UserInform;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,7 +43,7 @@ public class TestClass {
      * @param content 需要打印的字符串内容
      */
 
-    public String test(String content){
+    public String test(String content) {
         if (content != null && !content.isEmpty()) {
             System.out.println(content);
         } else {
@@ -54,7 +59,7 @@ public class TestClass {
             jsonObject.put("new_goods", false);
             jsonObject.put("goods_id", 10);
             jsonObject.put("goods_name", "aaa");
-            jsonObject.put("goods_model","bbb");
+            jsonObject.put("goods_model", "bbb");
             jsonObject.put("factory_name", "Manabox 2");
             jsonObject.put("receiver", "receiver");
             jsonObject.put("checker", "checker");
@@ -99,9 +104,54 @@ public class TestClass {
 
     }
 
-    public void test2(){
+    public void test2() {
         RukuService rukuService = new RukuService();
-        List<RukuRecordInform> res = rukuService.getRukuRecordListByDateOrFactory("2024-04-14", "Manabox 2");
+        List<RukuRecordInform> res = rukuService.getRukuRecordListByDateOrFactory(
+                "2024-04-14",
+                "Manabox 2"
+        );
+        System.out.println(res);
+    }
+
+    public void test3() {
+        ChukuService chukuService = new ChukuService();
+        List<ChukuRecordInform> res = chukuService.getChukuRecordList(
+                "2024-04-14",
+                "apply_department_name",
+                "apply_project_name",
+                "director"
+        );
+        System.out.println(res);
+    }
+
+    public void test4() {
+        DepositoryService depositoryService = new DepositoryService();
+        List<DepositoryInform> res = depositoryService.getDepostList(
+                "",
+                ""
+        );
+        System.out.println(res);
+    }
+
+    public void test5() {
+        MaterialService materialService = new MaterialService();
+        List<MaterialInform> res = materialService.getMaterialList(
+                "",
+                "",
+                "",
+                ""
+        );
+        System.out.println(res);
+    }
+
+    public void test6() {
+        UserService userService = new UserService();
+        List<UserInform> res = userService.getUserList(
+                "",
+                "",
+                "",
+                null
+        );
         System.out.println(res);
     }
 
