@@ -93,12 +93,12 @@ public class rukuFragment extends Fragment {
         photoBtn = root.findViewById(R.id.bt_photo);
         uploadBtn = root.findViewById(R.id.bt_next);
 
-//        photoBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                requestCameraPermission();
-//            }
-//        });
+        photoBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requestCameraPermission();
+            }
+        });
 //
         uploadBtn.setOnClickListener(new View.OnClickListener() {
             @Override
