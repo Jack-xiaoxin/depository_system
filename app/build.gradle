@@ -33,4 +33,5 @@ dependencies {
     implementation 'com.jakewharton:butterknife:10.0.0'
     //添加这一句，不然会报错
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.0.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
 }

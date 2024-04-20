@@ -29,7 +29,9 @@
                 android:textColor="@color/colorTextLinItem"
                 android:textSize="12sp" />
 
-            <include layout="@layout/layout_base_ruku" />
+            <include
+                android:id="@+id/layout_ruku_base"
+                layout="@layout/layout_base_ruku" />
 
             <TextView
                 android:layout_width="match_parent"
