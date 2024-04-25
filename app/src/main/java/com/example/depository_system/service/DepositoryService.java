@@ -14,9 +14,8 @@ import java.util.Iterator;
 import java.util.List;
 
 public class DepositoryService {
-    ServiceBase serviceBase = new ServiceBase();
 
-    public List<DepositoryInform> getDepostList(
+    public static List<DepositoryInform> getDepostList(
             String depositoryId,
             String name
     ) {
@@ -34,7 +33,8 @@ public class DepositoryService {
             throw new RuntimeException(e);
         }
 
-        String bodyString = serviceBase.HttpBase("/getDepositList", "POST", jsonObject);
+        String bodyString = ServiceBase.HttpBase("/getDepositList", "POST", jsonObject);
+        if(bodyString.isEmpty()) return depositoryInforms;
         try {
             JSONObject bodyDict = new JSONObject(bodyString);
             JSONArray dataArray = bodyDict.getJSONArray("data");
@@ -55,5 +55,35 @@ public class DepositoryService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static DepositoryInform insertDepot(String name) {
+        DepositoryInform depositoryInform = new DepositoryInform();
+        JSONObject jsonObject = new JSONObject();
+        try {
+            if (name != null && !name.isEmpty()) {
+                jsonObject.put("name", name);
+            }
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        String bodyString = ServiceBase.HttpBase("/insertDepot", "POST", jsonObject);
+        if(bodyString.isEmpty()) return depositoryInform;
+        try {
+            JSONObject bodyDict = new JSONObject(bodyString);
+            JSONArray dataArray = bodyDict.getJSONArray("data");
+            for (int i = 0; i < dataArray.length(); i++) {
+                JSONObject singleObject = dataArray.getJSONObject(i);
+                depositoryInform = new DepositoryInform();
+
+                depositoryInform.depotId = singleObject.getString("depository_id");
+                depositoryInform.depotName = singleObject.getString("name");
+                depositoryInform.description = singleObject.getString("description");
+                depositoryInform.createdTime = singleObject.getString("created_time");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return depositoryInform;
     }
 }

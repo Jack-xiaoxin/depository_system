@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:text="仓库"
+            android:text="*仓库"
             android:textColor="@color/colorPrimary"
             android:textSize="15sp" />
 
@@ -36,7 +36,17 @@
             android:paddingRight="@dimen/card_add_item_margin_right"
             android:textColor="@color/colorTextCardAddEdittext"
             android:textColorHint="@color/colorTextHint"
-            android:textSize="15dp" />
+            android:textSize="15dp"/>
+
+        <ImageButton
+            android:id="@+id/image_btn_depotName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/ic_right_arrow"/>
 
     </RelativeLayout>
 
@@ -75,6 +85,16 @@
             android:textColor="@color/colorTextCardAddEdittext"
             android:textColorHint="@color/colorTextHint"
             android:textSize="15dp" />
+
+        <ImageButton
+            android:id="@+id/image_btn_materialIdentifier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/ic_right_arrow"/>
 
     </RelativeLayout>
 
@@ -116,6 +136,16 @@
             android:textColor="@color/colorTextCardAddEdittext"
             android:textColorHint="@color/colorTextHint"
             android:textSize="15dp" />
+
+        <ImageButton
+            android:id="@+id/image_btn_materialName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/ic_right_arrow"/>
     </RelativeLayout>
 
     <View
@@ -153,6 +183,16 @@
             android:textColor="@color/colorTextCardAddEdittext"
             android:textColorHint="@color/colorTextHint"
             android:textSize="15dp" />
+
+        <ImageButton
+            android:id="@+id/image_btn_materialType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/ic_right_arrow"/>
 
     </RelativeLayout>
 
@@ -237,6 +277,16 @@
             android:textColorHint="@color/colorTextHint"
             android:textSize="15sp" />
 
+        <ImageButton
+            android:id="@+id/image_btn_factoryName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/ic_right_arrow"/>
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -271,6 +321,16 @@
             android:textColor="@color/colorTextCardAddEdittext"
             android:textColorHint="@color/colorTextHint"
             android:textSize="15sp" />
+
+        <ImageButton
+            android:id="@+id/image_btn_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/ic_right_arrow"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -342,6 +402,16 @@
             android:textColorHint="@color/colorTextHint"
             android:textSize="15sp" />
 
+        <ImageButton
+            android:id="@+id/image_btn_receiver"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/ic_right_arrow"/>
+
     </RelativeLayout>
 
 
@@ -376,6 +446,16 @@
             android:textColor="@color/colorTextCardAddEdittext"
             android:textColorHint="@color/colorTextHint"
             android:textSize="15sp" />
+
+        <ImageButton
+            android:id="@+id/image_btn_accepter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/ic_right_arrow"/>
 
     </RelativeLayout>
 

@@ -11,4 +11,6 @@ public class KucunInform {
     public Integer alarmNumber;
 
     public String updateTime;
+
+    public String depotId;
 }

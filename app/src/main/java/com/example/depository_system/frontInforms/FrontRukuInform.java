@@ -32,6 +32,7 @@ public class FrontRukuInform {
         RukuInform rukuInform = new RukuInform();
         rukuInform.depotName = depotName;
         rukuInform.materialIdentifer = materialIdentifier;
+        rukuInform.materialName = materialName;
         rukuInform.materialModel = materialType;
         rukuInform.number = materialNum;
         rukuInform.factoryName = factoryName;

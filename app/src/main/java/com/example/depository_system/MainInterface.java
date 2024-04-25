@@ -11,6 +11,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import com.example.depository_system.fragments.*;
 
 public class MainInterface extends AppCompatActivity {
 
@@ -84,6 +85,7 @@ public class MainInterface extends AppCompatActivity {
             fragmentTransaction.commit();
             setBackGroundColor(displayedView, chaRukuView);
             displayedFragment = charukuFragment;
+            titleToolbar.setTitle("入库信息查询");
         });
         chaChukuView.setOnClickListener(view -> {
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -92,6 +94,7 @@ public class MainInterface extends AppCompatActivity {
             fragmentTransaction.commit();
             setBackGroundColor(displayedView, chaChukuView);
             displayedFragment = chachukuFragment;
+            titleToolbar.setTitle("出库信息查询");
         });
         kuCunView.setOnClickListener(view -> {
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -100,6 +103,7 @@ public class MainInterface extends AppCompatActivity {
             fragmentTransaction.commit();
             setBackGroundColor(displayedView, kuCunView);
             displayedFragment = kucunFragment;
+            titleToolbar.setTitle("库存信息查询");
         });
 
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

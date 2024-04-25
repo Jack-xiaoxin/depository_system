@@ -14,17 +14,18 @@
     <string name="card_add_phone_num" translatable="false">银行预留手机号</string>
     <string name="hint_input_depository" translatable="false">请输入仓库名</string>
     <string name="hint_input_material_identifier" translatable="false">请输入物料编码</string>
-    <string name="ruku_input_material_identifier" translatable="false">物料编号</string>
-    <string name="ruku_material_name" translatable="false">物资名称</string>
+    <string name="ruku_input_material_identifier" translatable="false">*物料编号</string>
+    <string name="ruku_material_name" translatable="false">*物资名称</string>
     <string name="hint_input_material_name" translatable="false">请输入物资名称</string>
     <string name="hint_input_material_type" translatable="false">请输入物资型号</string>
-    <string name="hint_input_identity" translatable="false">请输入身份证号</string>
-    <string name="ruku_input_material_num" translatable="false">物资数量</string>
-    <string name="hint_input_material_num" translatable="false">请输入物资数量</string>
-    <string name="ruku_input_material_type" translatable="false">物资型号</string>
-    <string name="ruku_input_factory_name" translatable="false">厂家名称</string>
+    <string name="ruku_input_material_num" translatable="false">*入库数量</string>
+    <string name="hint_input_material_num" translatable="false">请输入入库物资数量</string>
+    <string name="ruku_output_material_num" translatable="false">*出库数量</string>
+    <string name="hint_output_material_num" translatable="false">请输入出库物资数量</string>
+    <string name="ruku_input_material_type" translatable="false">*物资型号</string>
+    <string name="ruku_input_factory_name" translatable="false">*厂家名称</string>
     <string name="hint_input_factory_name" translatable="false">请输入厂家名称</string>
-    <string name="ruku_input_time" translatable="false">入库时间</string>
+    <string name="ruku_input_time" translatable="false">*入库时间</string>
     <string name="hint_input_ruku_time" translatable="false">请输入入库时间</string>
     <string name="ruku_project_name" translatable="false">入库项目名称</string>
     <string name="hint_input_project_name" translatable="false">请输入入库项目名称</string>
@@ -34,6 +35,8 @@
     <string name="hint_ruku_accepter_name" translatable="false">请输入验收人姓名</string>
     <string name="chuku_project_name" translatable="false">领用项目</string>
     <string name="hint_chuku_project_name" translatable="false">请输入领用项目</string>
+    <string name="chuku_project_major" translatable="false">项目负责人</string>
+    <string name="hint_chuku_project_major" translatable="false">请输入项目负责人</string>
     <string name="chuku_user_organization" translatable="false">领用单位</string>
     <string name="hint_chuku_user_organization" translatable="false">请输入领用单位</string>
     <string name="chuku_time" translatable="false">领用时间</string>

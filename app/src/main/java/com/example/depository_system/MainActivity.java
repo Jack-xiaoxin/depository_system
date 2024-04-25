@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
             return false;
         } else if((username.equals("test") && password.equals("test")) || (username.equals("") && password.equals(""))) {
             Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show();
+            DataManagement.updateAll();
             return true;
         } else {
             Toast.makeText(this, "用户名或密码不对", Toast.LENGTH_SHORT).show();

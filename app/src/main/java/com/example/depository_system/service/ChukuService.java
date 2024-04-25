@@ -16,9 +16,8 @@ import java.util.Iterator;
 import java.util.List;
 
 public class ChukuService {
-    ServiceBase serviceBase = new ServiceBase();
 
-    public String action(ChukuActionInform chukuInform) {
+    public static String action(ChukuActionInform chukuInform) {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("deposit_id", chukuInform.depotId);
@@ -33,7 +32,7 @@ public class ChukuService {
             throw new RuntimeException(e);
         }
 
-        String response = serviceBase.HttpBase("/outbound", "POST", jsonObject);
+        String response = ServiceBase.HttpBase("/outbound", "POST", jsonObject);
         return response;
     }
 
@@ -62,7 +61,7 @@ public class ChukuService {
             throw new RuntimeException(e);
         }
 
-        String bodyString = serviceBase.HttpBase("/outboundHistory", "POST", jsonObject);
+        String bodyString = ServiceBase.HttpBase("/outboundHistory", "POST", jsonObject);
         try {
             JSONObject bodyDict = new JSONObject(bodyString);
             JSONArray dataArray = bodyDict.getJSONArray("data");

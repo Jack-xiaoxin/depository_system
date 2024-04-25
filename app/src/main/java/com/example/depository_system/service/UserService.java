@@ -11,9 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserService {
-    ServiceBase serviceBase = new ServiceBase();
 
-    public List<UserInform> getUserList(
+    public static List<UserInform> getUserList(
             String userId,
             String userName,
             String phoneNumber,
@@ -38,7 +37,7 @@ public class UserService {
             throw new RuntimeException(e);
         }
 
-        String bodyString = serviceBase.HttpBase("/getDepositList", "POST", jsonObject);
+        String bodyString = ServiceBase.HttpBase("/getDepositList", "POST", jsonObject);
         try {
             JSONObject bodyDict = new JSONObject(bodyString);
             JSONArray dataArray = bodyDict.getJSONArray("data");
@@ -53,11 +52,9 @@ public class UserService {
 
                 userInforms.add(userInform);
             }
-
-            return userInforms;
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return null;
+        return userInforms;
     }
 }

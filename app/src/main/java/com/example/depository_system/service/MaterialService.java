@@ -11,9 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MaterialService {
-    ServiceBase serviceBase = new ServiceBase();
 
-    public List<MaterialInform> getMaterialList(
+    public static List<MaterialInform> getMaterialList(
             String materialId,
             String materialName,
             String materialModel,
@@ -38,7 +37,7 @@ public class MaterialService {
             throw new RuntimeException(e);
         }
 
-        String bodyString = serviceBase.HttpBase("/getGoodsList", "POST", jsonObject);
+        String bodyString = ServiceBase.HttpBase("/getGoodsList", "POST", jsonObject);
         try {
             JSONObject bodyDict = new JSONObject(bodyString);
             JSONArray dataArray = bodyDict.getJSONArray("data");

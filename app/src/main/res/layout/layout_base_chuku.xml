@@ -17,12 +17,12 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:text="仓库"
+            android:text="*仓库"
             android:textColor="@color/colorPrimary"
             android:textSize="15sp" />
 
         <com.example.depository_system.view.DeleteEditText
-            android:id="@+id/et_card_id"
+            android:id="@+id/depot_name"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
@@ -38,12 +38,21 @@
             android:textColorHint="@color/colorTextHint"
             android:textSize="15dp" />
 
+        <ImageButton
+            android:id="@+id/image_btn_depotName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/ic_right_arrow"/>
+
     </RelativeLayout>
 
 
 
     <RelativeLayout
-        android:id="@+id/rel_choose_bank"
         android:layout_width="match_parent"
         android:layout_height="@dimen/itemCardAddHeight"
         android:layout_marginTop="@dimen/activity_horizontal_margin"
@@ -60,7 +69,7 @@
             android:textSize="15dp" />
 
         <com.example.depository_system.view.NumberEditText
-            android:id="@+id/material_identifier_id"
+            android:id="@+id/material_identifier"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
@@ -75,6 +84,16 @@
             android:textColor="@color/colorTextCardAddEdittext"
             android:textColorHint="@color/colorTextHint"
             android:textSize="15dp" />
+
+        <ImageButton
+            android:id="@+id/image_btn_materialIdentifier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/ic_right_arrow"/>
 
     </RelativeLayout>
 
@@ -101,7 +120,7 @@
             android:textSize="15dp" />
 
         <com.example.depository_system.view.DeleteEditText
-            android:id="@+id/material_name_id"
+            android:id="@+id/material_name"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
@@ -116,6 +135,16 @@
             android:textColor="@color/colorTextCardAddEdittext"
             android:textColorHint="@color/colorTextHint"
             android:textSize="15dp" />
+
+        <ImageButton
+            android:id="@+id/image_btn_materialName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/ic_right_arrow"/>
     </RelativeLayout>
 
     <View
@@ -140,7 +169,7 @@
             android:textSize="15sp" />
 
         <com.example.depository_system.view.DeleteEditText
-            android:id="@+id/et_name"
+            android:id="@+id/material_type"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
@@ -153,6 +182,16 @@
             android:textColor="@color/colorTextCardAddEdittext"
             android:textColorHint="@color/colorTextHint"
             android:textSize="15dp" />
+
+        <ImageButton
+            android:id="@+id/image_btn_materialType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/ic_right_arrow"/>
 
     </RelativeLayout>
 
@@ -173,12 +212,12 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:text="@string/ruku_input_material_num"
+            android:text="@string/ruku_output_material_num"
             android:textColor="@color/colorPrimary"
             android:textSize="15dp" />
 
         <com.example.depository_system.view.NumberEditText
-            android:id="@+id/et_peopleid"
+            android:id="@+id/material_num"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
@@ -186,7 +225,7 @@
             android:background="@null"
             android:focusableInTouchMode="false"
             android:gravity="right|center_vertical"
-            android:hint="@string/hint_input_material_num"
+            android:hint="@string/hint_output_material_num"
             android:inputType="number"
             android:maxLength="18"
             android:paddingRight="@dimen/card_add_item_margin_right"
@@ -221,7 +260,7 @@
             android:textSize="15dp" />
 
         <com.example.depository_system.view.DeleteEditText
-            android:id="@+id/ruku_factory_name"
+            android:id="@+id/factory_name"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
@@ -236,6 +275,16 @@
             android:textColor="@color/colorTextCardAddEdittext"
             android:textColorHint="@color/colorTextHint"
             android:textSize="15sp" />
+
+        <ImageButton
+            android:id="@+id/image_btn_factoryName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/ic_right_arrow"/>
 
     </RelativeLayout>
 
@@ -256,7 +305,7 @@
             android:textSize="15dp" />
 
         <com.example.depository_system.view.DeleteEditText
-            android:id="@+id/ruku_project"
+            android:id="@+id/project_name"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
@@ -271,6 +320,50 @@
             android:textColor="@color/colorTextCardAddEdittext"
             android:textColorHint="@color/colorTextHint"
             android:textSize="15sp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/itemCardAddHeight"
+        android:background="@color/colorTextWhite"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:text="@string/chuku_project_major"
+            android:textColor="@color/colorPrimary"
+            android:textSize="15dp" />
+
+        <com.example.depository_system.view.DeleteEditText
+            android:id="@+id/project_major"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:focusableInTouchMode="false"
+            android:gravity="right|center_vertical"
+            android:hint="@string/hint_chuku_project_major"
+            android:inputType="text"
+            android:maxLength="18"
+            android:paddingRight="@dimen/card_add_item_margin_right"
+            android:textColor="@color/colorTextCardAddEdittext"
+            android:textColorHint="@color/colorTextHint"
+            android:textSize="15sp" />
+
+        <ImageButton
+            android:id="@+id/image_btn_project_major"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/ic_right_arrow"/>
 
     </RelativeLayout>
 
@@ -326,7 +419,7 @@
             android:textSize="15dp" />
 
         <com.example.depository_system.view.DeleteEditText
-            android:id="@+id/ruku_receiver_name"
+            android:id="@+id/receiver_name"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
@@ -341,6 +434,16 @@
             android:textColor="@color/colorTextCardAddEdittext"
             android:textColorHint="@color/colorTextHint"
             android:textSize="15sp" />
+
+        <ImageButton
+            android:id="@+id/image_btn_receiver"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/ic_right_arrow"/>
 
     </RelativeLayout>
 
@@ -361,7 +464,7 @@
             android:textSize="15dp" />
 
         <com.example.depository_system.view.DeleteEditText
-            android:id="@+id/ruku_time"
+            android:id="@+id/chuku_time"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
@@ -376,6 +479,16 @@
             android:textColor="@color/colorTextCardAddEdittext"
             android:textColorHint="@color/colorTextHint"
             android:textSize="15sp" />
+
+        <ImageButton
+            android:id="@+id/image_btn_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/ic_right_arrow"/>
     </RelativeLayout>
 
 

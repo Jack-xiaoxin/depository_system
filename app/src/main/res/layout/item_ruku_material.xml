@@ -14,7 +14,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginLeft="25dp"
-        android:layout_marginTop="25dp" />
+        android:layout_marginTop="10dp"/>
 
     <TextView
         android:id="@+id/ruku_order_material_name"

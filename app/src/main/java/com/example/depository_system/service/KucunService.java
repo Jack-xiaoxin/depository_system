@@ -15,7 +15,8 @@ public class KucunService {
 
     public List<KucunInform> getKucunList(
             String kucunId,
-            String materialId
+            String materialId,
+            String depotId
     ) {
         List<KucunInform> kucunInforms = new ArrayList<>();
         JSONObject jsonObject = new JSONObject();
@@ -25,6 +26,9 @@ public class KucunService {
             }
             if (materialId != null && !materialId.isEmpty()) {
                 jsonObject.put("goods_id", materialId);
+            }
+            if (depotId != null && !depotId.isEmpty()) {
+                jsonObject.put("depository_id", depotId);
             }
 
         } catch (JSONException e) {
@@ -44,6 +48,7 @@ public class KucunService {
                 kucunInform.kucunNumber = singleObject.getInt("stored_number");
                 kucunInform.alarmNumber = singleObject.getInt("alarm_number");
                 kucunInform.updateTime = singleObject.getString("update_time");
+                kucunInform.depotId = singleObject.getString("depository_id");
 
                 kucunInforms.add(kucunInform);
             }

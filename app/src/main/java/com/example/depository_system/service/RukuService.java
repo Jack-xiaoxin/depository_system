@@ -24,12 +24,12 @@ public class RukuService {
     public static String action(RukuInform rukuInform) {
         JSONObject jsonObject = new JSONObject();
         try {
-//            jsonObject.put("new_goods", rukuInform.isNew);
+            jsonObject.put("new_goods", rukuInform.isNew);
             jsonObject.put("goods_id", rukuInform.materialIdentifer);
             jsonObject.put("goods_name", rukuInform.materialName);
             jsonObject.put("goods_model", rukuInform.materialModel);
             jsonObject.put("depository_name", rukuInform.depotName);
-//            jsonObject.put("depository_id", rukuInform.depotId);
+            jsonObject.put("depository_id", rukuInform.depotId);
             jsonObject.put("factory_name", rukuInform.factoryName);
             jsonObject.put("receiver", rukuInform.receiver);
             jsonObject.put("checker", rukuInform.acceptor);
@@ -44,7 +44,7 @@ public class RukuService {
         return response;
     }
 
-    public List<RukuRecordInform> getRukuRecordListByDateOrFactory(String date, String factoryName) {
+    public static List<RukuRecordInform> getRukuRecordListByDateOrFactory(String date, String factoryName) {
         List<RukuRecordInform> rukuRecordInformList = new ArrayList<RukuRecordInform>();
         JSONObject jsonObject = new JSONObject();
         try {
@@ -89,12 +89,12 @@ public class RukuService {
                     itemInform.inboundTime = valueObject.getString("inbound_time");
                     itemInform.projectName = valueObject.getString("project_name");
 
-                    JSONArray imageArray = valueObject.getJSONArray("images");
-                    List<String> imgList = new ArrayList<>();
-                    for (int j = 0; j < imageArray.length(); j++) {
-                        imgList.add(imageArray.getString(j));
-                    }
-                    itemInform.images = imgList;
+//                    JSONArray imageArray = valueObject.getJSONArray("images");
+//                    List<String> imgList = new ArrayList<>();
+//                    for (int j = 0; j < imageArray.length(); j++) {
+//                        imgList.add(imageArray.getString(j));
+//                    }
+//                    itemInform.images = imgList;
 
                     itemInformList.add(itemInform);
                 }
