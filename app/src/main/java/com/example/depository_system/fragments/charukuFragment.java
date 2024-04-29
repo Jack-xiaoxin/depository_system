@@ -1,6 +1,13 @@
 package com.example.depository_system.fragments;
 
+
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -14,9 +21,11 @@ import android.widget.FrameLayout;
 import android.widget.ListPopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,12 +36,20 @@ import com.example.depository_system.adapters.RukuMaterialAdapter;
 import com.example.depository_system.adapters.RukuOrderAdapter;
 import com.example.depository_system.informs.MaterialInform;
 import com.example.depository_system.informs.RukuRecordInform;
+import com.example.depository_system.informs.RukuRecordItemInform;
 import com.example.depository_system.service.RukuService;
 import com.loper7.date_time_picker.DateTimeConfig;
 import com.loper7.date_time_picker.dialog.CardDatePickerDialog;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.w3c.dom.Text;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
@@ -69,6 +86,10 @@ public class charukuFragment extends Fragment {
 
     private Handler handler;
 
+    private static final int REQUEST_CODE = 10;
+
+    private int myIndex = -1;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,7 +106,7 @@ public class charukuFragment extends Fragment {
         frameLayout = root.findViewById(R.id.order_detail);
         emptyLayout = root.findViewById(R.id.empty);
         progressBar = root.findViewById(R.id.progress_circular);
-        orderTextView = root.findViewById(R.id.order_id);
+        orderTextView = root.findViewById(R.id.inbound_identifier);
         recyclerView_material = root.findViewById(R.id.recyclerView_material);
         backButton = root.findViewById(R.id.go_back);
         exportButton = root.findViewById(R.id.export);
@@ -205,6 +226,7 @@ public class charukuFragment extends Fragment {
         listPopupWindow.setAdapter(new ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, list));
         listPopupWindow.setAnchorView(button);
         listPopupWindow.setModal(true);
+        listPopupWindow.setHeight(10*20*3);
         listPopupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -236,11 +258,18 @@ public class charukuFragment extends Fragment {
         timeButton.setVisibility(View.GONE);
         recyclerView.setVisibility(View.GONE);
 
-        orderTextView.setText("入库单号：" + rukuRecordInform.inboundId);
+        orderTextView.setText("入库单号：" + rukuRecordInform.inboundIdentifier);
         recyclerView_material.setAdapter(new RukuMaterialAdapter(root.getContext(), rukuRecordInform.itemList));
         recyclerView_material.setLayoutManager(new LinearLayoutManager(root.getContext()));
         frameLayout.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.GONE);
+        exportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                myIndex = index;
+                checkPermission();
+            }
+        });
     }
 
     private void showOrder() {
@@ -265,4 +294,123 @@ public class charukuFragment extends Fragment {
         emptyLayout.setVisibility(View.VISIBLE);
     }
 
+    private void exportExcel() {
+        List<RukuRecordItemInform> rukuRecordItemInformList = rukuRecordInforms.get(myIndex).itemList;
+        try {
+            // 创建excel xlsx格式
+            Workbook wb = new XSSFWorkbook();
+//            // 创建工作表
+            Sheet sheet = wb.createSheet();
+            String[] title = {"入库单号", "物料编码", "物资名称", "物资型号", "物资数量", "厂家名称", "收货人", "验收人", "入库项目","入库时间"};
+            //创建行对象
+            Row row = sheet.createRow(0);
+            // 设置有效数据的行数和列数
+            int colNum = title.length;
+            for (int i = 0; i < colNum; i++) {
+                sheet.setColumnWidth(i, 20 * 256);  // 每列20个字符宽
+                Cell cell1 = row.createCell(i);
+                //第一行
+                cell1.setCellValue(title[i]);
+            }
+            //导入数据
+            for (int rowNum = 0; rowNum < rukuRecordItemInformList.size(); rowNum++) {
+                // 之所以rowNum + 1 是因为要设置第二行单元格
+                row = sheet.createRow(rowNum + 1);
+                // 设置单元格显示宽度
+                row.setHeightInPoints(28f);
+                RukuRecordItemInform rukuRecordItemInform = rukuRecordItemInformList.get(rowNum);
+                for (int j = 0; j < title.length; j++) {
+                    Cell cell = row.createCell(j);
+                    switch (j) {
+                        case 0:
+                            cell.setCellValue(rukuRecordItemInform.id);
+                            break;
+                        case 1:
+                            cell.setCellValue(rukuRecordItemInform.materialIdentifier);
+                            break;
+                        case 2:
+                            cell.setCellValue(rukuRecordItemInform.materialName);
+                            break;
+                        case 3:
+                            cell.setCellValue(rukuRecordItemInform.materialModel);
+                            break;
+                        case 4:
+                            cell.setCellValue(rukuRecordItemInform.number);
+                            break;
+                        case 5:
+                            cell.setCellValue(rukuRecordItemInform.factoryName);
+                            break;
+                        case 6:
+                            cell.setCellValue(rukuRecordItemInform.receiver);
+                            break;
+                        case 7:
+                            cell.setCellValue(rukuRecordItemInform.checker);
+                            break;
+                        case 8:
+                            cell.setCellValue(rukuRecordItemInform.projectName);
+                            break;
+                        case 9:
+                            cell.setCellValue(rukuRecordItemInform.inboundTime);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            String mSDCardFolderPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/入库数据";
+            File dir = new File(mSDCardFolderPath);
+            //判断文件是否存在
+            if (!dir.isFile()) {
+                //不存在则创建
+                dir.mkdir();
+            }
+            File excel = new File(dir, convertTime(System.currentTimeMillis(), "yyyy-MM-dd-HH-mm-ss") + ".xlsx");
+            FileOutputStream fos = new FileOutputStream(excel);
+            wb.write(fos);
+            fos.flush();
+            fos.close();
+            final AlertDialog.Builder normalDialog =
+                    new AlertDialog.Builder(requireContext());
+            normalDialog.setTitle("导出入库单");
+            normalDialog.setMessage("导出成功！文件名：" + excel.getPath());
+            normalDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                }
+            });
+            normalDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    //时间戳转换字符串
+    public static String convertTime(long time, String patter) {
+        SimpleDateFormat sdf = new SimpleDateFormat(patter);
+        return sdf.format(new Date(time));
+    }
+
+    public void checkPermission() {
+        try {
+            String[] PERMISSIONS_STORAGE = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+            int permission = ActivityCompat.checkSelfPermission(requireContext(), "android.permission.WRITE_EXTERNAL_STORAGE");
+            if (permission != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(requireActivity(), PERMISSIONS_STORAGE, REQUEST_CODE);
+            } else {
+                exportExcel();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REQUEST_CODE) {
+            exportExcel();
+        } else {
+            Toast.makeText(requireContext(), "未获得文件权限", Toast.LENGTH_SHORT).show();
+        }
+    }
 }

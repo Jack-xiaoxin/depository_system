@@ -53,6 +53,7 @@ import com.example.depository_system.informs.RukuInform;
 import com.example.depository_system.informs.UserInform;
 import com.example.depository_system.service.ChukuService;
 import com.example.depository_system.service.DepositoryService;
+import com.example.depository_system.service.KucunService;
 import com.example.depository_system.service.MaterialService;
 import com.example.depository_system.service.RukuService;
 import com.example.depository_system.service.UserService;
@@ -186,7 +187,7 @@ public class chukuFragment extends Fragment {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     Set<String> set = new HashSet<>();
                     for(MaterialInform materialInform : materialInforms) {
-                        set.add(materialInform.materialId);
+                        set.add(materialInform.materialIdentifier);
                     }
                     if(set.size() == 0) {
                         set.add("空");
@@ -202,7 +203,7 @@ public class chukuFragment extends Fragment {
             public boolean onTouch(View view, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     Set<String> set = new HashSet<>();
-                    if(materialInforms == null) materialInforms = MaterialService.getMaterialList(null, null, null, null);
+                    if(materialInforms == null) materialInforms = MaterialService.getMaterialList(null, null, null, null, null);
                     for(MaterialInform materialInform : materialInforms) {
                         set.add(materialInform.materialName);
                     }
@@ -217,7 +218,7 @@ public class chukuFragment extends Fragment {
             public boolean onTouch(View view, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     Set<String> set = new HashSet<>();
-                    if(materialInforms == null) materialInforms = MaterialService.getMaterialList(null, null, null, null);
+                    if(materialInforms == null) materialInforms = MaterialService.getMaterialList(null, null, null, null, null);
                     for(MaterialInform materialInform : materialInforms) {
                         set.add(materialInform.materialModel);
                     }
@@ -232,7 +233,7 @@ public class chukuFragment extends Fragment {
             public boolean onTouch(View view, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     Set<String> set = new HashSet<>();
-                    if(materialInforms == null) materialInforms = MaterialService.getMaterialList(null, null, null, null);
+                    if(materialInforms == null) materialInforms = MaterialService.getMaterialList(null, null, null, null, null);
                     for(MaterialInform materialInform : materialInforms) {
                         set.add(materialInform.factoryName);
                     }
@@ -279,7 +280,7 @@ public class chukuFragment extends Fragment {
                     for(UserInform userInform : userInforms) {
                         set.add(userInform.userName);
                     }
-                    showListPopupWindow(set.toArray(new String[set.size()]), receiverNameEditText);
+                    showListPopupWindow(set.toArray(new String[set.size()]), projectMajorEditText);
                 }
                 return true;
             }
@@ -323,24 +324,32 @@ public class chukuFragment extends Fragment {
                             break;
                         }
                     }
-                    backChukuInform.materialId = materialIdentifierEditText.getText().toString();
+                    backChukuInform.materialIdentifier = materialIdentifierEditText.getText().toString();
                     backChukuInform.applyProjectName = projectNameEditText.getText().toString();
                     backChukuInform.applyDepartmentName = userOrganizationEditText.getText().toString();
                     backChukuInform.applier = receiverNameEditText.getText().toString();
                     backChukuInform.director = projectMajorEditText.getText().toString();
-                    backChukuInform.number = Integer.parseInt(materialNameEditText.getText().toString());
+                    backChukuInform.number = Integer.parseInt(materialNumEditText.getText().toString());
+                    backChukuInform.factoryName = factoryNamEditText.getText().toString();
+                    //设置materialId
+                    for(MaterialInform materialInform : materialInforms) {
+                        if(materialInform.materialIdentifier.equals(backChukuInform.materialIdentifier)
+                        && materialInform.factoryName.equals(backChukuInform.factoryName)) {
+                            backChukuInform.materialId = materialInform.materialId;
+                            break;
+                        }
+                    }
                     //检查数量够不够
-                    DataManagement.updateMaterial();
-                    for(KucunInform kucunInform : kucunInforms) {
-                        if(kucunInform.materialId.equals(backChukuInform.materialId)) {
-                            if(backChukuInform.number < kucunInform.kucunNumber) {
-                                showAlertDialog("库存不够，出库失败。当前库存数量：" + kucunInform.kucunNumber);
-                            } else {
-                                String result = ChukuService.action(backChukuInform);
-                                if(result.length() == 38) {
-                                    showAlertDialog("出库成功。出库后库存数量：" + (kucunInform.kucunNumber - backChukuInform.number));
-                                }
-                            }
+                    List<KucunInform> kucunInformList = KucunService.getKucunList(null, backChukuInform.materialId, backChukuInform.depotId);
+                    KucunInform kucunInform = kucunInformList.get(0);
+                    if(backChukuInform.number > kucunInform.kucunNumber) {
+                        showAlertDialog("库存不够, 当前库存数量：" + factoryNamEditText.getText() + ": " + kucunInform.kucunNumber);
+                    } else {
+                        String result = ChukuService.action(backChukuInform);
+                        if(result.length() == 38) {
+                            showAlertDialog("出库成功。出库后库存数量：" + factoryNamEditText.getText() + ": " + (kucunInform.kucunNumber - backChukuInform.number));
+                        } else {
+                            showAlertDialog("出问题啦，请联系开发者");
                         }
                     }
                 }
@@ -356,6 +365,7 @@ public class chukuFragment extends Fragment {
         listPopupWindow.setAdapter(new ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, list));
         listPopupWindow.setAnchorView(editText);
         listPopupWindow.setModal(true);
+        listPopupWindow.setHeight(10*20*3);
         listPopupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -363,10 +373,9 @@ public class chukuFragment extends Fragment {
                 editText.setText(list[i]);
                 if(editText.getId() == materialIdentifierEditText.getId()) {
                     for(MaterialInform materialInform : materialInforms) {
-                        if(materialInform.materialId == list[i]) {
+                        if(materialInform.materialIdentifier == list[i]) {
                             materialNameEditText.setText(materialInform.materialName);
                             materialTypeEditText.setText(materialInform.materialModel);
-                            factoryNamEditText.setText(materialInform.factoryName);
                         }
                     }
                 }
@@ -396,6 +405,7 @@ public class chukuFragment extends Fragment {
         factoryNamEditText.setText("");
         timeEditText.setText("");
         projectNameEditText.setText("");
+        projectMajorEditText.setText("");
         receiverNameEditText.setText("");
         userOrganizationEditText.setText("");
     }
@@ -545,7 +555,9 @@ public class chukuFragment extends Fragment {
         normalDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                setEditTextEmpty();
+                if(message.contains("成功")) {
+                    setEditTextEmpty();
+                }
             }
         });
         normalDialog.show();

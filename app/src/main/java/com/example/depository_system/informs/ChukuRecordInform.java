@@ -6,6 +6,8 @@ public class ChukuRecordInform {
 
     public String outboundId;
 
+    public String outboundIdentifier;
+
     public String applyDepartmentName;
 
     public String applyProjectName;

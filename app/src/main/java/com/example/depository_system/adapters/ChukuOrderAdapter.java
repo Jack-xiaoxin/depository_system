@@ -15,6 +15,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.depository_system.R;
+import com.example.depository_system.informs.ChukuRecordInform;
 import com.example.depository_system.informs.RukuInform;
 import com.example.depository_system.informs.RukuRecordInform;
 
@@ -28,18 +29,18 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 // 一个RecyclerViewd的适配器，用于显示入库单
-public class RukuOrderAdapter extends BaseRecycleAdapter{
+public class ChukuOrderAdapter extends BaseRecycleAdapter{
 
     private static final int TYPE_END = 1;
     private static final int TYPE_ITEM = 0;
     private static int TYPE = TYPE_ITEM;
-    private List<RukuRecordInform> mList;
+    private List<ChukuRecordInform> mList;
 
     private Context context;
 
     private Handler handler;
 
-    public RukuOrderAdapter(Context context, List<RukuRecordInform> list, Handler handler) {
+    public ChukuOrderAdapter(Context context, List<ChukuRecordInform> list, Handler handler) {
         this.context = context;
         this.mList = list;
         this.handler = handler;
@@ -47,7 +48,7 @@ public class RukuOrderAdapter extends BaseRecycleAdapter{
 
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if(viewType == TYPE_ITEM) {
-            return new ItemHolder(LayoutInflater.from(context).inflate(R.layout.item_ruku_order, parent, false));
+            return new ItemHolder(LayoutInflater.from(context).inflate(R.layout.item_chuku_order, parent, false));
         }
         return null;
     }
@@ -58,9 +59,10 @@ public class RukuOrderAdapter extends BaseRecycleAdapter{
             case TYPE_ITEM:
                 ItemHolder itemHolder = (ItemHolder) holder;
 //                itemHolder.imageView.setImageURI(Uri.parse("D:\\projects\\depository_system\\app\\src\\main\\res\\drawable\\alarm_on.png"));
-                itemHolder.factory_name.setText("厂家：" + mList.get(position).factoryName);
-                itemHolder.orderId.setText("入库单号：" + mList.get(position).inboundIdentifier);
-                String originaldate = mList.get(position).inboundDate;
+                itemHolder.department_name.setText("领用单位：" + mList.get(position).applyDepartmentName);
+                itemHolder.orderId.setText("出库单号：" + mList.get(position).outboundIdentifier);
+                itemHolder.project_name.setText("领用项目：" + mList.get(position).applyProjectName);
+                String originaldate = mList.get(position).outboundDate;
                 if(originaldate.length() != 10) {
                     SimpleDateFormat originalFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
                     try {
@@ -96,12 +98,14 @@ public class RukuOrderAdapter extends BaseRecycleAdapter{
     }
 
     class ItemHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.ruku_order_id_value)
+        @BindView(R.id.chuku_order_id_value)
         TextView orderId;
-        @BindView(R.id.ruku_factory_name)
-        TextView factory_name;
-        @BindView(R.id.ruku_time)
+        @BindView(R.id.chuku_department_name)
+        TextView department_name;
+        @BindView(R.id.chuku_time)
         TextView time;
+        @BindView(R.id.chuku_project)
+        TextView project_name;
 
         public ItemHolder(View itemView) {
             super(itemView);

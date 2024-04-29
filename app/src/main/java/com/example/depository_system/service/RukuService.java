@@ -25,9 +25,10 @@ public class RukuService {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("new_goods", rukuInform.isNew);
-            jsonObject.put("goods_id", rukuInform.materialIdentifer);
+            jsonObject.put("goods_id", rukuInform.materialId);
             jsonObject.put("goods_name", rukuInform.materialName);
             jsonObject.put("goods_model", rukuInform.materialModel);
+            jsonObject.put("goods_identifier", rukuInform.materialIdentifer);
             jsonObject.put("depository_name", rukuInform.depotName);
             jsonObject.put("depository_id", rukuInform.depotId);
             jsonObject.put("factory_name", rukuInform.factoryName);
@@ -35,6 +36,7 @@ public class RukuService {
             jsonObject.put("checker", rukuInform.acceptor);
             jsonObject.put("project_name", rukuInform.projectName);
             jsonObject.put("goods_number", rukuInform.number);
+            jsonObject.put("inbound_identifier", System.currentTimeMillis());
             jsonObject.put("images", rukuInform.images);
         } catch (JSONException e) {
             throw new RuntimeException(e);
@@ -67,6 +69,7 @@ public class RukuService {
                 RukuRecordInform rukuRecordInform = new RukuRecordInform();
 
                 rukuRecordInform.inboundId = singleObject.getString("inbound_id");
+                rukuRecordInform.inboundIdentifier = singleObject.getString("inbound_identifier");
                 rukuRecordInform.inboundDate = singleObject.getString("inbound_date");
                 rukuRecordInform.factoryName = singleObject.getString("factory_name");
 
@@ -84,10 +87,12 @@ public class RukuService {
                     itemInform.materialId = valueObject.getString("goods_id");
                     itemInform.materialName = valueObject.getString("goods_name");
                     itemInform.materialModel = valueObject.getString("goods_model");
+                    itemInform.materialIdentifier = valueObject.getString("goods_identifier");
                     itemInform.factoryName = valueObject.getString("factory_name");
                     itemInform.number = valueObject.getInt("goods_number");
                     itemInform.inboundTime = valueObject.getString("inbound_time");
                     itemInform.projectName = valueObject.getString("project_name");
+                    itemInform.depositoryId = valueObject.getString("depository_id");
 
 //                    JSONArray imageArray = valueObject.getJSONArray("images");
 //                    List<String> imgList = new ArrayList<>();

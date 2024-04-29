@@ -16,6 +16,7 @@ public class MaterialService {
             String materialId,
             String materialName,
             String materialModel,
+            String materialIdentifier,
             String factoryName
     ) {
         List<MaterialInform> materialInforms = new ArrayList<>();
@@ -29,6 +30,9 @@ public class MaterialService {
             }
             if (materialModel != null && !materialModel.isEmpty()) {
                 jsonObject.put("goods_model", materialModel);
+            }
+            if (materialIdentifier != null && !materialIdentifier.isEmpty()) {
+                jsonObject.put("goods_identifier", materialIdentifier);
             }
             if (factoryName != null && !factoryName.isEmpty()) {
                 jsonObject.put("factory_name", factoryName);
@@ -48,6 +52,7 @@ public class MaterialService {
                 materialInform.materialId = singleObject.getString("goods_id");
                 materialInform.materialName = singleObject.getString("goods_name");
                 materialInform.materialModel = singleObject.getString("goods_model");
+                materialInform.materialIdentifier = singleObject.getString("goods_identifier");
                 materialInform.factoryName = singleObject.getString("factory_name");
 
                 materialInforms.add(materialInform);

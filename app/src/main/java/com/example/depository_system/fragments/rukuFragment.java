@@ -21,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -169,7 +170,7 @@ public class rukuFragment extends Fragment {
         if(depositoryInforms == null)
             depositoryInforms = DepositoryService.getDepostList(null, null);
         if(materialInforms == null)
-            materialInforms = MaterialService.getMaterialList(null, null, null, null);
+            materialInforms = MaterialService.getMaterialList(null, null, null, null, null);
 
         photoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -203,9 +204,9 @@ public class rukuFragment extends Fragment {
             public boolean onTouch(View view, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     Set<String> set = new HashSet<>();
-                    if(materialInforms == null) materialInforms = MaterialService.getMaterialList(null, null, null, null);
+                    if(materialInforms == null) materialInforms = MaterialService.getMaterialList(null, null, null, null, null);
                     for(MaterialInform materialInform : materialInforms) {
-                        set.add(materialInform.materialId);
+                        set.add(materialInform.materialIdentifier);
                     }
                     showListPopupWindow(set.toArray(new String[set.size()]), materialIdentifierEditText);
                 }
@@ -218,7 +219,7 @@ public class rukuFragment extends Fragment {
             public boolean onTouch(View view, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     Set<String> set = new HashSet<>();
-                    if(materialInforms == null) materialInforms = MaterialService.getMaterialList(null, null, null, null);
+                    if(materialInforms == null) materialInforms = MaterialService.getMaterialList(null, null, null, null, null);
                     for(MaterialInform materialInform : materialInforms) {
                         set.add(materialInform.materialName);
                     }
@@ -233,7 +234,7 @@ public class rukuFragment extends Fragment {
             public boolean onTouch(View view, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     Set<String> set = new HashSet<>();
-                    if(materialInforms == null) materialInforms = MaterialService.getMaterialList(null, null, null, null);
+                    if(materialInforms == null) materialInforms = MaterialService.getMaterialList(null, null, null, null, null);
                     for(MaterialInform materialInform : materialInforms) {
                         set.add(materialInform.materialModel);
                     }
@@ -248,7 +249,7 @@ public class rukuFragment extends Fragment {
             public boolean onTouch(View view, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     Set<String> set = new HashSet<>();
-                    if(materialInforms == null) materialInforms = MaterialService.getMaterialList(null, null, null, null);
+                    if(materialInforms == null) materialInforms = MaterialService.getMaterialList(null, null, null, null, null);
                     for(MaterialInform materialInform : materialInforms) {
                         set.add(materialInform.factoryName);
                     }
@@ -358,11 +359,13 @@ public class rukuFragment extends Fragment {
                                         depositoryInforms = DepositoryService.getDepostList(null, null);
                                         boolean isNew = true;
                                         for (MaterialInform materialInform : materialInforms) {
-                                            if (materialInform.materialId.equals(backRukuInform.materialIdentifer)
+                                            if (materialInform.materialIdentifier.equals(backRukuInform.materialIdentifer)
                                                     && materialInform.materialName.equals(backRukuInform.materialName)
                                                     && materialInform.materialModel.equals(backRukuInform.materialModel)
-                                                    && materialInform.factoryName.equals(backRukuInform.factoryName))
+                                                    && materialInform.factoryName.equals(backRukuInform.factoryName)) {
                                                 isNew = false;
+                                                backRukuInform.materialId = materialInform.materialId;
+                                            }
                                         }
                                         backRukuInform.isNew = isNew;
                                         result[0] = RukuService.action(backRukuInform);
@@ -371,11 +374,14 @@ public class rukuFragment extends Fragment {
                     } else {
                         boolean isNew = true;
                         for(MaterialInform materialInform: materialInforms) {
-                            if(materialInform.materialId.equals(backRukuInform.materialIdentifer)
+                            if(materialInform.materialIdentifier.equals(backRukuInform.materialIdentifer)
                                     && materialInform.materialName.equals(backRukuInform.materialName)
                                     && materialInform.materialModel.equals(backRukuInform.materialModel)
-                                    && materialInform.factoryName.equals(backRukuInform.factoryName))
+                                    && materialInform.factoryName.equals(backRukuInform.factoryName)) {
                                 isNew = false;
+                                backRukuInform.materialId = materialInform.materialId;
+                            }
+
                         }
                         backRukuInform.isNew = isNew;
                         result[0] = RukuService.action(backRukuInform);
@@ -556,6 +562,7 @@ public class rukuFragment extends Fragment {
         listPopupWindow.setAdapter(new ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, list));
         listPopupWindow.setAnchorView(editText);
         listPopupWindow.setModal(true);
+        listPopupWindow.setHeight(10*20*3);
         listPopupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -563,10 +570,9 @@ public class rukuFragment extends Fragment {
                 editText.setText(list[i]);
                 if(editText.getId() == R.id.material_identifier) {
                     for(MaterialInform materialInform : materialInforms) {
-                        if(materialInform.materialId == list[i]) {
+                        if(materialInform.materialIdentifier == list[i]) {
                             materialNameEditText.setText(materialInform.materialName);
                             materialTypeEditText.setText(materialInform.materialModel);
-                            factoryNameEditText.setText(materialInform.factoryName);
                         }
                     }
                 }
@@ -587,6 +593,13 @@ public class rukuFragment extends Fragment {
         projectNameEditText.setText("");
         receiverEditText.setText("");
         acceptorEditText.setText("");
+        for(int i = 1; i <= 5; i++ ) {
+            ImageView imageView = getImageViewFromCount(i);
+            imageView.setImageBitmap(null);
+        }
+        for(int i = 1; i <= 5; i++) {
+            ImageButton imgBtn = getImageButtonFromCount(i);
+            imgBtn.setVisibility(View.GONE);
+        }
     }
-
 }

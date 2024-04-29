@@ -1,71 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/item_card"
+    android:layout_height="wrap_content"
+    android:background="@drawable/item_ruku_record_bg"
+    android:clickable="true"
+    android:gravity="center"
     android:layout_marginLeft="10dp"
     android:layout_marginTop="10dp"
     android:layout_marginRight="10dp"
-    android:background="#FFFFFFFF"
-    android:clickable="true"
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp"
     android:orientation="vertical">
-
-    <ImageView
-        android:id="@+id/ruku_image"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginTop="10dp"/>
-
-    <TextView
-        android:id="@+id/ruku_order_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/ruku_image"
-        android:layout_marginLeft="15dp"
-        android:layout_toEndOf="@+id/ruku_image"
-        android:layout_toRightOf="@+id/ruku_image"
-        android:text="入库单号:"
-        android:textColor="@color/black"
-        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/ruku_order_id_value"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/ruku_order_id"
+        android:layout_marginBottom="5dp"
         android:layout_marginLeft="15dp"
-        android:layout_toEndOf="@+id/ruku_image"
-        android:layout_toRightOf="@+id/ruku_image"
-        android:text="XXXX XXXX XXXX XXXX"
-        android:textColor="@color/black"
+        android:text="订单编号：XXXX XXXX XXXX XXXX"
+        android:textColor="@color/white"
         android:textSize="14sp" />
 
-    <TextView
-        android:id="@+id/ruku_factory_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/ruku_order_id_value"
-        android:layout_marginLeft="15dp"
-        android:layout_toEndOf="@+id/ruku_image"
-        android:layout_toRightOf="@+id/ruku_image"
-        android:text="厂家：XXXXXXXX"
-        android:textColor="@color/black"
-        android:textSize="14sp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_marginLeft="15dp">
+        <TextView
+            android:id="@+id/ruku_factory_name"
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/ruku_order_id_value"
+            android:text="厂家：XXXXXXXX"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+        <TextView
+            android:id="@+id/ruku_time"
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="wrap_content"
+            android:text="时间：XXXXXX"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+    </LinearLayout>
 
 
-    <TextView
-        android:id="@+id/ruku_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@id/ruku_factory_name"
-        android:layout_alignTop="@id/ruku_factory_name"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="21dp"
-        android:background="@drawable/text_card_bg"
-        android:paddingLeft="11dp"
-        android:paddingRight="11dp"
-        android:text="入库时间：XXXXXX"
-        android:textColor="@color/black"
-        android:textSize="14sp" />
-
-</RelativeLayout>
+</LinearLayout>

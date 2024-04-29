@@ -8,7 +8,7 @@
 
 
     <!-- 填充颜色 -->
-    <solid android:color="@color/colorGreen"/>
+    <solid android:color="@color/colorPink"/>
     <!-- 圆角 -->
     <corners android:radius="5dp" />
 

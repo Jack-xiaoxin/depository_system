@@ -11,9 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class KucunService {
-    ServiceBase serviceBase = new ServiceBase();
 
-    public List<KucunInform> getKucunList(
+    public static List<KucunInform> getKucunList(
             String kucunId,
             String materialId,
             String depotId
@@ -35,7 +34,7 @@ public class KucunService {
             throw new RuntimeException(e);
         }
 
-        String bodyString = serviceBase.HttpBase("/getStoredInfoList", "POST", jsonObject);
+        String bodyString = ServiceBase.HttpBase("/getStoredInfoList", "POST", jsonObject);
         try {
             JSONObject bodyDict = new JSONObject(bodyString);
             JSONArray dataArray = bodyDict.getJSONArray("data");
@@ -60,11 +59,11 @@ public class KucunService {
         return null;
     }
 
-    public List<KucunInform> getKucunAlarmList() {
+    public static List<KucunInform> getKucunAlarmList() {
         List<KucunInform> kucunInforms = new ArrayList<>();
         JSONObject jsonObject = new JSONObject();
 
-        String bodyString = serviceBase.HttpBase("/getAlarmedInfoList", "POST", jsonObject);
+        String bodyString = ServiceBase.HttpBase("/getAlarmedInfoList", "POST", jsonObject);
         try {
             JSONObject bodyDict = new JSONObject(bodyString);
             JSONArray dataArray = bodyDict.getJSONArray("data");

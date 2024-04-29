@@ -40,7 +40,7 @@
                 android:background="@color/colorGrey"
                 style="?buttonBarButtonStyle"
                 android:layout_weight="1"></Button>
-            <ToggleButton
+            <Button
                 android:id="@+id/time_btn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
                 android:text="时间: 无"
                 android:textColor="@color/black"
                 style="?buttonBarButtonStyle"
-                android:layout_weight="1"></ToggleButton>
+                android:layout_weight="1"></Button>
         </LinearLayout>
 
     </FrameLayout>
@@ -83,14 +83,17 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:layout_marginLeft="10dp">
+                android:background="@color/colorOrange"
+                android:gravity="center_vertical">
                 <TextView
-                    android:id="@+id/order_id"
-                    android:layout_width="match_parent"
+                    android:id="@+id/inbound_identifier"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="14dp"
                     android:text="123"
+                    android:textColor="@color/white"
+                    android:layout_toLeftOf="@+id/export"
+                    android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"></TextView>
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/export"

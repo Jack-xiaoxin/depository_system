@@ -10,6 +10,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.depository_system.informs.UserInform;
+
 public class MainActivity extends AppCompatActivity {
 
     Button loginBtn;
@@ -43,13 +45,16 @@ public class MainActivity extends AppCompatActivity {
         if(username == null || password == null) {
             Toast.makeText(this, "用户名或密码为空", Toast.LENGTH_SHORT).show();
             return false;
-        } else if((username.equals("test") && password.equals("test")) || (username.equals("") && password.equals(""))) {
-            Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show();
-            DataManagement.updateAll();
-            return true;
-        } else {
-            Toast.makeText(this, "用户名或密码不对", Toast.LENGTH_SHORT).show();
-            return false;
         }
+        DataManagement.updateUserInfo();
+        for(UserInform userInform : DataManagement.userInforms) {
+            if(userInform.phoneNumber.equals(username) && userInform.password.equals(password)) {
+                Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show();
+                DataManagement.updateAll();
+                return true;
+            }
+        }
+        Toast.makeText(this, "用户名或密码不对", Toast.LENGTH_SHORT).show();
+        return false;
     }
 }

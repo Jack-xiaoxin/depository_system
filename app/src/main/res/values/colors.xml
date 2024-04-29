@@ -11,8 +11,12 @@
     <color name="colorGrey">#b7b5c3</color>
     <color name="colorPrimary">#3f3c51</color>
     <color name="colorTextWhite">#fff</color>
+    <color name="colorPink">#FFC0CB</color>
+    <color name="colorBlue">#0000FF</color>
+    <color name="colorOrange">#FFA500</color>
     <color name="colorTextCardAddEdittext">#837f8c</color>
     <color name="colorTextHint">#b7b5c3</color>
+    <color name="colorKucunText">#FFFFFF</color>
     <!--    主背景颜色   -->
     <color name="mainBg">#fbf9ff</color>
     <!--Lin或者Rel条目文字背景-->

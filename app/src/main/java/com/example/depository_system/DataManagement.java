@@ -6,6 +6,7 @@ import com.example.depository_system.informs.MaterialInform;
 import com.example.depository_system.informs.RukuRecordInform;
 import com.example.depository_system.informs.UserInform;
 import com.example.depository_system.service.DepositoryService;
+import com.example.depository_system.service.KucunService;
 import com.example.depository_system.service.MaterialService;
 import com.example.depository_system.service.UserService;
 
@@ -17,7 +18,6 @@ public class DataManagement {
     public static List<DepositoryInform> depositoryInforms = new ArrayList<>();
     public static List<MaterialInform> materialInforms = new ArrayList<>();
     public static List<UserInform> userInforms = new ArrayList<>();
-
     public static List<KucunInform> kucunInforms = new ArrayList<>();
 
     public static List<DepositoryInform> updateDepository() {
@@ -26,7 +26,7 @@ public class DataManagement {
     }
 
     public static List<MaterialInform> updateMaterial() {
-        materialInforms = MaterialService.getMaterialList(null, null, null, null);
+        materialInforms = MaterialService.getMaterialList(null, null, null, null, null);
         return materialInforms;
     }
 
@@ -35,9 +35,15 @@ public class DataManagement {
         return userInforms;
     }
 
+    public static List<KucunInform> updateKucunInfo() {
+        kucunInforms = KucunService.getKucunList(null, null, null);
+        return kucunInforms;
+    }
+
     public static void updateAll() {
         updateDepository();
         updateMaterial();
         updateUserInfo();
+        updateKucunInfo();
     }
 }

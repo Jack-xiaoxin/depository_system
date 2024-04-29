@@ -12,6 +12,8 @@ public class ChukuRecordItemInform {
 
     public String materialModel;
 
+    public String materialIdentifier;
+
     public String factoryName;
 
     public String applier;
@@ -19,6 +21,12 @@ public class ChukuRecordItemInform {
     public String outboundTime;
 
     public Integer number;
+
+    public String projectName;
+
+    public String projectMajor;
+
+    public String departmentName;
 
     public List<String> images;
 }

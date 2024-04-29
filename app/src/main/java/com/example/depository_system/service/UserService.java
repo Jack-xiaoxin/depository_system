@@ -37,7 +37,7 @@ public class UserService {
             throw new RuntimeException(e);
         }
 
-        String bodyString = ServiceBase.HttpBase("/getDepositList", "POST", jsonObject);
+        String bodyString = ServiceBase.HttpBase("/getUserList", "POST", jsonObject);
         try {
             JSONObject bodyDict = new JSONObject(bodyString);
             JSONArray dataArray = bodyDict.getJSONArray("data");
@@ -49,6 +49,7 @@ public class UserService {
                 userInform.userName = singleObject.getString("user_name");
                 userInform.phoneNumber = singleObject.getString("phone_number");
                 userInform.category = singleObject.getInt("category");
+                userInform.password = singleObject.getString("password");
 
                 userInforms.add(userInform);
             }

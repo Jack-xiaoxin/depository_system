@@ -11,32 +11,31 @@
     android:orientation="vertical">
 
     <ImageView
-        android:id="@+id/ruku_image"
+        android:id="@+id/chuku_image"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginLeft="25dp"
         android:layout_marginTop="10dp"/>
 
     <TextView
-        android:id="@+id/ruku_order_material_name"
+        android:id="@+id/chuku_order_material_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/ruku_image"
+        android:layout_alignTop="@+id/chuku_image"
         android:layout_marginLeft="15dp"
-        android:layout_toEndOf="@+id/ruku_image"
-        android:layout_toRightOf="@+id/ruku_image"
+        android:layout_toEndOf="@+id/chuku_image"
+        android:layout_toRightOf="@+id/chuku_image"
         android:text="物资名称：XXXX"
         android:textColor="@color/white"
         android:textSize="14sp" />
 
     <TextView
-        android:id="@+id/ruku_order_material_identifier"
+        android:id="@+id/chuku_order_material_identifier"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/ruku_order_material_name"
-        android:layout_alignRight="@id/ruku_order_material_name"
+        android:layout_alignTop="@id/chuku_order_material_name"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="21dp"
+        android:layout_marginRight="11dp"
         android:paddingLeft="11dp"
         android:paddingRight="11dp"
         android:text="物料编码：XXXXXXXXXXX"
@@ -44,111 +43,101 @@
         android:textSize="14sp" />
 
     <TextView
-        android:id="@+id/ruku_order_material_type"
+        android:id="@+id/chuku_order_material_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/ruku_order_material_name"
+        android:layout_below="@+id/chuku_order_material_name"
         android:layout_marginLeft="15dp"
-        android:layout_toEndOf="@+id/ruku_image"
-        android:layout_toRightOf="@+id/ruku_image"
-        android:text="物资型号：XXXX XXXX XXXX XXXX"
+        android:layout_toEndOf="@+id/chuku_image"
+        android:layout_toRightOf="@+id/chuku_image"
+        android:text="物资型号：XXXXXX"
         android:textColor="@color/white"
         android:textSize="14sp" />
 
     <TextView
-        android:id="@+id/ruku_order_material_num"
+        android:id="@+id/chuku_order_material_factory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/ruku_order_material_type"
-        android:layout_alignRight="@id/ruku_order_material_type"
+        android:layout_alignTop="@+id/chuku_order_material_type"
         android:layout_alignParentRight="true"
         android:layout_marginRight="21dp"
+        android:text="厂家：XXXX XXXX XXXXXXX"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/chuku_department_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/chuku_order_material_type"
+        android:layout_marginLeft="15dp"
+        android:layout_toEndOf="@+id/chuku_image"
+        android:layout_toRightOf="@+id/chuku_image"
+        android:text="领用单位：XXXXXXXX"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/chuku_accepter_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@id/chuku_department_name"
+        android:layout_marginRight="11dp"
         android:paddingLeft="11dp"
         android:paddingRight="11dp"
+        android:text="领用人：XXXXXX"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/chuku_project_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/chuku_department_name"
+        android:layout_marginLeft="15dp"
+        android:layout_toEndOf="@+id/chuku_image"
+        android:layout_toRightOf="@+id/chuku_image"
+        android:text="领用项目：XXXXXXXX"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/chuku_project_major"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/chuku_department_name"
+        android:layout_marginRight="11dp"
+        android:paddingLeft="11dp"
+        android:paddingRight="11dp"
+        android:layout_alignParentRight="true"
+        android:text="项目负责人：XXXXXXXX"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/chuku_order_material_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/chuku_project_name"
+        android:layout_marginLeft="15dp"
+        android:layout_toEndOf="@+id/chuku_image"
+        android:layout_toRightOf="@+id/chuku_image"
         android:text="物资数量：XX"
         android:textColor="@color/white"
         android:textSize="14sp" />
 
     <TextView
-        android:id="@+id/ruku_factory_name"
+        android:id="@+id/chuku_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/ruku_order_material_type"
-        android:layout_marginLeft="15dp"
-        android:layout_toEndOf="@+id/ruku_image"
-        android:layout_toRightOf="@+id/ruku_image"
-        android:text="厂家：XXXXXXXX"
-        android:textColor="@color/white"
-        android:textSize="14sp" />
-
-
-    <TextView
-        android:id="@+id/ruku_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@id/ruku_factory_name"
-        android:layout_alignTop="@id/ruku_factory_name"
+        android:layout_alignTop="@id/chuku_order_material_num"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="21dp"
+        android:layout_marginRight="11dp"
         android:paddingLeft="11dp"
         android:paddingRight="11dp"
-        android:text="入库时间：XXXXXX"
+        android:text="出库时间：XXXXXX"
         android:textColor="@color/white"
         android:textSize="14sp" />
-
-    <TextView
-        android:id="@+id/ruku_receiver_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/ruku_factory_name"
-        android:layout_marginLeft="15dp"
-        android:layout_toEndOf="@+id/ruku_image"
-        android:layout_toRightOf="@+id/ruku_image"
-        android:text="收货人：XXXXXXXX"
-        android:textColor="@color/white"
-        android:textSize="14sp" />
-
-
-    <TextView
-        android:id="@+id/ruku_accepter_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@id/ruku_receiver_name"
-        android:layout_alignTop="@id/ruku_receiver_name"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="21dp"
-        android:paddingLeft="11dp"
-        android:paddingRight="11dp"
-        android:text="验收人：XXXXXX"
-        android:textColor="@color/white"
-        android:textSize="14sp" />
-
-    <TextView
-        android:id="@+id/ruku_depository_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/ruku_receiver_name"
-        android:layout_marginLeft="15dp"
-        android:layout_toEndOf="@+id/ruku_image"
-        android:layout_toRightOf="@+id/ruku_image"
-        android:text="仓库：XXXXXXXX"
-        android:textColor="@color/white"
-        android:textSize="14sp" />
-
-
-    <TextView
-        android:id="@+id/ruku_project"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@id/ruku_depository_name"
-        android:layout_alignTop="@id/ruku_depository_name"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="21dp"
-        android:paddingLeft="11dp"
-        android:paddingRight="11dp"
-        android:text="入库项目：XXXXXX"
-        android:textColor="@color/white"
-        android:textSize="14sp" />
-
 
 </RelativeLayout>

@@ -10,6 +10,8 @@ public class RukuInform {
 
     public String materialIdentifer;
 
+    public String materialId;
+
     public String factoryName;
 
     public String time;
@@ -29,6 +31,8 @@ public class RukuInform {
     public String materialName;
 
     public String materialModel;
+
+    public String inboundIdentifier;
 
     public String depotId;
 

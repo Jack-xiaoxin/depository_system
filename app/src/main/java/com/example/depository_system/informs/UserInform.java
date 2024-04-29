@@ -10,4 +10,6 @@ public class UserInform {
 
     public Integer category;
 
+    public String password;
+
 }

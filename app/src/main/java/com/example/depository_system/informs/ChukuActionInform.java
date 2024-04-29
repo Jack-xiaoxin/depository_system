@@ -9,6 +9,10 @@ public class ChukuActionInform {
 
     public String materialId;
 
+    public String materialIdentifier;
+
+    public String factoryName;
+
     public String applyDepartmentName;
 
     public String applier;
@@ -18,6 +22,8 @@ public class ChukuActionInform {
     public String director;
 
     public Integer number;
+
+    public String outboundIdentifier;
 
     public List<String> images;
 }
