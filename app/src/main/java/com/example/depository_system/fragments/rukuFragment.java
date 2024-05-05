@@ -14,6 +14,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.text.Layout;
 import android.util.Log;
@@ -38,6 +39,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
+import com.example.depository_system.DataManagement;
 import com.example.depository_system.MainActivity;
 import com.example.depository_system.MainInterface;
 import com.example.depository_system.R;
@@ -251,6 +253,18 @@ public class rukuFragment extends Fragment {
                     Set<String> set = new HashSet<>();
                     if(materialInforms == null) materialInforms = MaterialService.getMaterialList(null, null, null, null, null);
                     for(MaterialInform materialInform : materialInforms) {
+                        if(!materialIdentifierEditText.getText().toString().isEmpty()) {
+                            String str = materialIdentifierEditText.getText().toString();
+                            if(!materialInform.materialIdentifier.equals(str)) continue;
+                        }
+                        if(!materialNameEditText.getText().toString().isEmpty()) {
+                            String str = materialNameEditText.getText().toString();
+                            if(!materialInform.materialName.equals(str)) continue;
+                        }
+                        if(!materialTypeEditText.getText().toString().isEmpty()) {
+                            String str = materialTypeEditText.getText().toString();
+                            if(!materialInform.materialModel.equals(str)) continue;
+                        }
                         set.add(materialInform.factoryName);
                     }
                     showListPopupWindow(set.toArray(new String[set.size()]), factoryNameEditText);
@@ -355,6 +369,7 @@ public class rukuFragment extends Fragment {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         DepositoryInform depositoryInform = DepositoryService.insertDepot(backRukuInform.depotName);
+                                        DataManagement.depositoryInforms = DepositoryService.getDepostList(null, null);
                                         backRukuInform.depotId = depositoryInform.depotId;
                                         depositoryInforms = DepositoryService.getDepostList(null, null);
                                         boolean isNew = true;
@@ -386,6 +401,7 @@ public class rukuFragment extends Fragment {
                         backRukuInform.isNew = isNew;
                         result[0] = RukuService.action(backRukuInform);
                     }
+                    DataManagement.updateAll();
                     if(result[0].length() == 38) {
                         final AlertDialog.Builder normalDialog =
                                 new AlertDialog.Builder(requireContext());

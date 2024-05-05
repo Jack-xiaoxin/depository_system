@@ -3,6 +3,7 @@ package com.example.depository_system.fragments;
 import static com.example.depository_system.DataManagement.depositoryInforms;
 import static com.example.depository_system.DataManagement.kucunInforms;
 import static com.example.depository_system.DataManagement.materialInforms;
+import static com.example.depository_system.DataManagement.updateAll;
 import static com.example.depository_system.DataManagement.userInforms;
 
 import android.Manifest;
@@ -235,6 +236,18 @@ public class chukuFragment extends Fragment {
                     Set<String> set = new HashSet<>();
                     if(materialInforms == null) materialInforms = MaterialService.getMaterialList(null, null, null, null, null);
                     for(MaterialInform materialInform : materialInforms) {
+                        if(!materialIdentifierEditText.getText().toString().isEmpty()) {
+                            String str = materialIdentifierEditText.getText().toString();
+                            if(!materialInform.materialIdentifier.equals(str)) continue;
+                        }
+                        if(!materialNameEditText.getText().toString().isEmpty()) {
+                            String str = materialNameEditText.getText().toString();
+                            if(!materialInform.materialName.equals(str)) continue;
+                        }
+                        if(!materialTypeEditText.getText().toString().isEmpty()) {
+                            String str = materialTypeEditText.getText().toString();
+                            if(!materialInform.materialModel.equals(str)) continue;
+                        }
                         set.add(materialInform.factoryName);
                     }
                     showListPopupWindow(set.toArray(new String[set.size()]), factoryNamEditText);
@@ -347,6 +360,7 @@ public class chukuFragment extends Fragment {
                     } else {
                         String result = ChukuService.action(backChukuInform);
                         if(result.length() == 38) {
+                            updateAll();
                             showAlertDialog("出库成功。出库后库存数量：" + factoryNamEditText.getText() + ": " + (kucunInform.kucunNumber - backChukuInform.number));
                         } else {
                             showAlertDialog("出问题啦，请联系开发者");
