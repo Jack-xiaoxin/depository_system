@@ -36,6 +36,7 @@ import com.example.depository_system.adapters.RukuMaterialAdapter;
 import com.example.depository_system.adapters.RukuOrderAdapter;
 import com.example.depository_system.informs.ChukuRecordInform;
 import com.example.depository_system.informs.ChukuRecordItemInform;
+import com.example.depository_system.informs.DepositoryInform;
 import com.example.depository_system.informs.KucunInform;
 import com.example.depository_system.informs.MaterialInform;
 import com.example.depository_system.informs.RukuRecordItemInform;
@@ -341,13 +342,14 @@ public class chachukuFragment extends Fragment {
     }
 
     private void exportExcel() {
-        List<ChukuRecordItemInform> chukuRecordItemInformList = chukuRecordInforms.get(myIndex).itemList;
+        ChukuRecordInform chukuRecordInform = chukuRecordInforms.get(myIndex);
+        List<ChukuRecordItemInform> chukuRecordItemInformList = chukuRecordInform.itemList;
         try {
             // 创建excel xlsx格式
             Workbook wb = new XSSFWorkbook();
 //            // 创建工作表
             Sheet sheet = wb.createSheet();
-            String[] title = {"出库单号", "物料编码", "物资名称", "物资型号", "物资数量", "厂家名称", "领用人", "领用项目", "项目负责人","出库时间"};
+            String[] title = {"出库单号", "仓库", "物料编码", "物资名称", "物资型号", "物资数量", "厂家名称", "领用人", "领用项目", "项目负责人","出库时间"};
             //创建行对象
             Row row = sheet.createRow(0);
             // 设置有效数据的行数和列数
@@ -369,33 +371,40 @@ public class chachukuFragment extends Fragment {
                     Cell cell = row.createCell(j);
                     switch (j) {
                         case 0:
-                            cell.setCellValue(chukuRecordItemInform.id);
+                            cell.setCellValue(chukuRecordInform.outboundIdentifier);
                             break;
                         case 1:
-                            cell.setCellValue(chukuRecordItemInform.materialIdentifier);
+                            for(DepositoryInform depositoryInform : DataManagement.depositoryInforms) {
+                                if(chukuRecordItemInform.depository_id.equals(depositoryInform.depotId)){
+                                    cell.setCellValue(depositoryInform.depotName);
+                                }
+                            }
                             break;
                         case 2:
-                            cell.setCellValue(chukuRecordItemInform.materialName);
+                            cell.setCellValue(chukuRecordItemInform.materialIdentifier);
                             break;
                         case 3:
-                            cell.setCellValue(chukuRecordItemInform.materialModel);
+                            cell.setCellValue(chukuRecordItemInform.materialName);
                             break;
                         case 4:
-                            cell.setCellValue(chukuRecordItemInform.number);
+                            cell.setCellValue(chukuRecordItemInform.materialModel);
                             break;
                         case 5:
-                            cell.setCellValue(chukuRecordItemInform.factoryName);
+                            cell.setCellValue(chukuRecordItemInform.number);
                             break;
                         case 6:
-                            cell.setCellValue(chukuRecordItemInform.applier);
+                            cell.setCellValue(chukuRecordItemInform.factoryName);
                             break;
                         case 7:
-                            cell.setCellValue(chukuRecordItemInform.projectName);
+                            cell.setCellValue(chukuRecordItemInform.applier);
                             break;
                         case 8:
-                            cell.setCellValue(chukuRecordItemInform.projectMajor);
+                            cell.setCellValue(chukuRecordItemInform.projectName);
                             break;
                         case 9:
+                            cell.setCellValue(chukuRecordItemInform.projectMajor);
+                            break;
+                        case 10:
                             cell.setCellValue(chukuRecordItemInform.outboundTime);
                             break;
                         default:

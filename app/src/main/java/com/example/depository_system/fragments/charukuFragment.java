@@ -34,6 +34,7 @@ import com.example.depository_system.DataManagement;
 import com.example.depository_system.R;
 import com.example.depository_system.adapters.RukuMaterialAdapter;
 import com.example.depository_system.adapters.RukuOrderAdapter;
+import com.example.depository_system.informs.DepositoryInform;
 import com.example.depository_system.informs.MaterialInform;
 import com.example.depository_system.informs.RukuRecordInform;
 import com.example.depository_system.informs.RukuRecordItemInform;
@@ -295,13 +296,14 @@ public class charukuFragment extends Fragment {
     }
 
     private void exportExcel() {
-        List<RukuRecordItemInform> rukuRecordItemInformList = rukuRecordInforms.get(myIndex).itemList;
+        RukuRecordInform rukuRecordInform = rukuRecordInforms.get(myIndex);
+        List<RukuRecordItemInform> rukuRecordItemInformList = rukuRecordInform.itemList;
         try {
             // 创建excel xlsx格式
             Workbook wb = new XSSFWorkbook();
 //            // 创建工作表
             Sheet sheet = wb.createSheet();
-            String[] title = {"入库单号", "物料编码", "物资名称", "物资型号", "物资数量", "厂家名称", "收货人", "验收人", "入库项目","入库时间"};
+            String[] title = {"入库单号", "仓库", "物料编码", "物资名称", "物资型号", "物资数量", "厂家名称", "收货人", "验收人", "入库项目","入库时间"};
             //创建行对象
             Row row = sheet.createRow(0);
             // 设置有效数据的行数和列数
@@ -322,34 +324,41 @@ public class charukuFragment extends Fragment {
                 for (int j = 0; j < title.length; j++) {
                     Cell cell = row.createCell(j);
                     switch (j) {
-                        case 0:
-                            cell.setCellValue(rukuRecordItemInform.id);
+                        case 0:  //入库单号
+                            cell.setCellValue(rukuRecordInform.inboundIdentifier);
                             break;
-                        case 1:
+                        case 1:  //仓库
+                            for(DepositoryInform depositoryInform : DataManagement.depositoryInforms) {
+                                if(rukuRecordItemInform.depositoryId.equals(depositoryInform.depotId)) {
+                                    cell.setCellValue(depositoryInform.depotName);
+                                }
+                            }
+                            break;
+                        case 2:  //物料编码
                             cell.setCellValue(rukuRecordItemInform.materialIdentifier);
                             break;
-                        case 2:
+                        case 3:  //物料名称
                             cell.setCellValue(rukuRecordItemInform.materialName);
                             break;
-                        case 3:
+                        case 4:  //物料类型
                             cell.setCellValue(rukuRecordItemInform.materialModel);
                             break;
-                        case 4:
+                        case 5:  //物资数量
                             cell.setCellValue(rukuRecordItemInform.number);
                             break;
-                        case 5:
+                        case 6:  //厂家
                             cell.setCellValue(rukuRecordItemInform.factoryName);
                             break;
-                        case 6:
+                        case 7:  //收货人
                             cell.setCellValue(rukuRecordItemInform.receiver);
                             break;
-                        case 7:
+                        case 8:  //验收人
                             cell.setCellValue(rukuRecordItemInform.checker);
                             break;
-                        case 8:
+                        case 9:  //入库项目
                             cell.setCellValue(rukuRecordItemInform.projectName);
                             break;
-                        case 9:
+                        case 10:  //入库时间
                             cell.setCellValue(rukuRecordItemInform.inboundTime);
                             break;
                         default:

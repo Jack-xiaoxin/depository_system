@@ -98,6 +98,7 @@ public class ChukuService {
                     itemInform.departmentName = valueObject.getString("apply_department_name");
                     itemInform.projectMajor = valueObject.getString("director");
                     itemInform.projectName = valueObject.getString("apply_project_name");
+                    itemInform.depository_id = valueObject.getString("depository_id");
 
 //                    JSONArray imageArray = valueObject.getJSONArray("images");
 //                    List<String> imgList = new ArrayList<>();

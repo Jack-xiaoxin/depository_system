@@ -28,5 +28,7 @@ public class ChukuRecordItemInform {
 
     public String departmentName;
 
+    public String depository_id;
+
     public List<String> images;
 }
