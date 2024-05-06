@@ -8,5 +8,10 @@ public class MaterialInform {
 
     public String materialModel;
 
+<<<<<<< HEAD
+=======
+    public String materialIdentifier;
+
+>>>>>>> kc/front_end
     public String factoryName;
 }

@@ -6,14 +6,25 @@
       <GradleProjectSettings>
         <option name="testRunner" value="GRADLE" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
+<<<<<<< HEAD
         <option name="gradleJvm" value="jbr-17" />
+=======
+        <option name="gradleJvm" value="corretto-11" />
+>>>>>>> kc/front_end
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/library" />
+            <option value="$PROJECT_DIR$/library/calendarLibrary" />
+            <option value="$PROJECT_DIR$/library/leafchart" />
+            <option value="$PROJECT_DIR$/library/pickerview" />
           </set>
         </option>
+<<<<<<< HEAD
         <option name="resolveExternalAnnotations" value="false" />
+=======
+>>>>>>> kc/front_end
       </GradleProjectSettings>
     </option>
   </component>

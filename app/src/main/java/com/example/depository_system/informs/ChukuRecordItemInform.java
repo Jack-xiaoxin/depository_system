@@ -12,6 +12,11 @@ public class ChukuRecordItemInform {
 
     public String materialModel;
 
+<<<<<<< HEAD
+=======
+    public String materialIdentifier;
+
+>>>>>>> kc/front_end
     public String factoryName;
 
     public String applier;
@@ -20,6 +25,18 @@ public class ChukuRecordItemInform {
 
     public Integer number;
 
+<<<<<<< HEAD
     public List<String> images;
 
+=======
+    public String projectName;
+
+    public String projectMajor;
+
+    public String departmentName;
+
+    public String depository_id;
+
+    public List<String> images;
+>>>>>>> kc/front_end
 }

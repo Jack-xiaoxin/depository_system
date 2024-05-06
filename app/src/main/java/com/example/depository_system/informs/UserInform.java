@@ -10,4 +10,10 @@ public class UserInform {
 
     public Integer category;
 
+<<<<<<< HEAD
 }
+=======
+    public String password;
+
+}
+>>>>>>> kc/front_end

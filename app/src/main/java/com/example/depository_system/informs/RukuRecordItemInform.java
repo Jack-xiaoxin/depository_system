@@ -12,6 +12,11 @@ public class RukuRecordItemInform {
 
     public String materialModel;
 
+<<<<<<< HEAD
+=======
+    public String materialIdentifier;
+
+>>>>>>> kc/front_end
     public String factoryName;
 
     public String receiver;
@@ -23,7 +28,15 @@ public class RukuRecordItemInform {
     public String inboundTime;
 
     public Integer number;
+<<<<<<< HEAD
 
     public List<String> images;
 
 }
+=======
+    public String depositoryId;
+
+    public List<String> images;
+
+}
+>>>>>>> kc/front_end

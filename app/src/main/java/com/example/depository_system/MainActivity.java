@@ -1,7 +1,5 @@
 package com.example.depository_system;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -10,10 +8,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+<<<<<<< HEAD
 import com.example.depository_system.service.TestClass;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
+=======
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.depository_system.informs.UserInform;
+>>>>>>> kc/front_end
 
 public class MainActivity extends AppCompatActivity {
 
@@ -56,16 +60,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean login(String username, String password) {
-        if(username == null || password == null || username.isEmpty() || password.isEmpty()) {
+        if(username == null || password == null) {
             Toast.makeText(this, "用户名或密码为空", Toast.LENGTH_SHORT).show();
             return false;
-        } else if(username.equals("test") && password.equals("test")) {
-            Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show();
-            return true;
-        } else {
-            Toast.makeText(this, "用户名或密码不对", Toast.LENGTH_SHORT).show();
-            return false;
         }
+        DataManagement.updateUserInfo();
+        for(UserInform userInform : DataManagement.userInforms) {
+            if(userInform.phoneNumber.equals(username) && userInform.password.equals(password)) {
+                Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show();
+                DataManagement.updateAll();
+                return true;
+            }
+        }
+        Toast.makeText(this, "用户名或密码不对", Toast.LENGTH_SHORT).show();
+        return false;
     }
 
     private String testRequest(String username, String password) {

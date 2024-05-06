@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/item_ruku_record_bg"
+    android:clickable="true"
+    android:gravity="center"
+    android:layout_marginLeft="10dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginRight="10dp"
+    android:paddingBottom="10dp"
+    android:paddingTop="10dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/ruku_order_id_value"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="15dp"
+        android:text="订单编号：XXXX XXXX XXXX XXXX"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_marginLeft="15dp">
+        <TextView
+            android:id="@+id/ruku_factory_name"
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/ruku_order_id_value"
+            android:text="厂家：XXXXXXXX"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+        <TextView
+            android:id="@+id/ruku_time"
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="wrap_content"
+            android:text="时间：XXXXXX"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+
+</LinearLayout>

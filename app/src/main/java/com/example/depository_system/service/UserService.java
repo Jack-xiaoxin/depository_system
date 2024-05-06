@@ -11,9 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserService {
+<<<<<<< HEAD
     ServiceBase serviceBase = new ServiceBase();
 
     public List<UserInform> getUserList(
+=======
+
+    public static List<UserInform> getUserList(
+>>>>>>> kc/front_end
             String userId,
             String userName,
             String phoneNumber,
@@ -38,7 +43,11 @@ public class UserService {
             throw new RuntimeException(e);
         }
 
+<<<<<<< HEAD
         String bodyString = serviceBase.HttpBase("/getDepositList", "POST", jsonObject);
+=======
+        String bodyString = ServiceBase.HttpBase("/getUserList", "POST", jsonObject);
+>>>>>>> kc/front_end
         try {
             JSONObject bodyDict = new JSONObject(bodyString);
             JSONArray dataArray = bodyDict.getJSONArray("data");
@@ -50,6 +59,7 @@ public class UserService {
                 userInform.userName = singleObject.getString("user_name");
                 userInform.phoneNumber = singleObject.getString("phone_number");
                 userInform.category = singleObject.getInt("category");
+<<<<<<< HEAD
 
                 userInforms.add(userInform);
             }
@@ -61,3 +71,15 @@ public class UserService {
         return null;
     }
 }
+=======
+                userInform.password = singleObject.getString("password");
+
+                userInforms.add(userInform);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return userInforms;
+    }
+}
+>>>>>>> kc/front_end

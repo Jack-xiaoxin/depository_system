@@ -13,11 +13,16 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class ServiceBase {
+<<<<<<< HEAD
     public ServiceBase() {
         Log.d("java", "基础类实例化完成。");
     }
 
     public String HttpBase(String url, String method, JSONObject jsonObject){
+=======
+
+    public static String HttpBase(String url, String method, JSONObject jsonObject){
+>>>>>>> kc/front_end
         OkHttpClient client = new OkHttpClient();
 
         RequestBody body = RequestBody.create(
@@ -57,4 +62,8 @@ public class ServiceBase {
             return null;
         }
     };
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> kc/front_end
