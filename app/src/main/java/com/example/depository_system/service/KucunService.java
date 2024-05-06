@@ -48,6 +48,9 @@ public class KucunService {
                 kucunInform.alarmNumber = singleObject.getInt("alarm_number");
                 kucunInform.updateTime = singleObject.getString("update_time");
                 kucunInform.depotId = singleObject.getString("depository_id");
+                kucunInform.getDepositoryInfo();
+                kucunInform.getMaterialInfo();
+                kucunInform.getProjectInfo();
 
                 kucunInforms.add(kucunInform);
             }

@@ -1,6 +1,9 @@
 package com.example.depository_system.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -29,7 +32,17 @@ import com.example.depository_system.informs.KucunInform;
 import com.example.depository_system.informs.MaterialInform;
 import com.example.depository_system.service.KucunService;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
@@ -58,7 +71,7 @@ public class kucunFragment extends Fragment {
     public Button factoryNameBtn;
     private String factoryName = "";
 
-    private Handler handler;
+    public Handler handler;
 
     private List<KucunInform> kucunInformList = new ArrayList<>();
 
@@ -99,6 +112,8 @@ public class kucunFragment extends Fragment {
 
                 } else if(index == -2) {
                     progressBar.setVisibility(View.VISIBLE);
+                } else if(index == -3) {
+                    exportKucun();
                 }
             }
         };
@@ -289,5 +304,93 @@ public class kucunFragment extends Fragment {
             }
             kucunInformList.add(kucunInform);
         }
+    }
+
+    private void exportKucun() {
+        update();
+        try {
+            //创建excel xlsx格式
+            Workbook wb = new XSSFWorkbook();
+            //创建工作表
+            Sheet sheet = wb.createSheet();
+            String[] title = {"仓库", "入库项目", "物资名称", "物资编码", "物资类型", "物资数量", "预警数量", "厂家"};
+            //创建行对象
+            Row row = sheet.createRow(0);
+            //设置有效数据的行数和列数
+            int colNum = title.length;
+            for(int i = 0; i < colNum; i++) {
+                sheet.setColumnWidth(i, 20*256);
+                Cell cell1 = row.createCell(i);
+                //第一行
+                cell1.setCellValue(title[i]);
+            }
+            //导入数据
+            for(int rowNum = 0; rowNum < kucunInformList.size(); rowNum++) {
+                row = sheet.createRow(rowNum+1);
+                //设置单元格显示宽度
+                row.setHeightInPoints(28f);
+                KucunInform kucunInform = kucunInformList.get(rowNum);
+                for(int j = 0; j < title.length; j++) {
+                    Cell cell = row.createCell(j);
+                    switch (j) {
+                        case 0:
+                            cell.setCellValue(kucunInform.depotName);
+                            break;
+                        case 1:
+                            cell.setCellValue(kucunInform.projectName);
+                            break;
+                        case 2:
+                            cell.setCellValue(kucunInform.materialName);
+                            break;
+                        case 3:
+                            cell.setCellValue(kucunInform.materialIdentifier);
+                            break;
+                        case 4:
+                            cell.setCellValue(kucunInform.materialType);
+                            break;
+                        case 5:
+                            cell.setCellValue(kucunInform.kucunNumber);
+                            break;
+                        case 6:
+                            cell.setCellValue(kucunInform.alarmNumber);
+                            break;
+                        case 7:
+                            cell.setCellValue(kucunInform.factoryName);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            String mSDCardFolderPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/库存数据";
+            File dir = new File(mSDCardFolderPath);
+            //判断文件是否存在
+            if (!dir.isFile()) {
+                //不存在则创建
+                dir.mkdir();
+            }
+            File excel = new File(dir, convertTime(System.currentTimeMillis(), "yyyy-MM-dd-HH-mm-ss") + ".xlsx");
+            FileOutputStream fos = new FileOutputStream(excel);
+            wb.write(fos);
+            fos.flush();
+            fos.close();
+            final AlertDialog.Builder normalDialog =
+                    new AlertDialog.Builder(requireContext());
+            normalDialog.setTitle("导出库存");
+            normalDialog.setMessage("导出成功！文件名：" + excel.getPath());
+            normalDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                }
+            });
+            normalDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String convertTime(long time, String patter) {
+        SimpleDateFormat sdf = new SimpleDateFormat(patter);
+        return sdf.format(new Date(time));
     }
 }

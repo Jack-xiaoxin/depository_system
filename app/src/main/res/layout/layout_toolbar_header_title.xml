@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:gravity="center">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/tb_base_title"
@@ -14,4 +15,31 @@
         app:layout_scrollFlags="enterAlways|scroll"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:theme="@style/ToolbarStyle" />
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/kucun_export_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="导出"
+                android:layout_toLeftOf="@+id/myself_btn"
+                android:visibility="gone"></Button>
+            <Button
+                android:id="@+id/myself_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="我的"
+                android:visibility="gone"></Button>
+        </LinearLayout>
+
+
+    </FrameLayout>
+
 </RelativeLayout>

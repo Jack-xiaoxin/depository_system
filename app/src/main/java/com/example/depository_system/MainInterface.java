@@ -3,7 +3,9 @@ package com.example.depository_system;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Message;
 import android.view.View;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,6 +36,10 @@ public class MainInterface extends AppCompatActivity {
 
     private Toolbar titleToolbar;
 
+    private Button myButton;
+
+    private Button kucunExportButton;
+
     private static final int CAMERA_PERMISSIOS_REQUEST_CODE = 100;
 
     @Override
@@ -60,6 +66,9 @@ public class MainInterface extends AppCompatActivity {
 
         titleToolbar = findViewById(R.id.tb_base_title);
 
+        myButton = findViewById(R.id.myself_btn);
+        kucunExportButton = findViewById(R.id.kucun_export_btn);
+
         ruKuView.setOnClickListener(view -> {
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.hide(displayedFragment);
@@ -68,6 +77,7 @@ public class MainInterface extends AppCompatActivity {
             setBackGroundColor(displayedView, ruKuView);
             displayedFragment = rukuFragment;
             titleToolbar.setTitle("入库信息填写");
+            kucunExportButton.setVisibility(View.GONE);
         });
         chuKuView.setOnClickListener(view -> {
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -77,6 +87,7 @@ public class MainInterface extends AppCompatActivity {
             setBackGroundColor(displayedView, chuKuView);
             displayedFragment = chukuFragment;
             titleToolbar.setTitle("出库信息填写");
+            kucunExportButton.setVisibility(View.GONE);
         });
         chaRukuView.setOnClickListener(view -> {
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -86,6 +97,7 @@ public class MainInterface extends AppCompatActivity {
             setBackGroundColor(displayedView, chaRukuView);
             displayedFragment = charukuFragment;
             titleToolbar.setTitle("入库信息查询");
+            kucunExportButton.setVisibility(View.GONE);
         });
         chaChukuView.setOnClickListener(view -> {
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -95,6 +107,7 @@ public class MainInterface extends AppCompatActivity {
             setBackGroundColor(displayedView, chaChukuView);
             displayedFragment = chachukuFragment;
             titleToolbar.setTitle("出库信息查询");
+            kucunExportButton.setVisibility(View.GONE);
         });
         kuCunView.setOnClickListener(view -> {
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -104,6 +117,7 @@ public class MainInterface extends AppCompatActivity {
             setBackGroundColor(displayedView, kuCunView);
             displayedFragment = kucunFragment;
             titleToolbar.setTitle("库存信息查询");
+            kucunExportButton.setVisibility(View.VISIBLE);
         });
 
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -117,6 +131,18 @@ public class MainInterface extends AppCompatActivity {
         kuCunView.setBackgroundColor(Color.argb(255, 208, 208, 208));
         displayedFragment = kucunFragment;
         displayedView = kuCunView;
+        titleToolbar.setTitle("库存信息查询");
+        kucunExportButton.setVisibility(View.VISIBLE);
+
+        kucunExportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                com.example.depository_system.fragments.kucunFragment kucunFragment1 = (com.example.depository_system.fragments.kucunFragment) kucunFragment;
+                Message msg = new Message();
+                msg.obj = -3;
+                kucunFragment1.handler.sendMessage(msg);
+            }
+        });
     }
 
     private void setBackGroundColor(View originView, View dstView) {
