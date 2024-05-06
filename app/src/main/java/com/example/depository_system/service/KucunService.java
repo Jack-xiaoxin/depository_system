@@ -11,19 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class KucunService {
-<<<<<<< HEAD
     ServiceBase serviceBase = new ServiceBase();
 
     public List<KucunInform> getKucunList(
             String kucunId,
             String materialId
-=======
-
-    public static List<KucunInform> getKucunList(
-            String kucunId,
-            String materialId,
-            String depotId
->>>>>>> kc/front_end
     ) {
         List<KucunInform> kucunInforms = new ArrayList<>();
         JSONObject jsonObject = new JSONObject();
@@ -34,22 +26,12 @@ public class KucunService {
             if (materialId != null && !materialId.isEmpty()) {
                 jsonObject.put("goods_id", materialId);
             }
-<<<<<<< HEAD
-=======
-            if (depotId != null && !depotId.isEmpty()) {
-                jsonObject.put("depository_id", depotId);
-            }
->>>>>>> kc/front_end
 
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
 
-<<<<<<< HEAD
         String bodyString = serviceBase.HttpBase("/getStoredInfoList", "POST", jsonObject);
-=======
-        String bodyString = ServiceBase.HttpBase("/getStoredInfoList", "POST", jsonObject);
->>>>>>> kc/front_end
         try {
             JSONObject bodyDict = new JSONObject(bodyString);
             JSONArray dataArray = bodyDict.getJSONArray("data");
@@ -62,10 +44,6 @@ public class KucunService {
                 kucunInform.kucunNumber = singleObject.getInt("stored_number");
                 kucunInform.alarmNumber = singleObject.getInt("alarm_number");
                 kucunInform.updateTime = singleObject.getString("update_time");
-<<<<<<< HEAD
-=======
-                kucunInform.depotId = singleObject.getString("depository_id");
->>>>>>> kc/front_end
 
                 kucunInforms.add(kucunInform);
             }
@@ -77,19 +55,11 @@ public class KucunService {
         return null;
     }
 
-<<<<<<< HEAD
     public List<KucunInform> getKucunAlarmList() {
         List<KucunInform> kucunInforms = new ArrayList<>();
         JSONObject jsonObject = new JSONObject();
 
         String bodyString = serviceBase.HttpBase("/getAlarmedInfoList", "POST", jsonObject);
-=======
-    public static List<KucunInform> getKucunAlarmList() {
-        List<KucunInform> kucunInforms = new ArrayList<>();
-        JSONObject jsonObject = new JSONObject();
-
-        String bodyString = ServiceBase.HttpBase("/getAlarmedInfoList", "POST", jsonObject);
->>>>>>> kc/front_end
         try {
             JSONObject bodyDict = new JSONObject(bodyString);
             JSONArray dataArray = bodyDict.getJSONArray("data");
@@ -112,8 +82,4 @@ public class KucunService {
         }
         return null;
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> kc/front_end

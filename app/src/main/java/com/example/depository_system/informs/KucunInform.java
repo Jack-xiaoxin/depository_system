@@ -11,9 +11,4 @@ public class KucunInform {
     public Integer alarmNumber;
 
     public String updateTime;
-<<<<<<< HEAD
-=======
-
-    public String depotId;
->>>>>>> kc/front_end
 }

@@ -7,26 +7,4 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="colorGreen">#24c789</color>
-    <color name="colorGrey">#b7b5c3</color>
-    <color name="colorPrimary">#3f3c51</color>
-    <color name="colorTextWhite">#fff</color>
-    <color name="colorPink">#FFC0CB</color>
-    <color name="colorBlue">#0000FF</color>
-    <color name="colorOrange">#FFA500</color>
-    <color name="colorTextCardAddEdittext">#837f8c</color>
-    <color name="colorTextHint">#b7b5c3</color>
-    <color name="colorKucunText">#FFFFFF</color>
-    <!--    主背景颜色   -->
-    <color name="mainBg">#fbf9ff</color>
-    <!--Lin或者Rel条目文字背景-->
-    <color name="colorTextLinItem">#3f3f51</color>
-    <string name="ruku_tips" translatable="false">*请仔细核对后填写，星号为必填项。</string>
-    <string name="ruku_image_tips" translatable="false">*请上传图片</string>
-    <!--顶部悬浮背景-->
-    <color name="colorBgSticky">#fbf9ff</color>
-    <color name="itemBackground">#dde9e9e9</color>
-    <color name="colorPrimaryDark">#3f3c51</color>
-    <color name="colorAccent">#3f3c51</color>
-    <color name="white40">#40ffffff</color>
 </resources>
