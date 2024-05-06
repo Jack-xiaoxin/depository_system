@@ -4,11 +4,7 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         jcenter() // Warning: this repository is going to shut down soon
-        maven { url "https://jitpack.io" }
     }
 }
 rootProject.name = "depository_system"
 include ':app'
-include ':library:pickerview'
-include ':library:calendarLibrary'
-include ':library:leafchart'

@@ -16,7 +16,6 @@ import java.util.Iterator;
 import java.util.List;
 
 public class ChukuService {
-<<<<<<< HEAD
     ServiceBase serviceBase = new ServiceBase();
 
     public String action(ChukuActionInform chukuInform) {
@@ -25,42 +24,20 @@ public class ChukuService {
             jsonObject.put("deposit_id", chukuInform.depotId);
             jsonObject.put("goods_id", chukuInform.materialId);
             jsonObject.put("applier", chukuInform.applier);
-=======
-
-    public static String action(ChukuActionInform chukuInform) {
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("depository_id", chukuInform.depotId);
-            jsonObject.put("goods_id", chukuInform.materialId);
-            jsonObject.put("applier", chukuInform.applier);
-            jsonObject.put("goods_identifier", chukuInform.materialIdentifier);
->>>>>>> kc/front_end
             jsonObject.put("apply_department_name", chukuInform.applyDepartmentName);
             jsonObject.put("apply_project_name", chukuInform.applyProjectName);
             jsonObject.put("director", chukuInform.director);
             jsonObject.put("goods_number", chukuInform.number);
-<<<<<<< HEAD
-=======
-            jsonObject.put("outbound_identifier", System.currentTimeMillis());
->>>>>>> kc/front_end
             jsonObject.put("images", chukuInform.images);
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
 
-<<<<<<< HEAD
         String response = serviceBase.HttpBase("/outbound", "POST", jsonObject);
         return response;
     }
 
     public List<ChukuRecordInform> getChukuRecordList(
-=======
-        String response = ServiceBase.HttpBase("/outbound", "POST", jsonObject);
-        return response;
-    }
-
-    public static List<ChukuRecordInform> getChukuRecordList(
->>>>>>> kc/front_end
             String outboundDate,
             String applyDepartmentName,
             String applyProjectName,
@@ -85,11 +62,7 @@ public class ChukuService {
             throw new RuntimeException(e);
         }
 
-<<<<<<< HEAD
         String bodyString = serviceBase.HttpBase("/outboundHistory", "POST", jsonObject);
-=======
-        String bodyString = ServiceBase.HttpBase("/outboundHistory", "POST", jsonObject);
->>>>>>> kc/front_end
         try {
             JSONObject bodyDict = new JSONObject(bodyString);
             JSONArray dataArray = bodyDict.getJSONArray("data");
@@ -98,14 +71,8 @@ public class ChukuService {
                 ChukuRecordInform chukuRecordInform = new ChukuRecordInform();
 
                 chukuRecordInform.outboundId = singleObject.getString("outbound_id");
-<<<<<<< HEAD
                 chukuRecordInform.applyProjectName = singleObject.getString("apply_department_name");
                 chukuRecordInform.applyDepartmentName = singleObject.getString("apply_project_name");
-=======
-                chukuRecordInform.outboundIdentifier = singleObject.getString("outbound_identifier");
-                chukuRecordInform.applyProjectName = singleObject.getString("apply_project_name");
-                chukuRecordInform.applyDepartmentName = singleObject.getString("apply_department_name");
->>>>>>> kc/front_end
                 chukuRecordInform.director = singleObject.getString("director");
                 chukuRecordInform.outboundDate = singleObject.getString("outbound_date");
 
@@ -124,7 +91,6 @@ public class ChukuService {
                     itemInform.materialModel = valueObject.getString("goods_model");
                     itemInform.factoryName = valueObject.getString("factory_name");
                     itemInform.number = valueObject.getInt("goods_number");
-<<<<<<< HEAD
                     itemInform.outboundTime = valueObject.getString("outbound_time");
 
                     JSONArray imageArray = valueObject.getJSONArray("images");
@@ -133,21 +99,6 @@ public class ChukuService {
                         imgList.add(imageArray.getString(j));
                     }
                     itemInform.images = imgList;
-=======
-                    itemInform.materialIdentifier = valueObject.getString("goods_identifier");
-                    itemInform.outboundTime = valueObject.getString("outbound_time");
-                    itemInform.departmentName = valueObject.getString("apply_department_name");
-                    itemInform.projectMajor = valueObject.getString("director");
-                    itemInform.projectName = valueObject.getString("apply_project_name");
-                    itemInform.depository_id = valueObject.getString("depository_id");
-
-//                    JSONArray imageArray = valueObject.getJSONArray("images");
-//                    List<String> imgList = new ArrayList<>();
-//                    for (int j = 0; j < imageArray.length(); j++) {
-//                        imgList.add(imageArray.getString(j));
-//                    }
-//                    itemInform.images = imgList;
->>>>>>> kc/front_end
 
                     itemInformList.add(itemInform);
                 }
@@ -160,12 +111,6 @@ public class ChukuService {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-<<<<<<< HEAD
         return null;
     }
 }
-=======
-        return chukuRecordInformList;
-    }
-}
->>>>>>> kc/front_end

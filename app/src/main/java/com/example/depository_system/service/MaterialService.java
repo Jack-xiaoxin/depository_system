@@ -11,21 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MaterialService {
-<<<<<<< HEAD
     ServiceBase serviceBase = new ServiceBase();
 
     public List<MaterialInform> getMaterialList(
             String materialId,
             String materialName,
             String materialModel,
-=======
-
-    public static List<MaterialInform> getMaterialList(
-            String materialId,
-            String materialName,
-            String materialModel,
-            String materialIdentifier,
->>>>>>> kc/front_end
             String factoryName
     ) {
         List<MaterialInform> materialInforms = new ArrayList<>();
@@ -40,12 +31,6 @@ public class MaterialService {
             if (materialModel != null && !materialModel.isEmpty()) {
                 jsonObject.put("goods_model", materialModel);
             }
-<<<<<<< HEAD
-=======
-            if (materialIdentifier != null && !materialIdentifier.isEmpty()) {
-                jsonObject.put("goods_identifier", materialIdentifier);
-            }
->>>>>>> kc/front_end
             if (factoryName != null && !factoryName.isEmpty()) {
                 jsonObject.put("factory_name", factoryName);
             }
@@ -53,11 +38,7 @@ public class MaterialService {
             throw new RuntimeException(e);
         }
 
-<<<<<<< HEAD
         String bodyString = serviceBase.HttpBase("/getGoodsList", "POST", jsonObject);
-=======
-        String bodyString = ServiceBase.HttpBase("/getGoodsList", "POST", jsonObject);
->>>>>>> kc/front_end
         try {
             JSONObject bodyDict = new JSONObject(bodyString);
             JSONArray dataArray = bodyDict.getJSONArray("data");
@@ -68,10 +49,6 @@ public class MaterialService {
                 materialInform.materialId = singleObject.getString("goods_id");
                 materialInform.materialName = singleObject.getString("goods_name");
                 materialInform.materialModel = singleObject.getString("goods_model");
-<<<<<<< HEAD
-=======
-                materialInform.materialIdentifier = singleObject.getString("goods_identifier");
->>>>>>> kc/front_end
                 materialInform.factoryName = singleObject.getString("factory_name");
 
                 materialInforms.add(materialInform);
@@ -83,8 +60,4 @@ public class MaterialService {
         }
         return null;
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> kc/front_end
