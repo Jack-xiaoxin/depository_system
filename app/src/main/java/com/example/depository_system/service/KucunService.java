@@ -86,7 +86,65 @@ public class KucunService {
             return kucunInforms;
         } catch (JSONException e) {
             e.printStackTrace();
+            return null;
         }
-        return null;
+    }
+
+    public static String updateStoredNumber(
+            String kucunId,
+            String storedNumber
+    ) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            if (kucunId != null && !kucunId.isEmpty()) {
+                jsonObject.put("stored_id", kucunId);
+            }
+            if (storedNumber != null && !storedNumber.isEmpty()) {
+                jsonObject.put("stored_number", storedNumber);
+            }
+
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+
+        String bodyString = ServiceBase.HttpBase("/updateStoredNumber", "POST", jsonObject);
+        try {
+            JSONObject bodyDict = new JSONObject(bodyString);
+            String res = bodyDict.getString("data");
+
+            return res;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static String updateAlarmedNumber(
+            String kucunId,
+            String alarmedNumber
+    ) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            if (kucunId != null && !kucunId.isEmpty()) {
+                jsonObject.put("stored_id", kucunId);
+            }
+            if (alarmedNumber != null && !alarmedNumber.isEmpty()) {
+                jsonObject.put("alarm_number", alarmedNumber);
+            }
+
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+
+        String bodyString = ServiceBase.HttpBase("/updateAlarmedNumber", "POST", jsonObject);
+        try {
+            JSONObject bodyDict = new JSONObject(bodyString);
+            String res = bodyDict.getString("data");
+
+            return res;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

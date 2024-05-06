@@ -10,13 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProjectService {
-
-    public static List<ProjectInform> getProjectList(String projectName) {
-        List<ProjectInform> projectInforms = new ArrayList<>();
+    public static List<ProjectInform> getProjectList(String projectName, String projectID) {
         JSONObject jsonObject = new JSONObject();
         try {
             if(projectName != null && !projectName.isEmpty()) {
                 jsonObject.put("project_name", projectName);
+            }
+            if(projectID != null && !projectID.isEmpty()) {
+                jsonObject.put("project_id", projectID);
             }
         } catch (JSONException e) {
             throw new RuntimeException(e);
@@ -25,6 +26,8 @@ public class ProjectService {
         try {
             JSONObject bodyDict = new JSONObject(bodyString);
             JSONArray dataArray = bodyDict.getJSONArray("data");
+
+            List<ProjectInform> projectInforms = new ArrayList<>();
             for(int i = 0; i < dataArray.length(); i++) {
                 JSONObject singleObject = dataArray.getJSONObject(i);
                 ProjectInform projectInform = new ProjectInform();
@@ -32,10 +35,11 @@ public class ProjectService {
                 projectInform.projectMajor = singleObject.getString("project_major");
                 projectInforms.add(projectInform);
             }
+            return projectInforms;
         } catch (JSONException e) {
             e.printStackTrace();
+            return null;
         }
-        return projectInforms;
     }
 
     public static boolean insertProject(String projectName, String projectMajor) {
