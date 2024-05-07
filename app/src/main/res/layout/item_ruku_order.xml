@@ -12,15 +12,30 @@
     android:paddingTop="10dp"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/ruku_order_id_value"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
         android:layout_marginBottom="5dp"
-        android:layout_marginLeft="15dp"
-        android:text="订单编号：XXXX XXXX XXXX XXXX"
-        android:textColor="@color/white"
-        android:textSize="14sp" />
+        android:layout_marginLeft="15dp">
+        <TextView
+            android:id="@+id/ruku_order_id_value"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="wrap_content"
+            android:text="订单编号：XXXX XXXX XXXX XXXX"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+        <TextView
+            android:id="@+id/ruku_order_project"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="项目：XXXX"
+            android:textColor="@color/white"
+            android:textSize="14sp"/>
+    </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"

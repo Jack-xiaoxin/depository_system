@@ -52,6 +52,11 @@ public class KucunInform {
     }
 
     public void getProjectInfo() {
-        return;
+        for(ProjectInform projectInform : DataManagement.projectInforms) {
+            if(projectInform.projectId.equals(this.projectId)) {
+                this.projectName = projectInform.projectName;
+                break;
+            }
+        }
     }
 }

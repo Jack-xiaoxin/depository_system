@@ -65,6 +65,8 @@ public class charukuFragment extends Fragment {
     private String date;
     private String factoryName;
 
+    private String projectName;
+
     private Button factoryNameBtn;
 
     private Button timeButton;
@@ -132,7 +134,7 @@ public class charukuFragment extends Fragment {
         date = getTodayDate();
         timeButton.setText(date);
         recyclerView = root.findViewById(R.id.recyclerView);
-        rukuRecordInforms = RukuService.getRukuRecordListByDateOrFactory(date, null);
+        rukuRecordInforms = RukuService.getRukuRecordListByDateOrFactory(date, null, null);
         recyclerView.setAdapter(new RukuOrderAdapter(root.getContext(), rukuRecordInforms, handler));
         recyclerView.setLayoutManager(new LinearLayoutManager(root.getContext()));
 
@@ -195,7 +197,7 @@ public class charukuFragment extends Fragment {
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
-                rukuRecordInforms = RukuService.getRukuRecordListByDateOrFactory(date, factoryName);
+                rukuRecordInforms = RukuService.getRukuRecordListByDateOrFactory(date, factoryName, projectName);
                 Message msg = new Message();
                 if(!rukuRecordInforms.isEmpty()) {
                     msg.obj = -1;

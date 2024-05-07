@@ -64,4 +64,27 @@ public class MaterialService {
         }
         return null;
     }
+
+    public static boolean insertMaterial(
+            String materialName,
+            String materialIdentifier,
+            String materialType,
+            String factoryName) {
+        if(materialName == null || materialName.isEmpty()) return false;
+        if(materialIdentifier == null || materialIdentifier.isEmpty()) return false;
+        if(materialType == null || materialType.isEmpty()) return false;
+        if(factoryName == null || factoryName.isEmpty()) return false;
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("goods_name", materialName);
+            jsonObject.put("goods_model", materialType);
+            jsonObject.put("goods_identifier", materialIdentifier);
+            jsonObject.put("factory_name", factoryName);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String bodyString = ServiceBase.HttpBase("/getGoodsList", "POST", jsonObject);
+        if(bodyString == null || bodyString.isEmpty()) return false;
+        return true;
+    }
 }

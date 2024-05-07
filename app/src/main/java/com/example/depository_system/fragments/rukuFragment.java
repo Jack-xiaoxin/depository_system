@@ -46,12 +46,17 @@ import com.example.depository_system.R;
 import com.example.depository_system.frontInforms.FrontRukuInform;
 import com.example.depository_system.informs.DepositoryInform;
 import com.example.depository_system.informs.MaterialInform;
+import com.example.depository_system.informs.ProjectInform;
 import com.example.depository_system.informs.RukuInform;
 import com.example.depository_system.informs.UserInform;
 import com.example.depository_system.service.DepositoryService;
 import com.example.depository_system.service.MaterialService;
+import com.example.depository_system.service.ProjectService;
 import com.example.depository_system.service.RukuService;
 import com.example.depository_system.service.UserService;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -117,6 +122,8 @@ public class rukuFragment extends Fragment {
     private ImageButton receiver_btn;
     private ImageButton accepter_btn;
 
+    private ImageButton project_btn;
+
     List<Uri> list = new ArrayList<>();
 
     List<DepositoryInform> depositoryInforms;
@@ -165,6 +172,7 @@ public class rukuFragment extends Fragment {
         time_btn = root.findViewById(R.id.image_btn_time);
         receiver_btn = root.findViewById(R.id.image_btn_receiver);
         accepter_btn = root.findViewById(R.id.image_btn_accepter);
+        project_btn = root.findViewById(R.id.image_btn_project);
 //
         photoBtn = root.findViewById(R.id.bt_photo);
         uploadBtn = root.findViewById(R.id.bt_next);
@@ -273,6 +281,20 @@ public class rukuFragment extends Fragment {
             }
         });
 
+        project_btn.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_UP) {
+                    Set<String> set = new HashSet<>();
+                    for(ProjectInform projectInform : DataManagement.projectInforms) {
+                        set.add(projectInform.projectName);
+                    }
+                    showListPopupWindow(set.toArray(new String[set.size()]), projectNameEditText);
+                }
+                return true;
+            }
+        });
+
         time_btn.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
@@ -330,90 +352,131 @@ public class rukuFragment extends Fragment {
                         & checkEditTextIsEmpty(factoryNameEditText)
                         & checkEditTextIsEmpty(timeEditText);
 
-                if(!isOk) {
+                if (!isOk) {
                     Toast.makeText(requireContext(), "请填写必填项", Toast.LENGTH_SHORT).show();
                     depotNameEditText.requestFocus();
+                    return ;
                 }
 
-                if(isOk) {
-                    FrontRukuInform rukuInform = new FrontRukuInform();
-                    rukuInform.depotName = depotNameEditText.getText().toString();
-                    rukuInform.materialIdentifier = materialIdentifierEditText.getText().toString();
-                    rukuInform.materialName = materialNameEditText.getText().toString();
-                    rukuInform.materialType = materialTypeEditText.getText().toString();
-                    rukuInform.materialNum = Integer.parseInt(materialNumEditText.getText().toString());
-                    rukuInform.factoryName = factoryNameEditText.getText().toString();
-                    rukuInform.time = timeEditText.getText().toString();
-                    rukuInform.project = projectNameEditText.getText().toString();
-                    rukuInform.receiver = receiverEditText.getText().toString();
-                    rukuInform.accepter = acceptorEditText.getText().toString();
+                FrontRukuInform rukuInform = new FrontRukuInform();
+                rukuInform.depotName = depotNameEditText.getText().toString();
+                rukuInform.materialIdentifier = materialIdentifierEditText.getText().toString();
+                rukuInform.materialName = materialNameEditText.getText().toString();
+                rukuInform.materialType = materialTypeEditText.getText().toString();
+                rukuInform.materialNum = Integer.parseInt(materialNumEditText.getText().toString());
+                rukuInform.factoryName = factoryNameEditText.getText().toString();
+                rukuInform.time = timeEditText.getText().toString();
+                rukuInform.project = projectNameEditText.getText().toString();
+                rukuInform.receiver = receiverEditText.getText().toString();
+                rukuInform.accepter = acceptorEditText.getText().toString();
 
-                    RukuInform backRukuInform = rukuInform.convetToRukuInform();
-                    backRukuInform.images = new ArrayList<>();
-                    backRukuInform.images.add("/sdf/sdf;");
-                    //设置depotId
-                    for(DepositoryInform depositoryInform: depositoryInforms) {
-                        if(depositoryInform.depotName.equals(rukuInform.depotName)) {
-                            backRukuInform.depotId = depositoryInform.depotId;
-                            break;
-                        }
+                RukuInform backRukuInform = rukuInform.convetToRukuInform();
+                backRukuInform.images = new ArrayList<>();
+                backRukuInform.images.add("/sdf/sdf;");
+                //设置depotId
+                for (DepositoryInform depositoryInform : depositoryInforms) {
+                    if (depositoryInform.depotName.equals(rukuInform.depotName)) {
+                        backRukuInform.depotId = depositoryInform.depotId;
+                        break;
                     }
-                    final String[] result = {""};
-                    if(backRukuInform.depotId == null) {
-                        final AlertDialog.Builder normalDialog =
-                                new AlertDialog.Builder(requireContext());
-                        normalDialog.setTitle("新增仓库");
-                        normalDialog.setMessage("发现新的仓库名，是否添加?");
-                        normalDialog.setPositiveButton("确定",
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        DepositoryInform depositoryInform = DepositoryService.insertDepot(backRukuInform.depotName);
-                                        DataManagement.depositoryInforms = DepositoryService.getDepostList(null, null);
-                                        backRukuInform.depotId = depositoryInform.depotId;
-                                        depositoryInforms = DepositoryService.getDepostList(null, null);
-                                        boolean isNew = true;
-                                        for (MaterialInform materialInform : materialInforms) {
-                                            if (materialInform.materialIdentifier.equals(backRukuInform.materialIdentifer)
-                                                    && materialInform.materialName.equals(backRukuInform.materialName)
-                                                    && materialInform.materialModel.equals(backRukuInform.materialModel)
-                                                    && materialInform.factoryName.equals(backRukuInform.factoryName)) {
-                                                isNew = false;
-                                                backRukuInform.materialId = materialInform.materialId;
-                                            }
-                                        }
-                                        backRukuInform.isNew = isNew;
-                                        result[0] = RukuService.action(backRukuInform);
+                }
+
+                if (backRukuInform.depotId == null) {
+                    final AlertDialog.Builder normalDialog =
+                            new AlertDialog.Builder(requireContext());
+                    normalDialog.setTitle("新增仓库");
+                    normalDialog.setMessage("发现新的仓库名，是否添加?");
+                    normalDialog.setPositiveButton("确定",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    DepositoryInform depositoryInform = DepositoryService.insertDepot(backRukuInform.depotName);
+                                    DataManagement.updateDepository();
+                                    Toast.makeText(requireContext(), "添加仓库" + backRukuInform.depotName + "成功", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                    normalDialog.show();
+                    return;
+                }
+                for(MaterialInform materialInform : DataManagement.materialInforms) {
+                    if(materialInform.materialName.equals(backRukuInform.materialName)
+                    && materialInform.materialIdentifier.equals(backRukuInform.materialIdentifer)
+                    && materialInform.materialModel.equals(backRukuInform.materialModel)
+                    && materialInform.factoryName.equals(backRukuInform.factoryName)) {
+                        backRukuInform.materialId = materialInform.materialId;
+                        break;
+                    }
+                }
+                if(backRukuInform.materialId == null) {
+                    final AlertDialog.Builder normalDialog =
+                            new AlertDialog.Builder(requireContext());
+                    normalDialog.setTitle("新增物料");
+                    normalDialog.setMessage("发现新的物料，是否添加?\n" +
+                            "物料名称：" + backRukuInform.materialName + "\n" +
+                            "物料编码：" + backRukuInform.materialIdentifer + "\n" +
+                            "物料类型：" + backRukuInform.materialModel + "\n" +
+                            "厂家名称：" + backRukuInform.factoryName + "\n");
+                    normalDialog.setPositiveButton("确定",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    boolean result = MaterialService.insertMaterial(backRukuInform.materialName, backRukuInform.materialIdentifer, backRukuInform.materialModel, backRukuInform.factoryName);
+                                    if(result) {
+                                        DataManagement.updateMaterial();
+                                        Toast.makeText(requireContext(), "添加物料成功", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(requireContext(), "添加物料失败", Toast.LENGTH_SHORT).show();
                                     }
-                                });
-                    } else {
-                        boolean isNew = true;
-                        for(MaterialInform materialInform: materialInforms) {
-                            if(materialInform.materialIdentifier.equals(backRukuInform.materialIdentifer)
-                                    && materialInform.materialName.equals(backRukuInform.materialName)
-                                    && materialInform.materialModel.equals(backRukuInform.materialModel)
-                                    && materialInform.factoryName.equals(backRukuInform.factoryName)) {
-                                isNew = false;
-                                backRukuInform.materialId = materialInform.materialId;
-                            }
 
-                        }
-                        backRukuInform.isNew = isNew;
-                        result[0] = RukuService.action(backRukuInform);
+                                }
+                            });
+                    normalDialog.show();
+                    return;
+                }
+                boolean isNewProject = true;
+                for(ProjectInform projectInform : DataManagement.projectInforms) {
+                    if(projectInform.projectName.equals(backRukuInform.projectName)) {
+                        isNewProject = false;
                     }
+                }
+                if(isNewProject) {
+                    final AlertDialog.Builder normalDialog =
+                            new AlertDialog.Builder(requireContext());
+                    normalDialog.setTitle("新增项目");
+                    normalDialog.setMessage("发现新的项目，是否添加? \n" +
+                            "项目名称：" + backRukuInform.projectName + "\n");
+                    normalDialog.setPositiveButton("确定",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    boolean result = ProjectService.insertProject(backRukuInform.projectName, null);
+                                    if(result) {
+                                        DataManagement.updateProjectInfo();
+                                        Toast.makeText(requireContext(), "添加项目成功", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(requireContext(), "添加项目失败", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                }
+                            });
+                    normalDialog.show();
+                    return;
+                }
+                final String[] result = {""};
+                backRukuInform.isNew = false;
+                result[0] = RukuService.action(backRukuInform);
+                if (result[0].contains("0")) {
                     DataManagement.updateAll();
-                    if(result[0].length() == 38) {
-                        final AlertDialog.Builder normalDialog =
-                                new AlertDialog.Builder(requireContext());
-                        normalDialog.setMessage("入库成功");
-                        normalDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                setEditTextEmpty();
-                            }
-                        });
-                        normalDialog.show();
-                    }
+                    final AlertDialog.Builder normalDialog =
+                            new AlertDialog.Builder(requireContext());
+                    normalDialog.setMessage("入库成功");
+                    normalDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            setEditTextEmpty();
+                        }
+                    });
+                    normalDialog.show();
                 }
             }
         });

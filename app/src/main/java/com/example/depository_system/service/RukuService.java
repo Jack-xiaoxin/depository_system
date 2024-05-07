@@ -46,7 +46,7 @@ public class RukuService {
         return response;
     }
 
-    public static List<RukuRecordInform> getRukuRecordListByDateOrFactory(String date, String factoryName) {
+    public static List<RukuRecordInform> getRukuRecordListByDateOrFactory(String date, String factoryName, String projectName) {
         List<RukuRecordInform> rukuRecordInformList = new ArrayList<RukuRecordInform>();
         JSONObject jsonObject = new JSONObject();
         try {
@@ -55,6 +55,9 @@ public class RukuService {
             }
             if (factoryName != null && !factoryName.isEmpty()) {
                 jsonObject.put("factory_name", factoryName);
+            }
+            if(projectName != null && !projectName.isEmpty()) {
+                jsonObject.put("project_name", projectName);
             }
         } catch (JSONException e) {
             throw new RuntimeException(e);
@@ -72,6 +75,7 @@ public class RukuService {
                 rukuRecordInform.inboundIdentifier = singleObject.getString("inbound_identifier");
                 rukuRecordInform.inboundDate = singleObject.getString("inbound_date");
                 rukuRecordInform.factoryName = singleObject.getString("factory_name");
+                rukuRecordInform.projectId = singleObject.getString("project_id");
 
                 List<RukuRecordItemInform> itemInformList = new ArrayList<>();
                 Iterator<String> keys = singleObject.getJSONObject("inbound_record").keys();

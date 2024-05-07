@@ -50,12 +50,14 @@ import com.example.depository_system.informs.ChukuActionInform;
 import com.example.depository_system.informs.DepositoryInform;
 import com.example.depository_system.informs.KucunInform;
 import com.example.depository_system.informs.MaterialInform;
+import com.example.depository_system.informs.ProjectInform;
 import com.example.depository_system.informs.RukuInform;
 import com.example.depository_system.informs.UserInform;
 import com.example.depository_system.service.ChukuService;
 import com.example.depository_system.service.DepositoryService;
 import com.example.depository_system.service.KucunService;
 import com.example.depository_system.service.MaterialService;
+import com.example.depository_system.service.ProjectService;
 import com.example.depository_system.service.RukuService;
 import com.example.depository_system.service.UserService;
 
@@ -107,6 +109,8 @@ public class chukuFragment extends Fragment {
     ImageButton materialTypeBtn;
     @BindView(R.id.image_btn_factoryName)
     ImageButton factoryNameBtn;
+    @BindView(R.id.image_btn_chuku_project)
+    ImageButton projectBtn;
     @BindView(R.id.image_btn_project_major)
     ImageButton projectMajorNameBtn;
     @BindView(R.id.image_btn_receiver)
@@ -256,6 +260,21 @@ public class chukuFragment extends Fragment {
             }
         });
 
+        projectBtn.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_UP) {
+                    Set<String> set = new HashSet();
+                    for(ProjectInform projectInform : DataManagement.projectInforms) {
+                        set.add(projectInform.projectName);
+                    }
+                    showListPopupWindow(set.toArray(new String[set.size()]), projectNameEditText);
+                }
+
+                return true;
+            }
+        });
+
         timeBtn.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
@@ -352,8 +371,14 @@ public class chukuFragment extends Fragment {
                             break;
                         }
                     }
+                    String projectId = "";
+                    for(ProjectInform projectInform : DataManagement.projectInforms) {
+                        if(projectInform.projectName.equals(backChukuInform.applyProjectName)) {
+                            projectId = projectInform.projectId;
+                        }
+                    }
                     //检查数量够不够
-                    List<KucunInform> kucunInformList = KucunService.getKucunList(null, backChukuInform.materialId, backChukuInform.depotId);
+                    List<KucunInform> kucunInformList = KucunService.getKucunList(null, backChukuInform.materialId, backChukuInform.depotId, projectId);
                     KucunInform kucunInform = kucunInformList.get(0);
                     if(backChukuInform.number > kucunInform.kucunNumber) {
                         showAlertDialog("库存不够, 当前库存数量：" + factoryNamEditText.getText() + ": " + kucunInform.kucunNumber);

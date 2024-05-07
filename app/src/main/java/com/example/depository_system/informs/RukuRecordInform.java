@@ -6,6 +6,8 @@ public class RukuRecordInform {
 
     public String inboundId;
 
+    public String projectId;
+
     public String inboundIdentifier;
 
     public String inboundDate;

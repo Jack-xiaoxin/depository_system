@@ -3,11 +3,13 @@ package com.example.depository_system;
 import com.example.depository_system.informs.DepositoryInform;
 import com.example.depository_system.informs.KucunInform;
 import com.example.depository_system.informs.MaterialInform;
+import com.example.depository_system.informs.ProjectInform;
 import com.example.depository_system.informs.RukuRecordInform;
 import com.example.depository_system.informs.UserInform;
 import com.example.depository_system.service.DepositoryService;
 import com.example.depository_system.service.KucunService;
 import com.example.depository_system.service.MaterialService;
+import com.example.depository_system.service.ProjectService;
 import com.example.depository_system.service.UserService;
 
 import java.util.ArrayList;
@@ -19,25 +21,26 @@ public class DataManagement {
     public static List<MaterialInform> materialInforms = new ArrayList<>();
     public static List<UserInform> userInforms = new ArrayList<>();
     public static List<KucunInform> kucunInforms = new ArrayList<>();
+    public static List<ProjectInform> projectInforms = new ArrayList<>();
 
-    public static List<DepositoryInform> updateDepository() {
+    public static void updateDepository() {
         depositoryInforms = DepositoryService.getDepostList(null, null);
-        return depositoryInforms;
     }
 
-    public static List<MaterialInform> updateMaterial() {
+    public static void updateMaterial() {
         materialInforms = MaterialService.getMaterialList(null, null, null, null, null);
-        return materialInforms;
     }
 
-    public static List<UserInform> updateUserInfo() {
+    public static void updateUserInfo() {
         userInforms = UserService.getUserList(null, null, null, null);
-        return userInforms;
     }
 
-    public static List<KucunInform> updateKucunInfo() {
-        kucunInforms = KucunService.getKucunList(null, null, null);
-        return kucunInforms;
+    public static void updateKucunInfo() {
+        kucunInforms = KucunService.getKucunList(null, null, null, null);
+    }
+
+    public static void updateProjectInfo() {
+        projectInforms = ProjectService.getProjectList(null);
     }
 
     public static void updateAll() {
@@ -45,5 +48,6 @@ public class DataManagement {
         updateMaterial();
         updateUserInfo();
         updateKucunInfo();
+        updateProjectInfo();
     }
 }

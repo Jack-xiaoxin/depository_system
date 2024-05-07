@@ -14,7 +14,9 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.depository_system.DataManagement;
 import com.example.depository_system.R;
+import com.example.depository_system.informs.ProjectInform;
 import com.example.depository_system.informs.RukuInform;
 import com.example.depository_system.informs.RukuRecordInform;
 
@@ -60,6 +62,11 @@ public class RukuOrderAdapter extends BaseRecycleAdapter{
 //                itemHolder.imageView.setImageURI(Uri.parse("D:\\projects\\depository_system\\app\\src\\main\\res\\drawable\\alarm_on.png"));
                 itemHolder.factory_name.setText("厂家：" + mList.get(position).factoryName);
                 itemHolder.orderId.setText("入库单号：" + mList.get(position).inboundIdentifier);
+                for(ProjectInform projectInform : DataManagement.projectInforms) {
+                    if(projectInform.projectId.equals(mList.get(position).projectId)) {
+                        itemHolder.project.setText("入库项目：" + projectInform.projectName);
+                    }
+                }
                 String originaldate = mList.get(position).inboundDate;
                 if(originaldate.length() != 10) {
                     SimpleDateFormat originalFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
@@ -102,6 +109,8 @@ public class RukuOrderAdapter extends BaseRecycleAdapter{
         TextView factory_name;
         @BindView(R.id.ruku_time)
         TextView time;
+        @BindView(R.id.ruku_order_project)
+        TextView project;
 
         public ItemHolder(View itemView) {
             super(itemView);

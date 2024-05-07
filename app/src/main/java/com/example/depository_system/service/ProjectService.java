@@ -21,13 +21,14 @@ public class ProjectService {
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
-        String bodyString = ServiceBase.HttpBase("/getProjectInfoList", "POST", null);
+        String bodyString = ServiceBase.HttpBase("/getProjectInfoList", "POST", jsonObject);
         try {
             JSONObject bodyDict = new JSONObject(bodyString);
             JSONArray dataArray = bodyDict.getJSONArray("data");
             for(int i = 0; i < dataArray.length(); i++) {
                 JSONObject singleObject = dataArray.getJSONObject(i);
                 ProjectInform projectInform = new ProjectInform();
+                projectInform.projectId = singleObject.getString("project_id");
                 projectInform.projectName = singleObject.getString("project_name");
                 projectInform.projectMajor = singleObject.getString("project_major");
                 projectInforms.add(projectInform);
