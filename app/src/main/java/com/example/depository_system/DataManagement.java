@@ -47,7 +47,7 @@ public class DataManagement {
         updateDepository();
         updateMaterial();
         updateUserInfo();
-        updateKucunInfo();
         updateProjectInfo();
+        updateKucunInfo();
     }
 }

@@ -41,6 +41,15 @@
                 style="?buttonBarButtonStyle"
                 android:layout_weight="1"></Button>
             <Button
+                android:id="@+id/project_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@color/colorGrey"
+                android:text="项目: 无"
+                android:textColor="@color/black"
+                style="?buttonBarButtonStyle"
+                android:layout_weight="1"></Button>
+            <Button
                 android:id="@+id/time_btn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

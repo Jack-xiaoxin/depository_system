@@ -87,7 +87,7 @@ public class KucunAdapter extends BaseRecycleAdapter{
         itemHolder.materialNum.setText("物资数量：" + String.valueOf(mList.get(position).kucunNumber));
         itemHolder.alertNumber.setText("预警数量：" + String.valueOf(mList.get(position).alarmNumber));
         itemHolder.factoryName.setText("厂家：" + myMaterialInform.factoryName);
-        itemHolder.projectName.setText("入库项目：" + "XXXX");
+        itemHolder.projectName.setText("入库项目：" + mList.get(position).projectName);
     }
 
     public int getItemCount() {

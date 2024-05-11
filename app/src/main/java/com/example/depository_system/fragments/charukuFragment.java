@@ -36,6 +36,7 @@ import com.example.depository_system.adapters.RukuMaterialAdapter;
 import com.example.depository_system.adapters.RukuOrderAdapter;
 import com.example.depository_system.informs.DepositoryInform;
 import com.example.depository_system.informs.MaterialInform;
+import com.example.depository_system.informs.ProjectInform;
 import com.example.depository_system.informs.RukuRecordInform;
 import com.example.depository_system.informs.RukuRecordItemInform;
 import com.example.depository_system.service.RukuService;
@@ -64,10 +65,9 @@ public class charukuFragment extends Fragment {
 
     private String date;
     private String factoryName;
-
-    private String projectName;
-
     private Button factoryNameBtn;
+    private String projectName;
+    private Button projectButton;
 
     private Button timeButton;
 
@@ -111,6 +111,7 @@ public class charukuFragment extends Fragment {
         progressBar = root.findViewById(R.id.progress_circular);
         orderTextView = root.findViewById(R.id.inbound_identifier);
         recyclerView_material = root.findViewById(R.id.recyclerView_material);
+        projectButton = root.findViewById(R.id.project_btn);
         backButton = root.findViewById(R.id.go_back);
         exportButton = root.findViewById(R.id.export);
         handler = new Handler() {
@@ -147,6 +148,18 @@ public class charukuFragment extends Fragment {
                     set.add(materialInform.factoryName);
                 }
                 showListPopupWindow(set.toArray(new String[]{}), factoryNameBtn);
+            }
+        });
+
+        projectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Set<String> set = new HashSet<>();
+                set.add("空");
+                for(ProjectInform projectInform : DataManagement.projectInforms) {
+                    set.add(projectInform.projectName);
+                }
+                showListPopupWindow(set.toArray(new String[set.size()]), projectButton);
             }
         });
         
@@ -247,6 +260,12 @@ public class charukuFragment extends Fragment {
                         button.setText("时间：空");
                         date = null;
                     }
+                } else if(button.getId() == R.id.project_btn) {
+                    projectName = list[i];
+                    if(list[i] == "空") {
+                        button.setText("项目：空");
+                        projectName = null;
+                    }
                 }
                 update();
                 listPopupWindow.dismiss();
@@ -258,6 +277,7 @@ public class charukuFragment extends Fragment {
     private void showOrderDetail(int index) {
         RukuRecordInform rukuRecordInform = rukuRecordInforms.get(index);
         factoryNameBtn.setVisibility(View.GONE);
+        projectButton.setVisibility(View.GONE);
         timeButton.setVisibility(View.GONE);
         recyclerView.setVisibility(View.GONE);
 
@@ -277,6 +297,7 @@ public class charukuFragment extends Fragment {
 
     private void showOrder() {
         factoryNameBtn.setVisibility(View.VISIBLE);
+        projectButton.setVisibility(View.VISIBLE);
         timeButton.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.VISIBLE);
         frameLayout.setVisibility(View.GONE);
@@ -290,6 +311,7 @@ public class charukuFragment extends Fragment {
 
     private void showEmpty() {
         factoryNameBtn.setVisibility(View.VISIBLE);
+        projectButton.setVisibility(View.VISIBLE);
         timeButton.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);
         frameLayout.setVisibility(View.GONE);
