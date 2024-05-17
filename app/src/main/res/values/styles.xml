@@ -93,4 +93,13 @@
         <item name="android:windowEnterAnimation">@anim/dialog_top_in</item>
         <item name="android:windowExitAnimation">@anim/dialog_top_out</item>
     </style>
+
+    <style name="Widget.Theme.AppCompat.NoActionBar.ActionBar.Fullscreen" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
+    </style>
+
+    <style name="Widget.Theme.AppCompat.NoActionBar.ButtonBar.Fullscreen" parent="">
+        <item name="android:background">@color/black_overlay</item>
+        <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
+    </style>
 </resources>

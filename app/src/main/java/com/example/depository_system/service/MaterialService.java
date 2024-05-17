@@ -83,7 +83,7 @@ public class MaterialService {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        String bodyString = ServiceBase.HttpBase("/getGoodsList", "POST", jsonObject);
+        String bodyString = ServiceBase.HttpBase("/insertGoods", "POST", jsonObject);
         if(bodyString == null || bodyString.isEmpty()) return false;
         return true;
     }

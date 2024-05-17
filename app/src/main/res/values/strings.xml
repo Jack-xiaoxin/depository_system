@@ -43,4 +43,7 @@
     <string name="hint_chuku_time" translatable="false">请输入领用时间</string>
     <string name="chuku_reveiver_name" translatable="false">领用人</string>
     <string name="hint_chuku_receiver_name" translatable="false">请输入领用人</string>
+    <string name="title_activity_image">ImageActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>

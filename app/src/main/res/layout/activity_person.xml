@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <Button
+        android:id="@+id/my_review_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="审核"/>
+
+    <Button
+        android:id="@+id/my_logout_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/my_review_btn"
+        android:textColor="#ff0000"
+        android:text="注销"/>
+
+    <Button
+        android:id="@+id/my_back_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/my_logout_btn"
+        android:text="返回"/>
+
+</RelativeLayout>

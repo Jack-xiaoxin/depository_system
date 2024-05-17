@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:gravity="center"
+        android:text="注册"
+        android:textColor="#000000"
+        android:textSize="28dp" />
+
+    <LinearLayout
+        android:id="@+id/regiset_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textView"
+        android:layout_marginTop="68dp"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="40dp">
+
+            <EditText
+                android:id="@+id/regist_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:background="@drawable/edit_sq"
+                android:drawableLeft="@drawable/i_account"
+                android:drawablePadding="8dp"
+                android:ems="10"
+                android:hint="请输入用户名（必填项）"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:lines="1"
+                android:textColor="@color/black"
+                android:textColorHint="@color/colorGrey"
+                android:nextFocusForward="@id/regist_password" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp">
+
+            <EditText
+                android:id="@+id/regist_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:background="@drawable/edit_sq"
+                android:drawableLeft="@drawable/i_password"
+                android:drawablePadding="8dp"
+                android:ems="10"
+                android:hint="请输入密码（必填项）"
+                android:imeOptions="actionNext"
+                android:inputType="textPassword"
+                android:lines="1"
+                android:textColor="@color/black"
+                android:textColorHint="@color/colorGrey"
+                android:nextFocusForward="@id/regist_repassword" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp">
+
+            <EditText
+                android:id="@+id/regist_repassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:background="@drawable/edit_sq"
+                android:drawableLeft="@drawable/i_password"
+                android:drawablePadding="8dp"
+                android:ems="10"
+                android:hint="请再次输入密码（必填项）"
+                android:textColor="@color/black"
+                android:textColorHint="@color/colorGrey"
+                android:imeOptions="actionDone"
+                android:inputType="textPassword"
+                android:lines="1" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp">
+
+            <EditText
+                android:id="@+id/regist_realName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:background="@drawable/edit_sq"
+                android:drawableLeft="@drawable/i_account"
+                android:drawablePadding="8dp"
+                android:ems="10"
+                android:hint="请输入真实姓名（必填项）"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:lines="1"
+                android:textColor="@color/black"
+                android:textColorHint="@color/colorGrey"
+                android:nextFocusForward="@id/regist_repassword" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
+
+    <Button
+        android:id="@+id/regist_btn_register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/regiset_list"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="68dp"
+        android:layout_marginRight="30dp"
+        android:background="@drawable/btn_sq"
+        android:text="注册"
+        android:textColor="#FFFFFF" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="60dp"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/tv_tips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="已有账号！点击 "
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/register_goto_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/tv_tips"
+            android:gravity="center"
+            android:text="登 录"
+            android:textColor="#278b69"
+            android:textStyle="bold" />
+    </RelativeLayout>
+</RelativeLayout>

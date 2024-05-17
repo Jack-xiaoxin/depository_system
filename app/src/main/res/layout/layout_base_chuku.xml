@@ -226,7 +226,7 @@
             android:focusableInTouchMode="false"
             android:gravity="right|center_vertical"
             android:hint="@string/hint_output_material_num"
-            android:inputType="text"
+            android:inputType="number"
             android:maxLength="18"
             android:paddingRight="@dimen/card_add_item_margin_right"
             android:textColor="@color/colorTextCardAddEdittext"

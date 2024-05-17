@@ -2,39 +2,39 @@ package com.example.depository_system.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Handler;
-import android.os.Message;
+import android.text.InputType;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
 import com.example.depository_system.DataManagement;
 import com.example.depository_system.R;
 import com.example.depository_system.informs.DepositoryInform;
 import com.example.depository_system.informs.KucunInform;
 import com.example.depository_system.informs.MaterialInform;
-import com.example.depository_system.informs.RukuInform;
-import com.example.depository_system.informs.RukuRecordInform;
+import com.example.depository_system.service.KucunService;
 
-import org.w3c.dom.Text;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 
 // 一个RecyclerViewd的适配器，用于显示入库单
 public class KucunAdapter extends BaseRecycleAdapter{
@@ -88,6 +88,56 @@ public class KucunAdapter extends BaseRecycleAdapter{
         itemHolder.alertNumber.setText("预警数量：" + String.valueOf(mList.get(position).alarmNumber));
         itemHolder.factoryName.setText("厂家：" + myMaterialInform.factoryName);
         itemHolder.projectName.setText("入库项目：" + mList.get(position).projectName);
+
+        itemHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                PopupMenu popupMenu = new PopupMenu(holder.itemView.getContext(), holder.itemView, Gravity.BOTTOM);
+                popupMenu.getMenuInflater().inflate(R.menu.kucun_menu, popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        if(menuItem.getItemId() == R.id.menu_item_modify_kucun) {
+                            new MaterialDialog.Builder(itemHolder.itemView.getContext())
+                                    .title("库存数量")
+                                    .inputType(InputType.TYPE_CLASS_NUMBER)
+                                    .input(null, String.valueOf(mList.get(position).kucunNumber), false, new MaterialDialog.InputCallback() {
+                                        @Override
+                                        public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+                                            String str = dialog.getInputEditText().getText().toString();
+                                            int num = Integer.parseInt(str);
+                                        }
+                                    })
+                                    .content("请输入修改后的库存数量：")
+                                    .negativeText("取消")
+                                    .positiveText("修改")
+                                    .theme(Theme.LIGHT)
+                                    .show();
+                        } else if(menuItem.getItemId() == R.id.menu_item_modify_alert) {
+                            new MaterialDialog.Builder(itemHolder.itemView.getContext())
+                                    .title("预警数量")
+                                    .inputType(InputType.TYPE_CLASS_NUMBER)
+                                    .input(null, String.valueOf(mList.get(position).alarmNumber), false, new MaterialDialog.InputCallback() {
+                                        @Override
+                                        public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+                                            String str = dialog.getInputEditText().getText().toString();
+                                            int num = Integer.parseInt(str);
+                                            Log.d("kevin1", "alert number " + num);
+                                        }
+                                    })
+                                    .content("请输入修改后的预警数量：")
+                                    .negativeText("取消")
+                                    .positiveText("修改")
+                                    .theme(Theme.LIGHT)
+                                    .show();
+                        }
+                        return false;
+                    }
+                });
+                popupMenu.show();
+                return false;
+            }
+        });
     }
 
     public int getItemCount() {

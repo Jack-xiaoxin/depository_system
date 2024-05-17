@@ -1,11 +1,16 @@
 package com.example.depository_system;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Message;
+import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +19,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import com.example.depository_system.fragments.*;
+import com.example.depository_system.view.PersonActivity;
 
 public class MainInterface extends AppCompatActivity {
 
@@ -42,10 +48,13 @@ public class MainInterface extends AppCompatActivity {
 
     private static final int CAMERA_PERMISSIOS_REQUEST_CODE = 100;
 
+    private Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_interface);
+        this.context = context;
 
         initUI();
     }
@@ -70,6 +79,10 @@ public class MainInterface extends AppCompatActivity {
         kucunExportButton = findViewById(R.id.kucun_export_btn);
 
         ruKuView.setOnClickListener(view -> {
+            if(DataManagement.userInform.category >=2) {
+                Toast.makeText(view.getContext(), "无权限，请联系管理员", Toast.LENGTH_SHORT).show();
+                return;
+            }
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.hide(displayedFragment);
             fragmentTransaction.show(rukuFragment);
@@ -80,6 +93,10 @@ public class MainInterface extends AppCompatActivity {
             kucunExportButton.setVisibility(View.GONE);
         });
         chuKuView.setOnClickListener(view -> {
+            if(DataManagement.userInform.category >= 2) {
+                Toast.makeText(view.getContext(), "无权限，请联系管理员", Toast.LENGTH_SHORT).show();
+                return;
+            }
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.hide(displayedFragment);
             fragmentTransaction.show(chukuFragment);
@@ -133,6 +150,7 @@ public class MainInterface extends AppCompatActivity {
         displayedView = kuCunView;
         titleToolbar.setTitle("库存信息查询");
         kucunExportButton.setVisibility(View.VISIBLE);
+        myButton.setVisibility(View.VISIBLE);
 
         kucunExportButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,6 +159,15 @@ public class MainInterface extends AppCompatActivity {
                 Message msg = new Message();
                 msg.obj = -3;
                 kucunFragment1.handler.sendMessage(msg);
+            }
+        });
+
+        myButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("kevin", "mybutton clicked");
+                Intent intent = new Intent(view.getContext(), PersonActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -152,8 +179,9 @@ public class MainInterface extends AppCompatActivity {
     }
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if(requestCode == CAMERA_PERMISSIOS_REQUEST_CODE) {
-            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == CAMERA_PERMISSIOS_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 rukuFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
             } else {
 

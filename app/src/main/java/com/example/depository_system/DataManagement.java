@@ -23,6 +23,8 @@ public class DataManagement {
     public static List<KucunInform> kucunInforms = new ArrayList<>();
     public static List<ProjectInform> projectInforms = new ArrayList<>();
 
+    public static UserInform userInform;
+
     public static void updateDepository() {
         depositoryInforms = DepositoryService.getDepostList(null, null);
     }
