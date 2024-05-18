@@ -98,12 +98,12 @@ public class RukuService {
                     itemInform.projectName = valueObject.getString("project_name");
                     itemInform.depositoryId = valueObject.getString("depository_id");
 
-//                    JSONArray imageArray = valueObject.getJSONArray("images");
-//                    List<String> imgList = new ArrayList<>();
-//                    for (int j = 0; j < imageArray.length(); j++) {
-//                        imgList.add(imageArray.getString(j));
-//                    }
-//                    itemInform.images = imgList;
+                    JSONArray imageArray = valueObject.getJSONArray("images");
+                    List<String> imgList = new ArrayList<>();
+                    for (int j = 0; j < imageArray.length(); j++) {
+                        imgList.add(imageArray.getString(j));
+                    }
+                    itemInform.images = imgList;
 
                     itemInformList.add(itemInform);
                 }

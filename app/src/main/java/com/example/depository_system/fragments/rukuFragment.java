@@ -66,6 +66,7 @@ import com.example.depository_system.service.DepositoryService;
 import com.example.depository_system.service.MaterialService;
 import com.example.depository_system.service.ProjectService;
 import com.example.depository_system.service.RukuService;
+import com.example.depository_system.service.ServiceBase;
 import com.example.depository_system.service.UserService;
 import com.example.depository_system.view.ImageActivity;
 
@@ -334,8 +335,10 @@ public class rukuFragment extends Fragment {
                     requireActivity().startActivity(intent);
                 } else if(indexMsg >= 10000                                                                                                                                                                                                                                                                                                                                                                                                                                                                              && indexMsg <= 10000+list.size()-1){
                     int index = indexMsg - 10000;
-                    File file = new File(imageUriList.get(index).getPath());  //Todo 删除图片可能没完成
-                    if(file.delete()) {
+                    Uri uri = imageUriList.get(index);
+                    ContentResolver contentResolver = requireContext().getContentResolver();
+                    int rowsDeleted = contentResolver.delete(uri, null, null);
+                    if(rowsDeleted > 0) {
                         Toast.makeText(requireContext(), "图片已删除："+list.get(index), Toast.LENGTH_SHORT).show();
                     }
                     list.remove(index);
@@ -492,6 +495,26 @@ public class rukuFragment extends Fragment {
                 }
                 final String[] result = {""};
                 backRukuInform.isNew = false;
+                String imageResult = ServiceBase.uploadImage(imageUriList, getContext().getContentResolver());
+                if(!imageResult.contains("成功")) {
+                    new MaterialDialog.Builder(requireContext())
+                            .positiveText("确定")
+                            .content("图片上传失败，请重新提交入库")
+                            .show();
+                    return ;
+                } else {
+                    new MaterialDialog.Builder(requireContext())
+                            .positiveText("确定")
+                            .content("图片上传成功")
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+//                                    deleteImages();
+                                }
+                            })
+                            .show();
+                }
+                backRukuInform.images = list;
                 result[0] = RukuService.action(backRukuInform);
                 if (result[0].contains("0")) {
                     DataManagement.updateAll();
@@ -501,7 +524,7 @@ public class rukuFragment extends Fragment {
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
                             @Override
                             public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                setEditTextEmpty();
+//                                setEditTextEmpty();
                             }
                         })
                         .show();
@@ -571,6 +594,7 @@ public class rukuFragment extends Fragment {
                             .path(photoUri.getPath())
                             .build();
             Log.d("kevin", contentUri.toString());
+            Log.d("kevin", "url" + photoUri);
             list.add(contentUri.toString());
             imageUriList.add(photoUri);
             recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 5));
@@ -675,7 +699,15 @@ public class rukuFragment extends Fragment {
                 e.printStackTrace();
             }
         }
+    }
 
-
+    private void deleteImages() {
+        for(Uri uri : imageUriList) {
+            ContentResolver contentResolver = requireContext().getContentResolver();
+            int rowsDeleted = contentResolver.delete(uri, null, null);
+        }
+        list.clear();
+        imageUriList.clear();
+        updateImages();
     }
 }

@@ -150,5 +150,12 @@
         android:textColor="@color/white"
         android:textSize="14sp" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/charuku_image_list"
+        android:layout_below="@+id/ruku_project"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></androidx.recyclerview.widget.RecyclerView>
+
 
 </RelativeLayout>

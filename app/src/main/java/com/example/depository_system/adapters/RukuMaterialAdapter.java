@@ -1,13 +1,23 @@
 package com.example.depository_system.adapters;
 
+import static androidx.core.content.ContentProviderCompat.requireContext;
+
+import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.depository_system.DataManagement;
@@ -15,6 +25,7 @@ import com.example.depository_system.R;
 import com.example.depository_system.informs.DepositoryInform;
 import com.example.depository_system.informs.RukuRecordInform;
 import com.example.depository_system.informs.RukuRecordItemInform;
+import com.example.depository_system.view.ImageActivity;
 
 import org.w3c.dom.Text;
 
@@ -23,6 +34,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.logging.LogRecord;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,6 +45,8 @@ public class RukuMaterialAdapter extends BaseRecycleAdapter{
 
     private Context context;
 
+    private Handler handler;
+
     public RukuMaterialAdapter(Context context, List<RukuRecordItemInform> list) {
         this.context = context;
         this.mList = list;
@@ -40,6 +54,12 @@ public class RukuMaterialAdapter extends BaseRecycleAdapter{
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        handler = new android.os.Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                Log.d("kevin", msg.obj.toString());
+            }
+        };
         return new RukuMaterialAdapter.ItemHolder(LayoutInflater.from(context).inflate(R.layout.item_ruku_material, parent, false));
     }
 
@@ -78,6 +98,9 @@ public class RukuMaterialAdapter extends BaseRecycleAdapter{
             }
         }
         itemHolder.projectName.setText("入库项目：" + mList.get(position).projectName);
+
+        itemHolder.recyclerView.setAdapter(new ImageAdapter(mList.get(position).images, null));
+        itemHolder.recyclerView.setLayoutManager(new GridLayoutManager(context, 5));
     }
 
     class ItemHolder extends RecyclerView.ViewHolder {
@@ -103,6 +126,8 @@ public class RukuMaterialAdapter extends BaseRecycleAdapter{
         TextView projectName;
         @BindView(R.id.ruku_depository_name)
         TextView depositoryName;
+        @BindView(R.id.charuku_image_list)
+        RecyclerView recyclerView;
 
         public ItemHolder(View itemView) {
             super(itemView);
