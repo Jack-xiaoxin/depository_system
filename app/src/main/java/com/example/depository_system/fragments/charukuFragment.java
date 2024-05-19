@@ -40,6 +40,7 @@ import com.example.depository_system.informs.ProjectInform;
 import com.example.depository_system.informs.RukuRecordInform;
 import com.example.depository_system.informs.RukuRecordItemInform;
 import com.example.depository_system.service.RukuService;
+import com.example.depository_system.view.ImageActivity;
 import com.loper7.date_time_picker.DateTimeConfig;
 import com.loper7.date_time_picker.dialog.CardDatePickerDialog;
 
@@ -118,18 +119,29 @@ public class charukuFragment extends Fragment {
             @Override
             public void handleMessage(@NonNull Message msg) {
                 super.handleMessage(msg);
-                int index = (int)msg.obj;
-                if(index >= 0) {
-                    Log.d("kevin", ""+index);
-                    showOrderDetail(index);
-                } else if(index == -1) {
-                    RukuOrderAdapter adapter = new RukuOrderAdapter(root.getContext(), rukuRecordInforms, handler);
-                    recyclerView.setAdapter(adapter);
-                    showOrder();
-                } else if(index == -2) {
-                    showEmpty();
+                int arg1 = (int)msg.arg1;
+                if(arg1 == 100 || arg1 == 101) {
+                    if(arg1 == 100) {
+                        String imageUri = (String)msg.obj;
+                        Intent intent = new Intent(requireActivity(), ImageActivity.class);
+                        intent.putExtra("imageUri", imageUri);
+                        startActivity(intent);
+                    } else if(arg1 == 101) {
+                        //Todo save image
+                    }
+                } else {
+                    int index = (int)msg.obj;
+                    if(index >= 0) {
+                        Log.d("kevin", ""+index);
+                        showOrderDetail(index);
+                    } else if(index == -1) {
+                        RukuOrderAdapter adapter = new RukuOrderAdapter(root.getContext(), rukuRecordInforms, handler);
+                        recyclerView.setAdapter(adapter);
+                        showOrder();
+                    } else if(index == -2) {
+                        showEmpty();
+                    }
                 }
-
             }
         };
         date = getTodayDate();
@@ -282,7 +294,7 @@ public class charukuFragment extends Fragment {
         recyclerView.setVisibility(View.GONE);
 
         orderTextView.setText("入库单号：" + rukuRecordInform.inboundIdentifier);
-        recyclerView_material.setAdapter(new RukuMaterialAdapter(root.getContext(), rukuRecordInform.itemList));
+        recyclerView_material.setAdapter(new RukuMaterialAdapter(root.getContext(), rukuRecordInform.itemList, handler));
         recyclerView_material.setLayoutManager(new LinearLayoutManager(root.getContext()));
         frameLayout.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.GONE);

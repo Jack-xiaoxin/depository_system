@@ -42,6 +42,7 @@ import com.example.depository_system.informs.MaterialInform;
 import com.example.depository_system.informs.RukuRecordItemInform;
 import com.example.depository_system.service.ChukuService;
 import com.example.depository_system.service.KucunService;
+import com.example.depository_system.view.ImageActivity;
 import com.loper7.date_time_picker.DateTimeConfig;
 import com.loper7.date_time_picker.dialog.CardDatePickerDialog;
 
@@ -115,17 +116,29 @@ public class chachukuFragment extends Fragment {
             @Override
             public void handleMessage(@NonNull Message msg) {
                 super.handleMessage(msg);
-                int index = (int)msg.obj;
-                if(index >= 0) {
-                    showOrderDetail(index);
-                } else if(index == -1) {
-                    ChukuOrderAdapter adapter = new ChukuOrderAdapter(root.getContext(), chukuRecordInforms, handler);
-                    recyclerView.setAdapter(adapter);
-                    showOrder();
-                } else if(index == -2) {
-                    showEmpty();
+                int arg1 = (int)msg.arg1;
+                if(arg1 == 100 || arg1 == 101) {
+                    if(arg1 == 100) {
+                        String imageUri = (String)msg.obj;
+                        Intent intent = new Intent(requireActivity(), ImageActivity.class);
+                        intent.putExtra("imageUri", imageUri);
+                        startActivity(intent);
+                    } else if(arg1 == 101) {
+                        //Todo save image
+                    }
+                } else {
+                    int index = (int)msg.obj;
+                    if(index >= 0) {
+                        Log.d("kevin", ""+index);
+                        showOrderDetail(index);
+                    } else if(index == -1) {
+                        ChukuOrderAdapter adapter = new ChukuOrderAdapter(root.getContext(), chukuRecordInforms, handler);
+                        recyclerView.setAdapter(adapter);
+                        showOrder();
+                    } else if(index == -2) {
+                        showEmpty();
+                    }
                 }
-
             }
         };
 
@@ -279,7 +292,7 @@ public class chachukuFragment extends Fragment {
         recyclerView.setVisibility(View.GONE);
 
         orderTextView.setText("出库单号：" + chukuRecordInform.outboundIdentifier);
-        recyclerView_material.setAdapter(new ChukuMaterialAdapter(root.getContext(), chukuRecordInform.itemList));
+        recyclerView_material.setAdapter(new ChukuMaterialAdapter(root.getContext(), chukuRecordInform.itemList, handler));
         recyclerView_material.setLayoutManager(new LinearLayoutManager(root.getContext()));
         frameLayout.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.GONE);

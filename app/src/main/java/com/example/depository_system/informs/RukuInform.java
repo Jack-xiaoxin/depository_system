@@ -1,5 +1,7 @@
 package com.example.depository_system.informs;
 
+import android.net.Uri;
+
 import java.sql.Time;
 import java.util.List;
 import java.util.Timer;
@@ -8,7 +10,7 @@ public class RukuInform {
 
     public String depotName;
 
-    public String materialIdentifer;
+    public String materialIdentifier;
 
     public String materialId;
 
@@ -35,5 +37,7 @@ public class RukuInform {
     public String inboundIdentifier;
 
     public String depotId;
+
+    public List<Uri> imageUriList;
 
 }

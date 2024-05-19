@@ -300,8 +300,7 @@ public class rukuFragment extends Fragment {
             public boolean onTouch(View view, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     Set<String> set = new HashSet<>();
-                    if(userInforms == null) userInforms = UserService.getUserList(null, null, null, null);
-                    for(UserInform userInform : userInforms) {
+                    for(UserInform userInform : DataManagement.userInforms) {
                         set.add(userInform.userName);
                     }
                     showListPopupWindow(set.toArray(new String[set.size()]), receiverEditText);
@@ -315,8 +314,7 @@ public class rukuFragment extends Fragment {
             public boolean onTouch(View view, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
                     Set<String> set = new HashSet<>();
-                    if(userInforms == null) userInforms = UserService.getUserList(null, null, null, null);
-                    for(UserInform userInform : userInforms) {
+                    for(UserInform userInform : DataManagement.userInforms) {
                         set.add(userInform.userName);
                     }
                     showListPopupWindow(set.toArray(new String[set.size()]), acceptorEditText);
@@ -415,9 +413,9 @@ public class rukuFragment extends Fragment {
                 }
                 for(MaterialInform materialInform : DataManagement.materialInforms) {
                     if(materialInform.materialName.equals(backRukuInform.materialName)
-                    && materialInform.materialIdentifier.equals(backRukuInform.materialIdentifer)
-                    && materialInform.materialModel.equals(backRukuInform.materialModel)
-                    && materialInform.factoryName.equals(backRukuInform.factoryName)) {
+                            && materialInform.materialIdentifier.equals(backRukuInform.materialIdentifier)
+                            && materialInform.materialModel.equals(backRukuInform.materialModel)
+                            && materialInform.factoryName.equals(backRukuInform.factoryName)) {
                         backRukuInform.materialId = materialInform.materialId;
                         break;
                     }
@@ -428,14 +426,14 @@ public class rukuFragment extends Fragment {
                     normalDialog.setTitle("新增物料");
                     normalDialog.setMessage("发现新的物料，是否添加?\n" +
                             "物料名称：" + backRukuInform.materialName + "\n" +
-                            "物料编码：" + backRukuInform.materialIdentifer + "\n" +
+                            "物料编码：" + backRukuInform.materialIdentifier + "\n" +
                             "物料类型：" + backRukuInform.materialModel + "\n" +
                             "厂家名称：" + backRukuInform.factoryName + "\n");
                     normalDialog.setPositiveButton("确定",
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    boolean result = MaterialService.insertMaterial(backRukuInform.materialName, backRukuInform.materialIdentifer, backRukuInform.materialModel, backRukuInform.factoryName);
+                                    boolean result = MaterialService.insertMaterial(backRukuInform.materialName, backRukuInform.materialIdentifier, backRukuInform.materialModel, backRukuInform.factoryName);
                                     if(result) {
                                         DataManagement.updateMaterial();
                                         Toast.makeText(requireContext(), "添加物料成功", Toast.LENGTH_SHORT).show();
@@ -509,7 +507,7 @@ public class rukuFragment extends Fragment {
                             .onPositive(new MaterialDialog.SingleButtonCallback() {
                                 @Override
                                 public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-//                                    deleteImages();
+                                    deleteImages();
                                 }
                             })
                             .show();
@@ -519,15 +517,15 @@ public class rukuFragment extends Fragment {
                 if (result[0].contains("0")) {
                     DataManagement.updateAll();
                     MaterialDialog materialDialog = new MaterialDialog.Builder(requireContext())
-                        .positiveText("确定")
-                        .content("入库成功")
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-//                                setEditTextEmpty();
-                            }
-                        })
-                        .show();
+                            .positiveText("确定")
+                            .content("入库成功")
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    setEditTextEmpty();
+                                }
+                            })
+                            .show();
                 }
                 uploadBtn.setClickable(true);
             }

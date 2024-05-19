@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.depository_system.DataManagement;
 import com.example.depository_system.R;
 import com.example.depository_system.informs.DepositoryInform;
+import com.example.depository_system.informs.RukuInform;
 import com.example.depository_system.informs.RukuRecordInform;
 import com.example.depository_system.informs.RukuRecordItemInform;
 import com.example.depository_system.view.ImageActivity;
@@ -40,15 +41,15 @@ import java.util.logging.LogRecord;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class RukuMaterialAdapter extends BaseRecycleAdapter{
+public class RukuBatchAdapter extends BaseRecycleAdapter{
 
-    private List<RukuRecordItemInform> mList;
+    private List<RukuInform> mList;
 
     private Context context;
 
     private Handler handler;
 
-    public RukuMaterialAdapter(Context context, List<RukuRecordItemInform> list, Handler handler) {
+    public RukuBatchAdapter(Context context, List<RukuInform> list, Handler handler) {
         this.context = context;
         this.mList = list;
         this.handler = handler;
@@ -56,7 +57,7 @@ public class RukuMaterialAdapter extends BaseRecycleAdapter{
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new RukuMaterialAdapter.ItemHolder(LayoutInflater.from(context).inflate(R.layout.item_ruku_material, parent, false));
+        return new RukuBatchAdapter.ItemHolder(LayoutInflater.from(context).inflate(R.layout.item_ruku_material, parent, false));
     }
 
     @Override
@@ -73,27 +74,22 @@ public class RukuMaterialAdapter extends BaseRecycleAdapter{
         itemHolder.materialType.setText("物资型号：" + mList.get(position).materialModel);
         itemHolder.materialNum.setText("物资数量：" + mList.get(position).number);
         itemHolder.factoryName.setText("工厂名称：" + mList.get(position).factoryName);
-        String originaldate = mList.get(position).inboundTime;
-        SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS");
-        try {
-            Date date = originalFormat.parse(originaldate);
-            SimpleDateFormat targetFormat = new SimpleDateFormat("yyyy-MM-dd");
-            String formattedTime = targetFormat.format(date);
-            itemHolder.time.setText(formattedTime);
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
+        itemHolder.time.setText("时间：" + mList.get(position).time);
         itemHolder.receiver.setText("收货人：" + mList.get(position).receiver);
-        itemHolder.accepter.setText("验收人：" + mList.get(position).checker);
-        for(DepositoryInform depositoryInform : DataManagement.depositoryInforms) {
-            if(depositoryInform.depotId.equals(mList.get(position).depositoryId)) {
-                itemHolder.depositoryName.setText("仓库：" + depositoryInform.depotName);
-                break;
-            }
-        }
+        itemHolder.accepter.setText("验收人：" + mList.get(position).acceptor);
+        itemHolder.depositoryName.setText("仓库：" + mList.get(position).depotName);
         itemHolder.projectName.setText("入库项目：" + mList.get(position).projectName);
         itemHolder.recyclerView.setAdapter(new ImageAdapter_display(mList.get(position).images, handler));
         itemHolder.recyclerView.setLayoutManager(new GridLayoutManager(context, 5));
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Message msg = new Message();
+                msg.obj = position;
+                handler.sendMessage(msg);
+            }
+        });
     }
 
     class ItemHolder extends RecyclerView.ViewHolder {

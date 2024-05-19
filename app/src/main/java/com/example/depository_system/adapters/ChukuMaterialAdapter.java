@@ -1,6 +1,7 @@
 package com.example.depository_system.adapters;
 
 import android.content.Context;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.depository_system.R;
@@ -26,9 +28,12 @@ public class ChukuMaterialAdapter extends BaseRecycleAdapter{
 
     private Context context;
 
-    public ChukuMaterialAdapter(Context context, List<ChukuRecordItemInform> list) {
+    private Handler handler;
+
+    public ChukuMaterialAdapter(Context context, List<ChukuRecordItemInform> list, Handler handler) {
         this.context = context;
         this.mList = list;
+        this.handler = handler;
     }
     @NonNull
     @Override
@@ -57,6 +62,8 @@ public class ChukuMaterialAdapter extends BaseRecycleAdapter{
         itemHolder.projectName.setText("项目名称：" + mList.get(position).projectName);
         itemHolder.projectMajor.setText("项目负责人：" + mList.get(position).projectMajor);
         itemHolder.departmentName.setText("领用单位：" + mList.get(position).departmentName);
+        itemHolder.recyclerView.setAdapter(new ImageAdapter_display(mList.get(position).images, handler));
+        itemHolder.recyclerView.setLayoutManager(new GridLayoutManager(context,5));
     }
 
     class ItemHolder extends RecyclerView.ViewHolder {
@@ -82,6 +89,8 @@ public class ChukuMaterialAdapter extends BaseRecycleAdapter{
         TextView projectMajor;
         @BindView(R.id.chuku_accepter_name)
         TextView receiverName;
+        @BindView(R.id.chuku_material_imagelist)
+        RecyclerView recyclerView;
 
         public ItemHolder(View itemView) {
             super(itemView);

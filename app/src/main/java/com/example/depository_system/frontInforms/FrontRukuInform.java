@@ -31,7 +31,7 @@ public class FrontRukuInform {
     public RukuInform convetToRukuInform() {
         RukuInform rukuInform = new RukuInform();
         rukuInform.depotName = depotName;
-        rukuInform.materialIdentifer = materialIdentifier;
+        rukuInform.materialIdentifier = materialIdentifier;
         rukuInform.materialName = materialName;
         rukuInform.materialModel = materialType;
         rukuInform.number = materialNum;

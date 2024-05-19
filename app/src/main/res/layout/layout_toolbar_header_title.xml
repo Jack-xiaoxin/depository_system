@@ -37,6 +37,20 @@
                 android:layout_centerVertical="true"
                 android:text="我的"
                 android:visibility="gone"></Button>
+            <Button
+                android:id="@+id/batch_ruku"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="批量入库"
+                android:visibility="gone"></Button>
+            <Button
+                android:id="@+id/batch_chuku"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="批量出库"
+                android:visibility="gone"></Button>
         </LinearLayout>
 
 

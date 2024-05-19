@@ -19,6 +19,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import com.example.depository_system.fragments.*;
+import com.example.depository_system.view.BatchChukuActivity;
+import com.example.depository_system.view.BatchRukuActivity;
 import com.example.depository_system.view.PersonActivity;
 
 public class MainInterface extends AppCompatActivity {
@@ -45,6 +47,10 @@ public class MainInterface extends AppCompatActivity {
     private Button myButton;
 
     private Button kucunExportButton;
+
+    private Button batchRukuButton;
+
+    private Button batchChukuButton;
 
     private static final int CAMERA_PERMISSIOS_REQUEST_CODE = 100;
 
@@ -77,6 +83,8 @@ public class MainInterface extends AppCompatActivity {
 
         myButton = findViewById(R.id.myself_btn);
         kucunExportButton = findViewById(R.id.kucun_export_btn);
+        batchRukuButton = findViewById(R.id.batch_ruku);
+        batchChukuButton = findViewById(R.id.batch_chuku);
 
         ruKuView.setOnClickListener(view -> {
             if(DataManagement.userInform.category >=2) {
@@ -91,6 +99,8 @@ public class MainInterface extends AppCompatActivity {
             displayedFragment = rukuFragment;
             titleToolbar.setTitle("入库信息填写");
             kucunExportButton.setVisibility(View.GONE);
+            batchRukuButton.setVisibility(View.VISIBLE);
+            batchChukuButton.setVisibility(View.GONE);
         });
         chuKuView.setOnClickListener(view -> {
             if(DataManagement.userInform.category >= 2) {
@@ -105,6 +115,8 @@ public class MainInterface extends AppCompatActivity {
             displayedFragment = chukuFragment;
             titleToolbar.setTitle("出库信息填写");
             kucunExportButton.setVisibility(View.GONE);
+            batchRukuButton.setVisibility(View.GONE);
+            batchChukuButton.setVisibility(View.VISIBLE);
         });
         chaRukuView.setOnClickListener(view -> {
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -115,6 +127,8 @@ public class MainInterface extends AppCompatActivity {
             displayedFragment = charukuFragment;
             titleToolbar.setTitle("入库信息查询");
             kucunExportButton.setVisibility(View.GONE);
+            batchRukuButton.setVisibility(View.GONE);
+            batchChukuButton.setVisibility(View.GONE);
         });
         chaChukuView.setOnClickListener(view -> {
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -125,6 +139,8 @@ public class MainInterface extends AppCompatActivity {
             displayedFragment = chachukuFragment;
             titleToolbar.setTitle("出库信息查询");
             kucunExportButton.setVisibility(View.GONE);
+            batchRukuButton.setVisibility(View.GONE);
+            batchChukuButton.setVisibility(View.GONE);
         });
         kuCunView.setOnClickListener(view -> {
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -135,6 +151,8 @@ public class MainInterface extends AppCompatActivity {
             displayedFragment = kucunFragment;
             titleToolbar.setTitle("库存信息查询");
             kucunExportButton.setVisibility(View.VISIBLE);
+            batchRukuButton.setVisibility(View.GONE);
+            batchChukuButton.setVisibility(View.GONE);
         });
 
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -151,6 +169,8 @@ public class MainInterface extends AppCompatActivity {
         titleToolbar.setTitle("库存信息查询");
         kucunExportButton.setVisibility(View.VISIBLE);
         myButton.setVisibility(View.VISIBLE);
+        batchRukuButton.setVisibility(View.GONE);
+        batchChukuButton.setVisibility(View.GONE);
 
         kucunExportButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -167,6 +187,24 @@ public class MainInterface extends AppCompatActivity {
             public void onClick(View view) {
                 Log.d("kevin", "mybutton clicked");
                 Intent intent = new Intent(view.getContext(), PersonActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        batchChukuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("kevin", "batchChukuButton clicked");
+                Intent intent = new Intent(view.getContext(), BatchChukuActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        batchRukuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("kevin", "batchRukuButton clicked");
+                Intent intent = new Intent(view.getContext(), BatchRukuActivity.class);
                 startActivity(intent);
             }
         });

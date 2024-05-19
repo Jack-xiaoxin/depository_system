@@ -100,12 +100,12 @@ public class ChukuService {
                     itemInform.projectName = valueObject.getString("apply_project_name");
                     itemInform.depository_id = valueObject.getString("depository_id");
 
-//                    JSONArray imageArray = valueObject.getJSONArray("images");
-//                    List<String> imgList = new ArrayList<>();
-//                    for (int j = 0; j < imageArray.length(); j++) {
-//                        imgList.add(imageArray.getString(j));
-//                    }
-//                    itemInform.images = imgList;
+                    JSONArray imageArray = valueObject.getJSONArray("images");
+                    List<String> imgList = new ArrayList<>();
+                    for (int j = 0; j < imageArray.length(); j++) {
+                        imgList.add(imageArray.getString(j));
+                    }
+                    itemInform.images = imgList;
 
                     itemInformList.add(itemInform);
                 }

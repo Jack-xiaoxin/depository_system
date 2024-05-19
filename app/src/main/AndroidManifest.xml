@@ -16,6 +16,12 @@
         android:theme="@style/Theme.AppCompat.NoActionBar"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".view.BatchRukuActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.BathRukuActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.PersonActivity"
             android:exported="false" />
         <activity

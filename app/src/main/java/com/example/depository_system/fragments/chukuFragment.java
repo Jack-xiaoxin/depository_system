@@ -3,6 +3,7 @@ package com.example.depository_system.fragments;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,6 +15,8 @@ import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -36,9 +39,14 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.depository_system.DataManagement;
 import com.example.depository_system.R;
+import com.example.depository_system.adapters.ImageAdapter;
 import com.example.depository_system.frontInforms.FrontRukuInform;
 import com.example.depository_system.informs.ChukuActionInform;
 import com.example.depository_system.informs.DepositoryInform;
@@ -53,7 +61,9 @@ import com.example.depository_system.service.KucunService;
 import com.example.depository_system.service.MaterialService;
 import com.example.depository_system.service.ProjectService;
 import com.example.depository_system.service.RukuService;
+import com.example.depository_system.service.ServiceBase;
 import com.example.depository_system.service.UserService;
+import com.example.depository_system.view.ImageActivity;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -115,34 +125,16 @@ public class chukuFragment extends Fragment {
     Button uploadButton;
     @BindView(R.id.photo)
     Button photoButton;
-
-    @BindView(R.id.chuku_image1)
-    ImageView imageView1;
-    @BindView(R.id.chuku_image2)
-    ImageView imageView2;
-    @BindView(R.id.chuku_image3)
-    ImageView imageView3;
-    @BindView(R.id.chuku_image4)
-    ImageView imageView4;
-    @BindView(R.id.chuku_image5)
-    ImageView imageView5;
-
-    @BindView(R.id.chuku_cha1)
-    ImageButton imageButton1;
-    @BindView(R.id.chuku_cha2)
-    ImageButton imageButton2;
-    @BindView(R.id.chuku_cha3)
-    ImageButton imageButton3;
-    @BindView(R.id.chuku_cha4)
-    ImageButton imageButton4;
-    @BindView(R.id.chuku_cha5)
-    ImageButton imageButton5;
+    @BindView(R.id.chuku_imageList)
+    RecyclerView recyclerView;
 
     private View root;
     private Context context;
     private Activity activity;
-    List<Uri> imageList = new ArrayList<>();
+    List<Uri> imageUriList = new ArrayList<>();
+    List<String> imageList = new ArrayList<>();
     Uri photoUri;
+    private Handler handler;
 
     private static final int CAMERA_PERMISSIOS_REQUEST_CODE = 100;
 
@@ -307,6 +299,32 @@ public class chukuFragment extends Fragment {
             }
         });
 
+        handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                int indexMsg = (int)msg.obj;
+                if(indexMsg >= 100 && indexMsg <= 100+imageList.size()-1) {
+                    Intent intent = new Intent(requireActivity(), ImageActivity.class);
+                    intent.putExtra("imageUri", imageList.get(indexMsg-100));
+                    requireActivity().startActivity(intent);
+                } else if(indexMsg >= 10000 && indexMsg <= 10000+imageList.size()-1){
+                    int index = indexMsg - 10000;
+                    Uri uri = imageUriList.get(index);
+                    ContentResolver contentResolver = requireContext().getContentResolver();
+                    int rowsDeleted = contentResolver.delete(uri, null, null);
+                    if(rowsDeleted > 0) {
+                        Toast.makeText(requireContext(), "图片已删除："+imageList.get(index), Toast.LENGTH_SHORT).show();
+                    }
+                    imageList.remove(index);
+                    imageUriList.remove(index);
+                    updateImages();
+                } else if(indexMsg >= 1000 && indexMsg <= 1000+imageList.size()-1) {
+                    int index = indexMsg - 1000;
+//                    save(index);
+                }
+            }
+        };
+
         photoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -363,7 +381,7 @@ public class chukuFragment extends Fragment {
                         if(materialInform.materialIdentifier.equals(backChukuInform.materialIdentifier)
                         && materialInform.factoryName.equals(backChukuInform.factoryName)
                         && materialInform.materialModel.equals(materialTypeEditText.getText().toString())
-                        && materialInform.factoryName.equals(materialNameEditText.getText().toString())) {
+                        && materialInform.factoryName.equals(factoryNamEditText.getText().toString())) {
                              backChukuInform.materialId = materialInform.materialId;
                             break;
                         }
@@ -395,6 +413,26 @@ public class chukuFragment extends Fragment {
                     if(backChukuInform.number > kucunInform.kucunNumber) {
                         showAlertDialog("库存不够, 当前库存数量：" + factoryNamEditText.getText() + ": " + kucunInform.kucunNumber);
                     } else {
+                        backChukuInform.images = imageList;
+                        String imageResult = ServiceBase.uploadImage(imageUriList, getContext().getContentResolver());
+                        if(!imageResult.contains("成功")) {
+                            new MaterialDialog.Builder(requireContext())
+                                    .positiveText("确定")
+                                    .content("图片上传失败，请重新提交入库")
+                                    .show();
+                            return ;
+                        } else {
+                            new MaterialDialog.Builder(requireContext())
+                                    .positiveText("确定")
+                                    .content("图片上传成功")
+                                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                        @Override
+                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                            deleteImages();
+                                        }
+                                    })
+                                    .show();
+                        }
                         String result = ChukuService.action(backChukuInform);
                         if(result.length() == 38) {
                             DataManagement.updateAll();
@@ -461,36 +499,6 @@ public class chukuFragment extends Fragment {
         receiverNameEditText.setText("");
         userOrganizationEditText.setText("");
     }
-
-    private ImageButton getImageButtonFromCount(int count) {
-        if(count == 1) {
-            return imageButton1;
-        } else if(count == 2) {
-            return imageButton2;
-        } else if(count == 3) {
-            return imageButton3;
-        } else if(count == 4) {
-            return imageButton4;
-        } else if(count == 5) {
-            return imageButton5;
-        }
-        return null;
-    }
-
-    private ImageView getImageViewFromCount(int count) {
-        if(count == 1) {
-            return imageView1;
-        } else if(count == 2) {
-            return imageView2;
-        } else if(count == 3) {
-            return imageView3;
-        } else if(count == 4) {
-            return imageView4;
-        } else if(count == 5) {
-            return imageView5;
-        }
-        return null;
-    }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -542,60 +550,16 @@ public class chukuFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 80 && resultCode == -1) {
             Log.d("kevin", "拍照成功");
-            imageList.add(photoUri);
+            Uri contentUri = new Uri.Builder()
+                    .scheme(ContentResolver.SCHEME_CONTENT)
+                    .authority("com.example.android.fileprovider")
+                    .path(photoUri.getPath())
+                    .build();
+            imageUriList.add(photoUri);
+            imageList.add(contentUri.toString());
+            recyclerView.setLayoutManager(new GridLayoutManager(context, 5));
+            recyclerView.setAdapter(new ImageAdapter(imageList, handler));
 
-            InputStream inputStream = null;
-            try {
-                inputStream = requireContext().getContentResolver().openInputStream(photoUri);
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-            Bitmap rotatedBitmap = BitmapFactory.decodeStream(inputStream);
-            Matrix matrix = new Matrix();
-            matrix.postRotate(90); // Rotate 90 degrees clockwise
-
-            Bitmap originalBitmap = Bitmap.createBitmap(rotatedBitmap, 0, 0, rotatedBitmap.getWidth(), rotatedBitmap.getHeight(), matrix, true);
-            float density = getResources().getDisplayMetrics().density;
-            int maxWidth = (int) (60 * density);
-            int maxHeight = (int) (80 * density);
-            int originalWidth = originalBitmap.getWidth();
-            int originalHeight = originalBitmap.getHeight();
-            float scale = Math.min((float) maxWidth / originalWidth, (float) maxHeight / originalHeight);
-            int scaledWidth = Math.round(originalWidth * scale);
-            int scaledHeight = Math.round(originalHeight * scale);
-            Bitmap scaledBitmap = Bitmap.createScaledBitmap(originalBitmap, scaledWidth, scaledHeight, false);
-
-            ImageView imageView = getImageViewFromCount(count);
-            ImageButton imageButton = getImageButtonFromCount(count);
-            ImageButton preImageButton = getImageButtonFromCount(count-1);
-            if(preImageButton != null) preImageButton.setVisibility(View.GONE);
-            count++;
-            imageView.setImageBitmap(scaledBitmap);
-            imageView.setVisibility(View.VISIBLE);
-            imageButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //删除图片
-                    Uri uri = imageList.get(count-2);
-                    new File(uri.getPath()).delete();
-                    Toast.makeText(requireContext(), "已删除图片"+uri.getLastPathSegment(), Toast.LENGTH_SHORT).show();
-                    //不再显示
-                    imageView.setImageBitmap(null);
-                    view.setVisibility(View.GONE);
-                    count--;
-                    if(preImageButton != null) preImageButton.setVisibility(View.VISIBLE);
-                    if(count <= 5) {
-                        photoButton.setClickable(true);
-                        photoButton.setBackground(requireContext().getDrawable(R.drawable.conor_button_green));
-                    }
-                }
-            });
-            imageButton.setVisibility(View.VISIBLE);
-
-            if(count >= 6) {
-                photoButton.setClickable(false);
-                photoButton.setBackground(requireContext().getDrawable(R.drawable.conor_button_grey));
-            }
 
         }
     }
@@ -613,5 +577,20 @@ public class chukuFragment extends Fragment {
             }
         });
         normalDialog.show();
+    }
+
+    private void updateImages() {
+        recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 5));
+        recyclerView.setAdapter(new ImageAdapter(imageList, handler));
+    }
+
+    private void deleteImages() {
+        for(Uri uri : imageUriList) {
+            ContentResolver contentResolver = requireContext().getContentResolver();
+            int rowsDeleted = contentResolver.delete(uri, null, null);
+        }
+        imageList.clear();
+        imageUriList.clear();
+        updateImages();
     }
 }
