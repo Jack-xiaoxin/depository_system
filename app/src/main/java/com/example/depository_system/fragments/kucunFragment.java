@@ -120,11 +120,17 @@ public class kucunFragment extends Fragment {
                     recyclerView.setLayoutManager(new LinearLayoutManager(root.getContext()));
                     recyclerView.setVisibility(View.VISIBLE);
                 } else if(index == -4) {
-                    emptyFrameLayout.setVisibility(View.GONE);
-                    DataManagement.updateKucunInfo();
-                    recyclerView.setAdapter(new KucunAdapter(requireContext(), DataManagement.kucunInforms, handler));
-                    recyclerView.setLayoutManager(new LinearLayoutManager(root.getContext()));
-                    recyclerView.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.GONE);
+                    if(kucunInformList.isEmpty()) {
+                        emptyFrameLayout.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
+                    } else {
+                        emptyFrameLayout.setVisibility(View.GONE);
+                        DataManagement.updateKucunInfo();
+                        recyclerView.setAdapter(new KucunAdapter(requireContext(), DataManagement.kucunInforms, handler));
+                        recyclerView.setLayoutManager(new LinearLayoutManager(root.getContext()));
+                        recyclerView.setVisibility(View.VISIBLE);
+                    }
                 }
             }
         };

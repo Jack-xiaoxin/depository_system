@@ -226,4 +226,12 @@ public class MainInterface extends AppCompatActivity {
             }
         }
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(DataManagement.userInform == null) {
+            finish();
+        }
+    }
 }

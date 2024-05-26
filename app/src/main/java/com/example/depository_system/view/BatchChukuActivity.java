@@ -154,7 +154,25 @@ public class BatchChukuActivity extends AppCompatActivity {
         handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                return ;
+                super.handleMessage(msg);
+                if(msg.obj instanceof Integer) {
+                    int index = (int)msg.obj;
+                    if(index >= 0 && index <= chukuRecordItemInforms.size()) {
+                        setMaterialInformAndDisplay(chukuRecordItemInforms.get(index));
+                        indexFixing = index;
+                    } else if(index >= 10000 && index <= 10000+images.size()-1) {
+                        ContentResolver contentResolver = getContentResolver();
+                        int rowsDeleted = contentResolver.delete(imageUris.get(index-10000), null, null);
+                        images.remove(index-10000);
+                        imageUris.remove(index-10000);
+                        updateImageRecylerView();
+                    }
+                } else {
+                    String imageUri = String.valueOf(msg.obj);
+                    Intent intent = new Intent(context, ImageActivity.class);
+                    intent.putExtra("imageUri", imageUri);
+                    startActivity(intent);
+                }
             }
         };
 
@@ -732,5 +750,20 @@ public class BatchChukuActivity extends AppCompatActivity {
         images.clear();
         imageUris.clear();
         updateImages();
+    }
+
+    private void setMaterialInformAndDisplay(ChukuRecordItemInform chukuRecordItemInform) {
+        materialIdentifierEditText.setText(chukuRecordItemInform.materialIdentifier);
+        materialNameEditText.setText(chukuRecordItemInform.materialName);
+        materialNumEditText.setText(String.valueOf(chukuRecordItemInform.number));
+        materialTypeEditText.setText(chukuRecordItemInform.materialModel);
+        depositoryEditText.setText(chukuRecordItemInform.depositoryName);
+        receiverEditText.setText(chukuRecordItemInform.applier);
+        images = chukuRecordItemInform.images;
+        imageUris = chukuRecordItemInform.imageUriList;
+        addAllLinearLayout.setVisibility(View.GONE);
+        addMaterialLinearLayout.setVisibility(View.VISIBLE);
+        updateImageRecylerView();
+        saveMaterialButton.setText("修改");
     }
 }

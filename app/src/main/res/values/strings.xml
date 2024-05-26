@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">depository_system</string>
+    <string name="app_name">仓储系统 V1.0</string>
     <string name="read_agreement">我已阅读并同意</string>
     <string name="service_agreement">《服务协议》</string>
     <string name="upload">提交</string>

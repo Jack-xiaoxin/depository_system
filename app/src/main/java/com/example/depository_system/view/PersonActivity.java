@@ -16,6 +16,7 @@ import android.widget.ListPopupWindow;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.example.depository_system.DataManagement;
 import com.example.depository_system.R;
 import com.example.depository_system.informs.MaterialInform;
 import com.example.depository_system.informs.UserInform;
@@ -54,6 +55,14 @@ public class PersonActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                finish();
+            }
+        });
+
+        logoutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DataManagement.userInform = null;
                 finish();
             }
         });

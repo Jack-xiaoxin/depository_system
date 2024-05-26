@@ -326,26 +326,34 @@ public class rukuFragment extends Fragment {
         handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                int indexMsg = (int)msg.obj;
-                if(indexMsg >= 100 && indexMsg <= 100+list.size()-1) {
-                    Intent intent = new Intent(requireActivity(), ImageActivity.class);
-                    intent.putExtra("imageUri", list.get(indexMsg-100));
-                    requireActivity().startActivity(intent);
-                } else if(indexMsg >= 10000                                                                                                                                                                                                                                                                                                                                                                                                                                                                              && indexMsg <= 10000+list.size()-1){
-                    int index = indexMsg - 10000;
-                    Uri uri = imageUriList.get(index);
-                    ContentResolver contentResolver = requireContext().getContentResolver();
-                    int rowsDeleted = contentResolver.delete(uri, null, null);
-                    if(rowsDeleted > 0) {
-                        Toast.makeText(requireContext(), "图片已删除："+list.get(index), Toast.LENGTH_SHORT).show();
+                if(msg.obj instanceof Integer) {
+                    int indexMsg = (int)msg.obj;
+                    if(indexMsg >= 100 && indexMsg <= 100+list.size()-1) {
+                        Intent intent = new Intent(requireActivity(), ImageActivity.class);
+                        intent.putExtra("imageUri", list.get(indexMsg-100));
+                        requireActivity().startActivity(intent);
+                    } else if(indexMsg >= 10000                                                                                                                                                                                                                                                                                                                                                                                                                                                                              && indexMsg <= 10000+list.size()-1){
+                        int index = indexMsg - 10000;
+                        Uri uri = imageUriList.get(index);
+                        ContentResolver contentResolver = requireContext().getContentResolver();
+                        int rowsDeleted = contentResolver.delete(uri, null, null);
+                        if(rowsDeleted > 0) {
+                            Toast.makeText(requireContext(), "图片已删除："+list.get(index), Toast.LENGTH_SHORT).show();
+                        }
+                        list.remove(index);
+                        imageUriList.remove(index);
+                        updateImages();
+                    } else if(indexMsg >= 1000 && indexMsg <= 1000+list.size()-1) {
+                        int index = indexMsg - 1000;
+                        save(index);
                     }
-                    list.remove(index);
-                    imageUriList.remove(index);
-                    updateImages();
-                } else if(indexMsg >= 1000 && indexMsg <= 1000+list.size()-1) {
-                    int index = indexMsg - 1000;
-                    save(index);
+                } else {
+                    String imageUri = String.valueOf(msg.obj);
+                    Intent intent = new Intent(requireContext(), ImageActivity.class);
+                    intent.putExtra("imageUri", imageUri);
+                    startActivity(intent);
                 }
+
             }
         };
 //

@@ -66,7 +66,8 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
                         switch (item.getItemId()) {
                             case R.id.menu_item_display:
                                 Message msg1 = new Message();
-                                msg1.obj = 100+position;
+//                                msg1.obj = 100+position;
+                                msg1.obj = imageUri;
                                 handler.sendMessage(msg1);
                                 return true;
                             case R.id.menu_item_save:

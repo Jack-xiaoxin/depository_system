@@ -103,6 +103,15 @@ public class ChukuBatchAdapter extends BaseRecycleAdapter{
                 handler.sendMessage(msg);
             }
         });
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Message msg = new Message();
+                msg.obj = position;
+                handler.sendMessage(msg);
+            }
+        });
     }
 
     class ItemHolder extends RecyclerView.ViewHolder {

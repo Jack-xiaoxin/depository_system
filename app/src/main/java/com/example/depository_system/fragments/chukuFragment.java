@@ -302,26 +302,34 @@ public class chukuFragment extends Fragment {
         handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                int indexMsg = (int)msg.obj;
-                if(indexMsg >= 100 && indexMsg <= 100+imageList.size()-1) {
-                    Intent intent = new Intent(requireActivity(), ImageActivity.class);
-                    intent.putExtra("imageUri", imageList.get(indexMsg-100));
-                    requireActivity().startActivity(intent);
-                } else if(indexMsg >= 10000 && indexMsg <= 10000+imageList.size()-1){
-                    int index = indexMsg - 10000;
-                    Uri uri = imageUriList.get(index);
-                    ContentResolver contentResolver = requireContext().getContentResolver();
-                    int rowsDeleted = contentResolver.delete(uri, null, null);
-                    if(rowsDeleted > 0) {
-                        Toast.makeText(requireContext(), "图片已删除："+imageList.get(index), Toast.LENGTH_SHORT).show();
-                    }
-                    imageList.remove(index);
-                    imageUriList.remove(index);
-                    updateImages();
-                } else if(indexMsg >= 1000 && indexMsg <= 1000+imageList.size()-1) {
-                    int index = indexMsg - 1000;
+                if(msg.obj instanceof Integer) {
+                    int indexMsg = (int)msg.obj;
+                    if(indexMsg >= 100 && indexMsg <= 100+imageList.size()-1) {
+                        Intent intent = new Intent(requireActivity(), ImageActivity.class);
+                        intent.putExtra("imageUri", imageList.get(indexMsg-100));
+                        requireActivity().startActivity(intent);
+                    } else if(indexMsg >= 10000 && indexMsg <= 10000+imageList.size()-1){
+                        int index = indexMsg - 10000;
+                        Uri uri = imageUriList.get(index);
+                        ContentResolver contentResolver = requireContext().getContentResolver();
+                        int rowsDeleted = contentResolver.delete(uri, null, null);
+                        if(rowsDeleted > 0) {
+                            Toast.makeText(requireContext(), "图片已删除："+imageList.get(index), Toast.LENGTH_SHORT).show();
+                        }
+                        imageList.remove(index);
+                        imageUriList.remove(index);
+                        updateImages();
+                    } else if(indexMsg >= 1000 && indexMsg <= 1000+imageList.size()-1) {
+                        int index = indexMsg - 1000;
 //                    save(index);
+                    }
+                } else {
+                    String imageUri = String.valueOf(msg.obj);
+                    Intent intent = new Intent(requireContext(), ImageActivity.class);
+                    intent.putExtra("imageUri", imageUri);
+                    startActivity(intent);
                 }
+
             }
         };
 
