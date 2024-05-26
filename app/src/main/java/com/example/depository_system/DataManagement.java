@@ -1,11 +1,13 @@
 package com.example.depository_system;
 
+import com.example.depository_system.informs.DepartmentInform;
 import com.example.depository_system.informs.DepositoryInform;
 import com.example.depository_system.informs.KucunInform;
 import com.example.depository_system.informs.MaterialInform;
 import com.example.depository_system.informs.ProjectInform;
 import com.example.depository_system.informs.RukuRecordInform;
 import com.example.depository_system.informs.UserInform;
+import com.example.depository_system.service.DepartmentService;
 import com.example.depository_system.service.DepositoryService;
 import com.example.depository_system.service.KucunService;
 import com.example.depository_system.service.MaterialService;
@@ -22,6 +24,7 @@ public class DataManagement {
     public static List<UserInform> userInforms = new ArrayList<>();
     public static List<KucunInform> kucunInforms = new ArrayList<>();
     public static List<ProjectInform> projectInforms = new ArrayList<>();
+    public static List<DepartmentInform> departmentInforms = new ArrayList<>();
 
     public static UserInform userInform;
 
@@ -45,11 +48,16 @@ public class DataManagement {
         projectInforms = ProjectService.getProjectList(null);
     }
 
+    public static void updateDepartmentInfo() {
+        departmentInforms = DepartmentService.getDepartmentList(null);
+    }
+
     public static void updateAll() {
         updateDepository();
         updateMaterial();
         updateUserInfo();
         updateProjectInfo();
         updateKucunInfo();
+        updateDepartmentInfo();
     }
 }

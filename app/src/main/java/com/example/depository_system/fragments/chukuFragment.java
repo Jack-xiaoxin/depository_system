@@ -376,6 +376,7 @@ public class chukuFragment extends Fragment {
                     backChukuInform.director = projectMajorEditText.getText().toString();
                     backChukuInform.number = Integer.parseInt(materialNumEditText.getText().toString());
                     backChukuInform.factoryName = factoryNamEditText.getText().toString();
+                    backChukuInform.time = timeEditText.getText().toString();
                     //设置materialId
                     for(MaterialInform materialInform : DataManagement.materialInforms) {
                         if(materialInform.materialIdentifier.equals(backChukuInform.materialIdentifier)
@@ -409,29 +410,37 @@ public class chukuFragment extends Fragment {
                     }
                     //检查数量够不够
                     List<KucunInform> kucunInformList = KucunService.getKucunList(null, backChukuInform.materialId, backChukuInform.depotId, projectId);
+                    if(kucunInformList.size() < 1) {
+                        showAlertDialog("无此库存信息，请检查仓库、物料、项目");
+                        uploadButton.setClickable(true);
+                        return;
+                    }
                     KucunInform kucunInform = kucunInformList.get(0);
                     if(backChukuInform.number > kucunInform.kucunNumber) {
                         showAlertDialog("库存不够, 当前库存数量：" + factoryNamEditText.getText() + ": " + kucunInform.kucunNumber);
                     } else {
-                        backChukuInform.images = imageList;
-                        String imageResult = ServiceBase.uploadImage(imageUriList, getContext().getContentResolver());
-                        if(!imageResult.contains("成功")) {
-                            new MaterialDialog.Builder(requireContext())
-                                    .positiveText("确定")
-                                    .content("图片上传失败，请重新提交入库")
-                                    .show();
-                            return ;
-                        } else {
-                            new MaterialDialog.Builder(requireContext())
-                                    .positiveText("确定")
-                                    .content("图片上传成功")
-                                    .onPositive(new MaterialDialog.SingleButtonCallback() {
-                                        @Override
-                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                            deleteImages();
-                                        }
-                                    })
-                                    .show();
+                        if(imageList.size() > 0) {
+                            backChukuInform.images = imageList;
+                            String imageResult = ServiceBase.uploadImage(imageUriList, getContext().getContentResolver());
+                            if(!imageResult.contains("成功")) {
+                                new MaterialDialog.Builder(requireContext())
+                                        .positiveText("确定")
+                                        .content("图片上传失败，请重新提交入库")
+                                        .show();
+                                uploadButton.setClickable(true);
+                                return ;
+                            } else {
+                                new MaterialDialog.Builder(requireContext())
+                                        .positiveText("确定")
+                                        .content("图片上传成功")
+                                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                            @Override
+                                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                                deleteImages();
+                                            }
+                                        })
+                                        .show();
+                            }
                         }
                         String result = ChukuService.action(backChukuInform);
                         if(result.length() == 38) {
@@ -559,8 +568,6 @@ public class chukuFragment extends Fragment {
             imageList.add(contentUri.toString());
             recyclerView.setLayoutManager(new GridLayoutManager(context, 5));
             recyclerView.setAdapter(new ImageAdapter(imageList, handler));
-
-
         }
     }
 

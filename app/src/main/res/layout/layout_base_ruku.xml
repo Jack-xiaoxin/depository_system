@@ -5,7 +5,7 @@
     android:background="@color/mainBg"
     android:orientation="vertical">
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/rel_reset_bypsw"
         android:layout_width="match_parent"
         android:layout_height="@dimen/itemCardAddHeight"
@@ -23,16 +23,17 @@
 
         <com.example.depository_system.view.DeleteEditText
             android:id="@+id/depot_name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_toLeftOf="@+id/image_btn_depotName"
+            android:layout_weight="10"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
             android:background="@null"
             android:focusableInTouchMode="true"
             android:gravity="right|center_vertical"
             android:hint="@string/hint_input_depository"
             android:inputType="text"
-            android:maxLength="25"
+            android:autoSizeTextType="uniform"
             android:paddingRight="@dimen/card_add_item_margin_right"
             android:textColor="@color/colorTextCardAddEdittext"
             android:textColorHint="@color/colorTextHint"
@@ -40,7 +41,8 @@
 
         <ImageButton
             android:id="@+id/image_btn_depotName"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
             android:layout_centerVertical="true"
@@ -48,11 +50,9 @@
             android:layout_marginRight="10dp"
             android:background="@drawable/ic_right_arrow"/>
 
-    </RelativeLayout>
+    </LinearLayout>
 
-
-
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/rel_choose_bank"
         android:layout_width="match_parent"
         android:layout_height="@dimen/itemCardAddHeight"
@@ -71,16 +71,17 @@
 
         <com.example.depository_system.view.DeleteEditText
             android:id="@+id/material_identifier"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="10"
             android:layout_height="match_parent"
-            android:layout_toLeftOf="@+id/image_btn_materialIdentifier"
+            android:layout_marginLeft="15dp"
             android:layout_centerVertical="true"
             android:background="@null"
             android:focusableInTouchMode="true"
             android:gravity="right|center_vertical"
             android:hint="@string/hint_input_material_identifier"
             android:inputType="text"
-            android:maxLength="25"
+            android:maxLines="3"
             android:paddingRight="@dimen/card_add_item_margin_right"
             android:textColor="@color/colorTextCardAddEdittext"
             android:textColorHint="@color/colorTextHint"
@@ -88,15 +89,16 @@
 
         <ImageButton
             android:id="@+id/image_btn_materialIdentifier"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
             android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
+            android:layout_gravity="center_vertical"
             android:layout_marginRight="10dp"
             android:background="@drawable/ic_right_arrow"/>
 
-    </RelativeLayout>
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"
@@ -104,7 +106,7 @@
         android:layout_marginLeft="15dp"
         android:background="@color/mainBg" />
 
-    <RelativeLayout
+    <LinearLayout
 
         android:layout_width="match_parent"
         android:layout_height="@dimen/itemCardAddHeight"
@@ -122,16 +124,16 @@
 
         <com.example.depository_system.view.DeleteEditText
             android:id="@+id/material_name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="10"
             android:layout_height="match_parent"
-            android:layout_toLeftOf="@+id/image_btn_materialName"
+            android:layout_marginLeft="15dp"
             android:layout_centerVertical="true"
             android:background="@null"
             android:focusableInTouchMode="true"
             android:gravity="right|center_vertical"
             android:hint="@string/hint_input_material_name"
             android:inputType="text"
-            android:maxLength="25"
             android:paddingRight="@dimen/card_add_item_margin_right"
             android:textColor="@color/colorTextCardAddEdittext"
             android:textColorHint="@color/colorTextHint"
@@ -139,14 +141,15 @@
 
         <ImageButton
             android:id="@+id/image_btn_materialName"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:scaleType="centerCrop"
             android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
+            android:layout_gravity="center_vertical"
             android:layout_marginRight="10dp"
             android:background="@drawable/ic_right_arrow"/>
-    </RelativeLayout>
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"
@@ -154,7 +157,7 @@
         android:layout_marginLeft="15dp"
         android:background="@color/mainBg" />
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/itemCardAddHeight"
         android:background="@color/colorTextWhite"
@@ -171,14 +174,15 @@
 
         <com.example.depository_system.view.DeleteEditText
             android:id="@+id/material_type"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="10"
             android:layout_height="match_parent"
-            android:layout_toLeftOf="@+id/image_btn_materialType"
+            android:layout_marginLeft="15dp"
             android:layout_centerVertical="true"
             android:background="@null"
             android:gravity="right|center_vertical"
             android:hint="@string/hint_input_material_type"
-            android:maxLength="10"
+            android:maxLines="3"
             android:paddingRight="@dimen/card_add_item_margin_right"
             android:textColor="@color/colorTextCardAddEdittext"
             android:textColorHint="@color/colorTextHint"
@@ -186,15 +190,15 @@
 
         <ImageButton
             android:id="@+id/image_btn_materialType"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
             android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
             android:background="@drawable/ic_right_arrow"/>
 
-    </RelativeLayout>
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"
@@ -202,7 +206,7 @@
         android:layout_marginLeft="30dp"
         android:background="@color/mainBg" />
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/itemCardAddHeight"
         android:background="@color/colorTextWhite"
@@ -219,9 +223,10 @@
 
         <com.example.depository_system.view.DeleteEditText
             android:id="@+id/material_num"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
+            android:layout_marginLeft="15dp"
             android:layout_centerVertical="true"
             android:background="@null"
             android:focusableInTouchMode="false"
@@ -234,7 +239,7 @@
             android:textColorHint="@color/colorTextHint"
             android:textSize="15sp" />
 
-    </RelativeLayout>
+    </LinearLayout>
 
 
     <View
@@ -244,7 +249,7 @@
         android:background="@color/mainBg" />
 
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/itemCardAddHeight"
         android:background="@color/colorTextWhite"
@@ -262,16 +267,17 @@
 
         <com.example.depository_system.view.DeleteEditText
             android:id="@+id/factory_name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="10"
             android:layout_height="match_parent"
-            android:layout_toLeftOf="@+id/image_btn_factoryName"
+            android:layout_marginLeft="15dp"
             android:layout_centerVertical="true"
             android:background="@null"
             android:focusableInTouchMode="false"
             android:gravity="right|center_vertical"
             android:hint="@string/hint_input_factory_name"
             android:inputType="text"
-            android:maxLength="18"
+            android:maxLines="3"
             android:paddingRight="@dimen/card_add_item_margin_right"
             android:textColor="@color/colorTextCardAddEdittext"
             android:textColorHint="@color/colorTextHint"
@@ -279,17 +285,17 @@
 
         <ImageButton
             android:id="@+id/image_btn_factoryName"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
             android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
             android:background="@drawable/ic_right_arrow"/>
 
-    </RelativeLayout>
+    </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/itemCardAddHeight"
         android:background="@color/colorTextWhite"
@@ -307,9 +313,10 @@
 
         <com.example.depository_system.view.DeleteEditText
             android:id="@+id/ruku_time"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="10"
             android:layout_height="match_parent"
-            android:layout_toLeftOf="@+id/image_btn_time"
+            android:layout_marginLeft="10dp"
             android:layout_centerVertical="true"
             android:background="@null"
             android:focusableInTouchMode="false"
@@ -324,16 +331,16 @@
 
         <ImageButton
             android:id="@+id/image_btn_time"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
             android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
             android:background="@drawable/ic_right_arrow"/>
-    </RelativeLayout>
+    </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/itemCardAddHeight"
         android:background="@color/colorTextWhite"
@@ -351,16 +358,16 @@
 
         <com.example.depository_system.view.DeleteEditText
             android:id="@+id/project_name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
+            android:layout_weight="10"
             android:layout_centerVertical="true"
             android:background="@null"
             android:focusableInTouchMode="false"
             android:gravity="right|center_vertical"
             android:hint="@string/hint_input_project_name"
             android:inputType="text"
-            android:maxLength="18"
+            android:maxLines="3"
             android:paddingRight="@dimen/card_add_item_margin_right"
             android:textColor="@color/colorTextCardAddEdittext"
             android:textColorHint="@color/colorTextHint"
@@ -368,7 +375,8 @@
 
         <ImageButton
             android:id="@+id/image_btn_project"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
             android:layout_centerVertical="true"
@@ -376,10 +384,10 @@
             android:layout_marginRight="10dp"
             android:background="@drawable/ic_right_arrow"/>
 
-    </RelativeLayout>
+    </LinearLayout>
 
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/itemCardAddHeight"
         android:background="@color/colorTextWhite"
@@ -397,16 +405,15 @@
 
         <com.example.depository_system.view.DeleteEditText
             android:id="@+id/receiver_name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="10"
             android:layout_height="match_parent"
-            android:layout_toLeftOf="@+id/image_btn_receiver"
             android:layout_centerVertical="true"
             android:background="@null"
             android:focusableInTouchMode="false"
             android:gravity="right|center_vertical"
             android:hint="@string/hint_ruku_receiver_name"
             android:inputType="text"
-            android:maxLength="18"
             android:paddingRight="@dimen/card_add_item_margin_right"
             android:textColor="@color/colorTextCardAddEdittext"
             android:textColorHint="@color/colorTextHint"
@@ -414,7 +421,8 @@
 
         <ImageButton
             android:id="@+id/image_btn_receiver"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
             android:layout_centerVertical="true"
@@ -422,10 +430,10 @@
             android:layout_marginRight="10dp"
             android:background="@drawable/ic_right_arrow"/>
 
-    </RelativeLayout>
+    </LinearLayout>
 
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/itemCardAddHeight"
         android:background="@color/colorTextWhite"
@@ -442,9 +450,9 @@
 
         <com.example.depository_system.view.DeleteEditText
             android:id="@+id/accepter_name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="10"
             android:layout_height="match_parent"
-            android:layout_toLeftOf="@+id/image_btn_accepter"
             android:layout_centerVertical="true"
             android:background="@null"
             android:focusableInTouchMode="false"
@@ -459,7 +467,8 @@
 
         <ImageButton
             android:id="@+id/image_btn_accepter"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
             android:layout_centerVertical="true"
@@ -467,7 +476,7 @@
             android:layout_marginRight="10dp"
             android:background="@drawable/ic_right_arrow"/>
 
-    </RelativeLayout>
+    </LinearLayout>
 
 
 </LinearLayout>

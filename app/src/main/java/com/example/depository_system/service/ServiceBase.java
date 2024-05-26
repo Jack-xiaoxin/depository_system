@@ -112,6 +112,8 @@ public class ServiceBase {
 
     public static String uploadImage(List<Uri> imageUris, ContentResolver contentResolver) {
 
+        if(imageUris == null || imageUris.size() == 0) return "无图片上传";
+
         MultipartBody.Builder builder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM);
 

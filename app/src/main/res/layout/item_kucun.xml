@@ -27,6 +27,7 @@
         android:layout_toEndOf="@+id/kucun_image"
         android:layout_toRightOf="@+id/kucun_image"
         android:text="物资名称：XXXX"
+        android:maxLines="2"
         android:textColor="@color/colorKucunText"
         android:textSize="14sp" />
 

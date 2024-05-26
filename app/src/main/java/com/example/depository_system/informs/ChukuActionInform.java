@@ -23,6 +23,8 @@ public class ChukuActionInform {
 
     public Integer number;
 
+    public String time;
+
     public String outboundIdentifier;
 
     public List<String> images;

@@ -2,6 +2,7 @@ package com.example.depository_system.adapters;
 
 import static androidx.core.content.ContentProviderCompat.requireContext;
 
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -22,7 +23,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.depository_system.DataManagement;
 import com.example.depository_system.R;
+import com.example.depository_system.informs.ChukuRecordItemInform;
 import com.example.depository_system.informs.DepositoryInform;
+import com.example.depository_system.informs.RukuInform;
 import com.example.depository_system.informs.RukuRecordInform;
 import com.example.depository_system.informs.RukuRecordItemInform;
 import com.example.depository_system.view.ImageActivity;
@@ -40,15 +43,15 @@ import java.util.logging.LogRecord;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class RukuMaterialAdapter extends BaseRecycleAdapter{
+public class ChukuBatchAdapter extends BaseRecycleAdapter{
 
-    private List<RukuRecordItemInform> mList;
+    private List<ChukuRecordItemInform> mList;
 
     private Context context;
 
     private Handler handler;
 
-    public RukuMaterialAdapter(Context context, List<RukuRecordItemInform> list, Handler handler) {
+    public ChukuBatchAdapter(Context context, List<ChukuRecordItemInform> list, Handler handler) {
         this.context = context;
         this.mList = list;
         this.handler = handler;
@@ -56,7 +59,7 @@ public class RukuMaterialAdapter extends BaseRecycleAdapter{
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new RukuMaterialAdapter.ItemHolder(LayoutInflater.from(context).inflate(R.layout.item_ruku_material, parent, false));
+        return new ChukuBatchAdapter.ItemHolder(LayoutInflater.from(context).inflate(R.layout.item_chuku_material, parent, false));
     }
 
     @Override
@@ -65,7 +68,7 @@ public class RukuMaterialAdapter extends BaseRecycleAdapter{
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         super.onBindViewHolder(holder, position);
         ItemHolder itemHolder = (ItemHolder) holder;
         itemHolder.materialIdentifier.setText("物资编码：" + mList.get(position).materialIdentifier);
@@ -73,53 +76,61 @@ public class RukuMaterialAdapter extends BaseRecycleAdapter{
         itemHolder.materialType.setText("物资型号：" + mList.get(position).materialModel);
         itemHolder.materialNum.setText("物资数量：" + mList.get(position).number);
         itemHolder.factoryName.setText("工厂名称：" + mList.get(position).factoryName);
-        itemHolder.time.setText(mList.get(position).inboundTime);
-//        SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS");
-//        try {
-//            Date date = originalFormat.parse(originaldate);
-//            SimpleDateFormat targetFormat = new SimpleDateFormat("yyyy-MM-dd");
-//            String formattedTime = targetFormat.format(date);
-//            itemHolder.time.setText(formattedTime);
-//        } catch (ParseException e) {
-//            throw new RuntimeException(e);
-//        }
-        itemHolder.receiver.setText("收货人：" + mList.get(position).receiver);
-        itemHolder.accepter.setText("验收人：" + mList.get(position).checker);
-        for(DepositoryInform depositoryInform : DataManagement.depositoryInforms) {
-            if(depositoryInform.depotId.equals(mList.get(position).depositoryId)) {
-                itemHolder.depositoryName.setText("仓库：" + depositoryInform.depotName);
-                break;
-            }
-        }
-        itemHolder.projectName.setText("入库项目：" + mList.get(position).projectName);
+        itemHolder.time.setText("时间：" + mList.get(position).time);
+        itemHolder.receiver.setText("领用人：" + mList.get(position).applier);
+        itemHolder.projectMajor.setText("项目负责人：" + mList.get(position).projectMajor);
+        itemHolder.depositoryName.setText("仓库：" + mList.get(position).depositoryName);
+        itemHolder.projectName.setText("领用项目：" + mList.get(position).projectName);
+        itemHolder.depositoryName.setText("仓库：" + mList.get(position).depositoryName);
+        itemHolder.departmentName.setText("领用单位：" + mList.get(position).departmentName);
         itemHolder.recyclerView.setAdapter(new ImageAdapter_display(mList.get(position).images, handler));
         itemHolder.recyclerView.setLayoutManager(new GridLayoutManager(context, 5));
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Message msg = new Message();
+                msg.obj = position;
+                handler.sendMessage(msg);
+            }
+        });
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Message msg = new Message();
+                msg.obj = position;
+                handler.sendMessage(msg);
+            }
+        });
     }
 
     class ItemHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.ruku_image)
+        @BindView(R.id.chuku_image)
         ImageView imageView;
-        @BindView(R.id.ruku_order_material_name)
+        @BindView(R.id.chuku_order_material_name)
         TextView materialName;
-        @BindView(R.id.ruku_order_material_type)
+        @BindView(R.id.chuku_order_material_type)
         TextView materialType;
-        @BindView(R.id.ruku_order_material_identifier)
+        @BindView(R.id.chuku_order_material_identifier)
         TextView materialIdentifier;
-        @BindView(R.id.ruku_order_material_num)
+        @BindView(R.id.chuku_order_material_num)
         TextView materialNum;
-        @BindView(R.id.ruku_factory_name)
+        @BindView(R.id.chuku_order_material_factory)
         TextView factoryName;
-        @BindView(R.id.ruku_time)
+        @BindView(R.id.chuku_department_name)
+        TextView departmentName;
+        @BindView(R.id.chuku_time)
         TextView time;
-        @BindView(R.id.ruku_receiver_name)
+        @BindView(R.id.chuku_accepter_name)
         TextView receiver;
-        @BindView(R.id.ruku_accepter_name)
-        TextView accepter;
-        @BindView(R.id.ruku_project)
+        @BindView(R.id.chuku_project_major)
+        TextView projectMajor;
+        @BindView(R.id.chuku_project_name)
         TextView projectName;
-        @BindView(R.id.ruku_depository_name)
+        @BindView(R.id.chuku_depository)
         TextView depositoryName;
-        @BindView(R.id.charuku_image_list)
+        @BindView(R.id.chuku_material_imagelist)
         RecyclerView recyclerView;
 
         public ItemHolder(View itemView) {

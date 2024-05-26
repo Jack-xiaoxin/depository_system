@@ -37,6 +37,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListPopupWindow;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -137,6 +138,7 @@ public class BatchRukuActivity extends AppCompatActivity {
         time_btn = add_btn_frameLayout.findViewById(R.id.image_btn_time);
         timeEditText = add_btn_frameLayout.findViewById(R.id.ruku_time);
         uploadBtn = add_btn_frameLayout.findViewById(R.id.upload);
+        backBtn = add_btn_frameLayout.findViewById(R.id.back);
 
         depotNameEditText = add_material_frameLayout.findViewById(R.id.depot_name);
         materialIdentifierEditText = add_material_frameLayout.findViewById(R.id.material_identifier);
@@ -388,6 +390,27 @@ public class BatchRukuActivity extends AppCompatActivity {
             }
         });
 
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(rukuInforms.size() > 0) {
+                    new MaterialDialog.Builder(context)
+                            .content("待保存数据将不会保存，是否继续返回？")
+                            .positiveText("确定")
+                            .negativeText("取消")
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    finish();
+                                }
+                            })
+                            .show();
+                }  else {
+                    finish();
+                }
+            }
+        });
+
         initHandler();
     }
 
@@ -530,10 +553,6 @@ public class BatchRukuActivity extends AppCompatActivity {
         materialNameEditText.setText("");
         materialNumEditText.setText("");
         materialTypeEditText.setText("");
-        depotNameEditText.setText("");
-        projectNameEditText.setText("");
-        acceptorEditText.setText("");
-        receiverEditText.setText("");
     }
 
     private void clearImages() {
@@ -704,23 +723,26 @@ public class BatchRukuActivity extends AppCompatActivity {
         final String[] result = {""};
         rukuInform.isNew = false;
         String imageResult = ServiceBase.uploadImage(rukuInform.imageUriList, context.getContentResolver());
-        if(!imageResult.contains("成功")) {
-            new MaterialDialog.Builder(context)
-                    .positiveText("确定")
-                    .content("图片上传失败，请重新提交入库")
-                    .show();
-            return ;
-        } else {
-            new MaterialDialog.Builder(context)
-                    .positiveText("确定")
-                    .content("图片上传成功")
-                    .onPositive(new MaterialDialog.SingleButtonCallback() {
-                        @Override
-                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                            deleteImages();
-                        }
-                    })
-                    .show();
+        if(rukuInform.imageUriList.size() > 0) {
+            if(!imageResult.contains("成功")) {
+                new MaterialDialog.Builder(context)
+                        .positiveText("确定")
+                        .content("图片上传失败，请重新提交入库")
+                        .show();
+                uploadBtn.setClickable(true);
+                return ;
+            } else {
+                new MaterialDialog.Builder(context)
+                        .positiveText("确定")
+                        .content("图片上传成功")
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                deleteImages();
+                            }
+                        })
+                        .show();
+            }
         }
         result[0] = RukuService.action(rukuInform);
         if (result[0].contains("0")) {

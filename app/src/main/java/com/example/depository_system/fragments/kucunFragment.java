@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -114,6 +115,16 @@ public class kucunFragment extends Fragment {
                     progressBar.setVisibility(View.VISIBLE);
                 } else if(index == -3) {
                     exportKucun();
+                } else if(index == 1001) {
+                    recyclerView.setAdapter(new KucunAdapter(requireContext(), DataManagement.kucunInforms, handler));
+                    recyclerView.setLayoutManager(new LinearLayoutManager(root.getContext()));
+                    recyclerView.setVisibility(View.VISIBLE);
+                } else if(index == -4) {
+                    emptyFrameLayout.setVisibility(View.GONE);
+                    DataManagement.updateKucunInfo();
+                    recyclerView.setAdapter(new KucunAdapter(requireContext(), DataManagement.kucunInforms, handler));
+                    recyclerView.setLayoutManager(new LinearLayoutManager(root.getContext()));
+                    recyclerView.setVisibility(View.VISIBLE);
                 }
             }
         };
@@ -193,7 +204,7 @@ public class kucunFragment extends Fragment {
                     }
                     update();
                     Message msg2 = new Message();
-                    msg2.obj = -1;
+                    msg2.obj = -4;
                     handler.sendMessage(msg2);
                 }
             }).start();

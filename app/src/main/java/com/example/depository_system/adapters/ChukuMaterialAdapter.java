@@ -62,6 +62,7 @@ public class ChukuMaterialAdapter extends BaseRecycleAdapter{
         itemHolder.projectName.setText("项目名称：" + mList.get(position).projectName);
         itemHolder.projectMajor.setText("项目负责人：" + mList.get(position).projectMajor);
         itemHolder.departmentName.setText("领用单位：" + mList.get(position).departmentName);
+        itemHolder.depositoryName.setText("仓库：" + mList.get(position).depositoryName);
         itemHolder.recyclerView.setAdapter(new ImageAdapter_display(mList.get(position).images, handler));
         itemHolder.recyclerView.setLayoutManager(new GridLayoutManager(context,5));
     }
@@ -89,6 +90,8 @@ public class ChukuMaterialAdapter extends BaseRecycleAdapter{
         TextView projectMajor;
         @BindView(R.id.chuku_accepter_name)
         TextView receiverName;
+        @BindView(R.id.chuku_depository)
+        TextView depositoryName;
         @BindView(R.id.chuku_material_imagelist)
         RecyclerView recyclerView;
 

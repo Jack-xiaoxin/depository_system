@@ -140,6 +140,18 @@
         android:textColor="@color/white"
         android:textSize="14sp" />
 
+    <TextView
+        android:id="@+id/chuku_depository"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/chuku_order_material_num"
+        android:layout_marginLeft="15dp"
+        android:layout_toEndOf="@+id/chuku_image"
+        android:layout_toRightOf="@+id/chuku_image"
+        android:text="仓库：XXXXXX"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chuku_material_imagelist"
         android:layout_below="@+id/chuku_time"

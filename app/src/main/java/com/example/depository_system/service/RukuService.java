@@ -38,6 +38,7 @@ public class RukuService {
             jsonObject.put("goods_number", rukuInform.number);
             jsonObject.put("inbound_identifier", System.currentTimeMillis());
             jsonObject.put("images", rukuInform.images);
+            jsonObject.put("time", rukuInform.time);
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }

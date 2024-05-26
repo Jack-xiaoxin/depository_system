@@ -1,8 +1,10 @@
 package com.example.depository_system.service;
 
+import com.example.depository_system.DataManagement;
 import com.example.depository_system.informs.ChukuActionInform;
 import com.example.depository_system.informs.ChukuRecordInform;
 import com.example.depository_system.informs.ChukuRecordItemInform;
+import com.example.depository_system.informs.DepositoryInform;
 import com.example.depository_system.informs.RukuRecordInform;
 import com.example.depository_system.informs.RukuRecordItemInform;
 
@@ -30,6 +32,7 @@ public class ChukuService {
             jsonObject.put("goods_number", chukuInform.number);
             jsonObject.put("outbound_identifier", System.currentTimeMillis());
             jsonObject.put("images", chukuInform.images);
+            jsonObject.put("time", chukuInform.time);
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
@@ -99,6 +102,11 @@ public class ChukuService {
                     itemInform.projectMajor = valueObject.getString("director");
                     itemInform.projectName = valueObject.getString("apply_project_name");
                     itemInform.depository_id = valueObject.getString("depository_id");
+                    for(DepositoryInform depositoryInform : DataManagement.depositoryInforms) {
+                        if(depositoryInform.depotId.equals(itemInform.depository_id)) {
+                            itemInform.depositoryName = depositoryInform.depotName;
+                        }
+                    }
 
                     JSONArray imageArray = valueObject.getJSONArray("images");
                     List<String> imgList = new ArrayList<>();

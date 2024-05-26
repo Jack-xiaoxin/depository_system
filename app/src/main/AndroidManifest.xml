@@ -19,7 +19,7 @@
             android:name=".view.BatchRukuActivity"
             android:exported="false" />
         <activity
-            android:name=".view.BathRukuActivity"
+            android:name=".view.BatchChukuActivity"
             android:exported="false" />
         <activity
             android:name=".view.PersonActivity"

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
+import android.os.Message;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Gravity;
@@ -105,7 +106,11 @@ public class KucunAdapter extends BaseRecycleAdapter{
                                         @Override
                                         public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
                                             String str = dialog.getInputEditText().getText().toString();
-                                            int num = Integer.parseInt(str);
+                                            KucunService.updateStoredNumber(mList.get(position).kucunId, str);
+                                            DataManagement.updateKucunInfo();
+                                            Message msg = new Message();
+                                            msg.obj = 1001;
+                                            handler.sendMessage(msg);
                                         }
                                     })
                                     .content("请输入修改后的库存数量：")
@@ -121,8 +126,11 @@ public class KucunAdapter extends BaseRecycleAdapter{
                                         @Override
                                         public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
                                             String str = dialog.getInputEditText().getText().toString();
-                                            int num = Integer.parseInt(str);
-                                            Log.d("kevin1", "alert number " + num);
+                                            KucunService.updateAlarmedNumber(mList.get(position).kucunId, str);
+                                            DataManagement.updateKucunInfo();
+                                            Message msg = new Message();
+                                            msg.obj = 1001;
+                                            handler.sendMessage(msg);
                                         }
                                     })
                                     .content("请输入修改后的预警数量：")

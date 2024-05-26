@@ -493,25 +493,29 @@ public class rukuFragment extends Fragment {
                 }
                 final String[] result = {""};
                 backRukuInform.isNew = false;
-                String imageResult = ServiceBase.uploadImage(imageUriList, getContext().getContentResolver());
-                if(!imageResult.contains("成功")) {
-                    new MaterialDialog.Builder(requireContext())
-                            .positiveText("确定")
-                            .content("图片上传失败，请重新提交入库")
-                            .show();
-                    return ;
-                } else {
-                    new MaterialDialog.Builder(requireContext())
-                            .positiveText("确定")
-                            .content("图片上传成功")
-                            .onPositive(new MaterialDialog.SingleButtonCallback() {
-                                @Override
-                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                    deleteImages();
-                                }
-                            })
-                            .show();
+                if(imageUriList.size() > 0) {
+                    String imageResult = ServiceBase.uploadImage(imageUriList, getContext().getContentResolver());
+                    if(!imageResult.contains("成功")) {
+                        new MaterialDialog.Builder(requireContext())
+                                .positiveText("确定")
+                                .content("图片上传失败，请重新提交入库")
+                                .show();
+                        uploadBtn.setClickable(true);
+                        return ;
+                    } else {
+                        new MaterialDialog.Builder(requireContext())
+                                .positiveText("确定")
+                                .content("图片上传成功")
+                                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                        deleteImages();
+                                    }
+                                })
+                                .show();
+                    }
                 }
+
                 backRukuInform.images = list;
                 result[0] = RukuService.action(backRukuInform);
                 if (result[0].contains("0")) {
