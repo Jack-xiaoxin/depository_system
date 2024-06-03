@@ -495,6 +495,7 @@
 
             </LinearLayout>
 
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -533,6 +534,57 @@
                     android:textColor="@color/colorTextCardAddEdittext"
                     android:textColorHint="@color/colorTextHint"
                     android:textSize="15sp" />
+
+            </LinearLayout>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="15dp"
+                android:background="@color/mainBg" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/itemCardAddHeight"
+                android:background="@color/colorTextWhite"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:text="@string/ruku_input_material_unit"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="15sp" />
+
+                <com.example.depository_system.view.DeleteEditText
+                    android:id="@+id/material_unit"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="10"
+                    android:layout_marginLeft="15dp"
+                    android:layout_centerVertical="true"
+                    android:background="@null"
+                    android:gravity="right|center_vertical"
+                    android:hint="@string/hint_input_material_unit"
+                    android:maxLength="10"
+                    android:paddingRight="@dimen/card_add_item_margin_right"
+                    android:textColor="@color/colorTextCardAddEdittext"
+                    android:textColorHint="@color/colorTextHint"
+                    android:textSize="15dp" />
+
+                <ImageButton
+                    android:id="@+id/image_btn_materialUnit"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:scaleType="centerCrop"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/ic_right_arrow"/>
 
             </LinearLayout>
 

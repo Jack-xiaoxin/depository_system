@@ -37,6 +37,7 @@ import com.example.depository_system.adapters.RukuOrderAdapter;
 import com.example.depository_system.informs.DepositoryInform;
 import com.example.depository_system.informs.MaterialInform;
 import com.example.depository_system.informs.ProjectInform;
+import com.example.depository_system.informs.RukuInform;
 import com.example.depository_system.informs.RukuRecordInform;
 import com.example.depository_system.informs.RukuRecordItemInform;
 import com.example.depository_system.service.RukuService;
@@ -140,6 +141,9 @@ public class charukuFragment extends Fragment {
                         showOrder();
                     } else if(index == -2) {
                         showEmpty();
+                    } else if(index == -100) {
+                        int ide = -index;
+                        RukuInform rukuInform = new RukuInform();
                     }
                 }
             }

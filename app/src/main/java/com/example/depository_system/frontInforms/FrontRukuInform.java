@@ -16,6 +16,8 @@ public class FrontRukuInform {
 
     public int materialNum;
 
+    public String materialUnit;
+
     public String factoryName;
 
     public String time;
@@ -35,6 +37,7 @@ public class FrontRukuInform {
         rukuInform.materialName = materialName;
         rukuInform.materialModel = materialType;
         rukuInform.number = materialNum;
+        rukuInform.materialUnit = materialUnit;
         rukuInform.factoryName = factoryName;
         rukuInform.time = time;
         rukuInform.projectName = project;

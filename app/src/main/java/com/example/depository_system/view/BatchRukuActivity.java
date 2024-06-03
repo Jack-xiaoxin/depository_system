@@ -24,6 +24,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -49,12 +50,15 @@ import com.example.depository_system.adapters.RukuMaterialAdapter;
 import com.example.depository_system.frontInforms.FrontRukuInform;
 import com.example.depository_system.informs.DepositoryInform;
 import com.example.depository_system.informs.MaterialInform;
+import com.example.depository_system.informs.PersonInform;
 import com.example.depository_system.informs.ProjectInform;
 import com.example.depository_system.informs.RukuInform;
 import com.example.depository_system.informs.RukuRecordItemInform;
 import com.example.depository_system.informs.UserInform;
 import com.example.depository_system.service.DepositoryService;
+import com.example.depository_system.service.KucunService;
 import com.example.depository_system.service.MaterialService;
+import com.example.depository_system.service.PersonService;
 import com.example.depository_system.service.ProjectService;
 import com.example.depository_system.service.RukuService;
 import com.example.depository_system.service.ServiceBase;
@@ -87,6 +91,7 @@ public class BatchRukuActivity extends AppCompatActivity {
     private EditText materialNameEditText;
     private EditText materialTypeEditText;
     private EditText materialNumEditText;
+    private EditText materialUnitEditText;
     private EditText timeEditText;
     private EditText projectNameEditText;
     private EditText receiverEditText;
@@ -95,6 +100,7 @@ public class BatchRukuActivity extends AppCompatActivity {
     private ImageButton materialName_btn;
     private ImageButton materialIdentifier_btn;
     private ImageButton materialType_btn;
+    private ImageButton materialUnit_btn;
     private ImageButton time_btn;
     private ImageButton receiver_btn;
     private ImageButton accepter_btn;
@@ -145,6 +151,7 @@ public class BatchRukuActivity extends AppCompatActivity {
         materialNameEditText = add_material_frameLayout.findViewById(R.id.material_name);
         materialTypeEditText = add_material_frameLayout.findViewById(R.id.material_type);
         materialNumEditText = add_material_frameLayout.findViewById(R.id.material_num);
+        materialUnitEditText = add_material_frameLayout.findViewById(R.id.material_unit);
         projectNameEditText = add_material_frameLayout.findViewById(R.id.project_name);
         receiverEditText = add_material_frameLayout.findViewById(R.id.receiver_name);
         acceptorEditText = add_material_frameLayout.findViewById(R.id.accepter_name);
@@ -153,6 +160,7 @@ public class BatchRukuActivity extends AppCompatActivity {
         materialIdentifier_btn = add_material_frameLayout.findViewById(R.id.image_btn_materialIdentifier);
         materialName_btn = add_material_frameLayout.findViewById(R.id.image_btn_materialName);
         materialType_btn = add_material_frameLayout.findViewById(R.id.image_btn_materialType);
+        materialUnit_btn = add_material_frameLayout.findViewById(R.id.image_btn_materialUnit);
         receiver_btn = add_material_frameLayout.findViewById(R.id.image_btn_receiver);
         accepter_btn = add_material_frameLayout.findViewById(R.id.image_btn_accepter);
         project_btn = add_material_frameLayout.findViewById(R.id.image_btn_project);
@@ -248,6 +256,20 @@ public class BatchRukuActivity extends AppCompatActivity {
             }
         });
 
+        materialUnit_btn.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    Set<String> set = new HashSet<>();
+                    for(MaterialInform materialInform : DataManagement.materialInforms) {
+                        set.add(materialInform.materialUnit);
+                    }
+                    showListPopupWindow(set.toArray(new String[set.size()]), materialUnitEditText);
+                }
+                return true;
+            }
+        });
+
         project_btn.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
@@ -287,6 +309,9 @@ public class BatchRukuActivity extends AppCompatActivity {
                     for(UserInform userInform : DataManagement.userInforms) {
                         set.add(userInform.userName);
                     }
+                    for(PersonInform personInform : DataManagement.personInforms) {
+                        set.add(personInform.name);
+                    }
                     showListPopupWindow(set.toArray(new String[set.size()]), receiverEditText);
                 }
                 return true;
@@ -300,6 +325,9 @@ public class BatchRukuActivity extends AppCompatActivity {
                     Set<String> set = new HashSet<>();
                     for(UserInform userInform : DataManagement.userInforms) {
                         set.add(userInform.userName);
+                    }
+                    for(PersonInform personInform : DataManagement.personInforms) {
+                        set.add(personInform.name);
                     }
                     showListPopupWindow(set.toArray(new String[set.size()]), acceptorEditText);
                 }
@@ -346,6 +374,7 @@ public class BatchRukuActivity extends AppCompatActivity {
                 rukuInform.materialName = materialNameEditText.getText().toString();
                 rukuInform.materialModel = materialTypeEditText.getText().toString();
                 rukuInform.materialIdentifier = materialIdentifierEditText.getText().toString();
+                rukuInform.materialUnit = materialUnitEditText.getText().toString();
                 rukuInform.number = Integer.parseInt(materialNumEditText.getText().toString());
                 rukuInform.time = timeEditText.getText().toString();
                 rukuInform.projectName = projectNameEditText.getText().toString();
@@ -431,6 +460,7 @@ public class BatchRukuActivity extends AppCompatActivity {
                         if(editText.getText().toString().equals(materialInform.materialIdentifier)) {
                             materialNameEditText.setText(materialInform.materialName);
                             materialTypeEditText.setText(materialInform.materialModel);
+                            materialUnitEditText.setText(materialInform.materialUnit);
                         }
                     }
                 } else if(editText.getId() == factoryEditText.getId()) {
@@ -662,7 +692,7 @@ public class BatchRukuActivity extends AppCompatActivity {
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            boolean result = MaterialService.insertMaterial(rukuInform.materialName, rukuInform.materialIdentifier, rukuInform.materialModel, rukuInform.factoryName);
+                            boolean result = MaterialService.insertMaterial(rukuInform.materialName, rukuInform.materialIdentifier, rukuInform.materialModel, rukuInform.factoryName, rukuInform.materialUnit);
                             if(result) {
                                 DataManagement.updateMaterial();
                                 Toast.makeText(context, "添加物料成功", Toast.LENGTH_SHORT).show();
@@ -672,6 +702,67 @@ public class BatchRukuActivity extends AppCompatActivity {
                         }
                     });
             normalDialog.show();
+            uploadBtn.setClickable(true);
+            return;
+        }
+        boolean isChanged = true;
+        for(PersonInform personInform : DataManagement.personInforms) {
+            if(personInform.name.equals(rukuInform.acceptor)) {
+                isChanged = false;
+                break;
+            }
+        }
+        for(UserInform userInform : DataManagement.userInforms) {
+            if(userInform.userName.equals(rukuInform.acceptor)) {
+                isChanged = false;
+                break;
+            }
+        }
+        if (isChanged) {
+            new MaterialDialog.Builder(this)
+                    .positiveText("确定")
+                    .negativeText("取消")
+                    .title("人物名称")
+                    .content("发现新的人物名称，是否添加? " + rukuInform.receiver)
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            PersonService.insertPersonInfo(rukuInform.receiver);
+                            DataManagement.updatePersonInfo();
+                        }
+                    })
+                    .show();
+            uploadBtn.setClickable(true);
+            return;
+        }
+
+        isChanged = true;
+        for(PersonInform personInform : DataManagement.personInforms) {
+            if(personInform.name.equals(rukuInform.receiver)) {
+                isChanged = false;
+                break;
+            }
+        }
+        for(UserInform userInform : DataManagement.userInforms) {
+            if(userInform.userName.equals(rukuInform.receiver)) {
+                isChanged = false;
+                break;
+            }
+        }
+        if (isChanged) {
+            new MaterialDialog.Builder(this)
+                    .positiveText("确定")
+                    .negativeText("取消")
+                    .title("人物名称")
+                    .content("发现新的人物名称，是否添加? " + rukuInform.acceptor)
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            PersonService.insertPersonInfo(rukuInform.acceptor);
+                            DataManagement.updatePersonInfo();
+                        }
+                    })
+                    .show();
             uploadBtn.setClickable(true);
             return;
         }
@@ -745,7 +836,7 @@ public class BatchRukuActivity extends AppCompatActivity {
             }
         }
         result[0] = RukuService.action(rukuInform);
-        if (result[0].contains("0")) {
+        if (result[0].contains("入库成功")) {
             DataManagement.updateAll();
             MaterialDialog materialDialog = new MaterialDialog.Builder(context)
                     .positiveText("确定")
@@ -756,6 +847,32 @@ public class BatchRukuActivity extends AppCompatActivity {
                             clearEditText();
                             rukuInforms.remove(rukuInform);
                             updateMaterialAdapters();
+                            if(result[0].contains("新增库存类型成功")) {
+                                new MaterialDialog.Builder(context)
+                                        .content("发现新的库存记录，请输入预警值：\n" +
+                                                "仓库： " + rukuInform.depotName + "\n" +
+                                                "物料编码： " + rukuInform.materialIdentifier + "\n" +
+                                                "物料名称：" + rukuInform.materialName + "\n" +
+                                                "物料类型：" + rukuInform.materialModel + "\n" +
+                                                "计量单位：" + rukuInform.materialUnit + "\n" +
+                                                "入库项目：" + rukuInform.projectName)
+                                        .inputType(InputType.TYPE_CLASS_NUMBER)
+                                        .input(null, "100", false, new MaterialDialog.InputCallback() {
+                                            @Override
+                                            public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+                                                String str = dialog.getInputEditText().getText().toString();
+                                                String strId = "";
+                                                for(int i = 0; i < result[0].length(); i++) {
+                                                    char ch = result[0].charAt(i);
+                                                    if(ch <= '9' && ch >= '0') {
+                                                        strId += ch;
+                                                    }
+                                                }
+                                                KucunService.updateAlarmedNumber(strId, str);
+                                            }
+                                        })
+                                        .show();
+                            }
                         }
                     })
                     .show();

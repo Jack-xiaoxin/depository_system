@@ -6,4 +6,7 @@
     <item
         android:id="@+id/menu_item_modify_alert"
         android:title="修改预警值" />
+    <item
+        android:id="@+id/menu_item_modify_delete"
+        android:title="删除"/>
 </menu>

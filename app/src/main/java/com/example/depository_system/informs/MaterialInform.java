@@ -10,5 +10,7 @@ public class MaterialInform {
 
     public String materialIdentifier;
 
+    public String materialUnit;
+
     public String factoryName;
 }

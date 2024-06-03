@@ -49,11 +49,13 @@ import com.example.depository_system.informs.DepartmentInform;
 import com.example.depository_system.informs.DepositoryInform;
 import com.example.depository_system.informs.KucunInform;
 import com.example.depository_system.informs.MaterialInform;
+import com.example.depository_system.informs.PersonInform;
 import com.example.depository_system.informs.ProjectInform;
 import com.example.depository_system.informs.RukuInform;
 import com.example.depository_system.informs.UserInform;
 import com.example.depository_system.service.ChukuService;
 import com.example.depository_system.service.KucunService;
+import com.example.depository_system.service.PersonService;
 import com.example.depository_system.service.ServiceBase;
 
 import java.io.File;
@@ -82,6 +84,7 @@ public class BatchChukuActivity extends AppCompatActivity {
     private EditText materialNameEditText;
     private EditText materialTypeEditText;
     private EditText materialNumEditText;
+    private EditText materialUnitEditText;
     private EditText factoryNameEditText;
     private EditText depositoryEditText;
     private EditText projectEditText;
@@ -93,6 +96,7 @@ public class BatchChukuActivity extends AppCompatActivity {
     private ImageButton materialIdentifierImageButton;
     private ImageButton materialNameImageButton;
     private ImageButton materialTypeImageButton;
+    private ImageButton materialUnitImageButton;
     private ImageButton factoryNameImageButton;
     private ImageButton depositoryImageButton;
     private ImageButton projectImageButton;
@@ -130,6 +134,7 @@ public class BatchChukuActivity extends AppCompatActivity {
         materialNameEditText = addMaterialLinearLayout.findViewById(R.id.material_name);
         factoryNameEditText = addMaterialLinearLayout.findViewById(R.id.factory_name);
         materialNumEditText = addMaterialLinearLayout.findViewById(R.id.material_num);
+        materialUnitEditText = addMaterialLinearLayout.findViewById(R.id.material_unit);
         projectEditText = addAllLinearLayout.findViewById(R.id.project_name);
         departmentEditText = addAllLinearLayout.findViewById(R.id.chuku_user_organization);
         timeEditText = addAllLinearLayout.findViewById(R.id.chuku_time);
@@ -140,6 +145,7 @@ public class BatchChukuActivity extends AppCompatActivity {
         materialIdentifierImageButton = addMaterialLinearLayout.findViewById(R.id.image_btn_materialIdentifier);
         materialNameImageButton = addMaterialLinearLayout.findViewById(R.id.image_btn_materialName);
         materialTypeImageButton = addMaterialLinearLayout.findViewById(R.id.image_btn_materialType);
+        materialUnitImageButton = addMaterialLinearLayout.findViewById(R.id.image_btn_materialUnit);
         factoryNameImageButton = addMaterialLinearLayout.findViewById(R.id.image_btn_factoryName);
         depositoryImageButton = addAllLinearLayout.findViewById(R.id.image_btn_depotName);
         projectImageButton = addAllLinearLayout.findViewById(R.id.image_btn_chuku_project);
@@ -363,6 +369,17 @@ public class BatchChukuActivity extends AppCompatActivity {
             }
         });
 
+        materialUnitImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Set<String> set = new HashSet<>();
+                for(MaterialInform materialInform : DataManagement.materialInforms) {
+                    set.add(materialInform.materialUnit);
+                }
+                showListPopupWindow(set.toArray(new String[set.size()]), materialUnitEditText);
+            }
+        });
+
         factoryNameImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -403,6 +420,9 @@ public class BatchChukuActivity extends AppCompatActivity {
                 for(UserInform inform : DataManagement.userInforms) {
                     set.add(inform.userName);
                 }
+                for(PersonInform personInform : DataManagement.personInforms) {
+                    set.add(personInform.name);
+                }
                 showListPopupWindow(set.toArray(new String[set.size()]), projectMajorEditText);
             }
         });
@@ -413,6 +433,9 @@ public class BatchChukuActivity extends AppCompatActivity {
                 Set<String> set = new HashSet<>();
                 for(UserInform inform : DataManagement.userInforms) {
                     set.add(inform.userName);
+                }
+                for(PersonInform personInform : DataManagement.personInforms) {
+                    set.add(personInform.name);
                 }
                 showListPopupWindow(set.toArray(new String[set.size()]), receiverEditText);
             }
@@ -471,6 +494,7 @@ public class BatchChukuActivity extends AppCompatActivity {
                         if(editText.getText().toString().equals(materialInform.materialIdentifier)) {
                             materialNameEditText.setText(materialInform.materialName);
                             materialTypeEditText.setText(materialInform.materialModel);
+                            materialUnitEditText.setText(materialInform.materialUnit);
                         }
                     }
                 } else if(editText.getId() == depositoryEditText.getId()) {
@@ -660,6 +684,54 @@ public class BatchChukuActivity extends AppCompatActivity {
             }
             if(backChukuInform.materialId == null) {
                 showAlertDialog("没有此物料，请重新输入");
+                uploadButton.setClickable(true);
+                return;
+            }
+            boolean isChanged = false;
+            for(PersonInform personInform : DataManagement.personInforms) {
+                if(personInform.name.equals(backChukuInform.applier)) {
+                    isChanged = true;
+                    break;
+                }
+            }
+            if (isChanged) {
+                new MaterialDialog.Builder(this)
+                        .positiveText("确定")
+                        .negativeText("取消")
+                        .title("人物名称")
+                        .content("发现新的人物名称，是否添加? " + backChukuInform.applier)
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                PersonService.insertPersonInfo(backChukuInform.applier);
+                                DataManagement.updatePersonInfo();
+                            }
+                        })
+                        .show();
+                uploadButton.setClickable(true);
+                return;
+            }
+            isChanged = false;
+            for(PersonInform personInform : DataManagement.personInforms) {
+                if(personInform.name.equals(backChukuInform.director)) {
+                    isChanged = true;
+                    break;
+                }
+            }
+            if (isChanged) {
+                new MaterialDialog.Builder(this)
+                        .positiveText("确定")
+                        .negativeText("取消")
+                        .title("人物名称")
+                        .content("发现新的人物名称，是否添加? " + backChukuInform.director)
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                PersonService.insertPersonInfo(backChukuInform.director);
+                                DataManagement.updatePersonInfo();
+                            }
+                        })
+                        .show();
                 uploadButton.setClickable(true);
                 return;
             }

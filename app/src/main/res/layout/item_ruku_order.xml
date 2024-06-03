@@ -15,22 +15,21 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="15dp">
         <TextView
             android:id="@+id/ruku_order_id_value"
-            android:layout_width="0dp"
-            android:layout_weight="2"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
             android:text="订单编号：XXXX XXXX XXXX XXXX"
             android:textColor="@color/white"
             android:textSize="14sp" />
         <TextView
             android:id="@+id/ruku_order_project"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:text="项目：XXXX"
             android:textColor="@color/white"
             android:textSize="14sp"/>
@@ -40,21 +39,20 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_marginLeft="15dp">
         <TextView
             android:id="@+id/ruku_factory_name"
-            android:layout_width="0dp"
-            android:layout_weight="3"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
             android:layout_toRightOf="@id/ruku_order_id_value"
             android:text="厂家：XXXXXXXX"
             android:textColor="@color/white"
             android:textSize="14sp" />
         <TextView
             android:id="@+id/ruku_time"
-            android:layout_width="0dp"
-            android:layout_weight="3"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="时间：XXXXXX"
             android:textColor="@color/white"

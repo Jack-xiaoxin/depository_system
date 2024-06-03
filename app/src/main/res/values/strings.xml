@@ -23,6 +23,8 @@
     <string name="ruku_output_material_num" translatable="false">*出库数量</string>
     <string name="hint_output_material_num" translatable="false">请输入出库物资数量</string>
     <string name="ruku_input_material_type" translatable="false">*物资型号</string>
+    <string name="ruku_input_material_unit" translatable="false">*计量单位</string>
+    <string name="hint_input_material_unit" translatable="false">请输入计量单位</string>
     <string name="ruku_input_factory_name" translatable="false">*厂家名称</string>
     <string name="hint_input_factory_name" translatable="false">请输入厂家名称</string>
     <string name="ruku_input_time" translatable="false">*入库时间</string>

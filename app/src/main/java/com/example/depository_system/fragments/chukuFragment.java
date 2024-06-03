@@ -52,6 +52,7 @@ import com.example.depository_system.informs.ChukuActionInform;
 import com.example.depository_system.informs.DepositoryInform;
 import com.example.depository_system.informs.KucunInform;
 import com.example.depository_system.informs.MaterialInform;
+import com.example.depository_system.informs.PersonInform;
 import com.example.depository_system.informs.ProjectInform;
 import com.example.depository_system.informs.RukuInform;
 import com.example.depository_system.informs.UserInform;
@@ -59,6 +60,7 @@ import com.example.depository_system.service.ChukuService;
 import com.example.depository_system.service.DepositoryService;
 import com.example.depository_system.service.KucunService;
 import com.example.depository_system.service.MaterialService;
+import com.example.depository_system.service.PersonService;
 import com.example.depository_system.service.ProjectService;
 import com.example.depository_system.service.RukuService;
 import com.example.depository_system.service.ServiceBase;
@@ -89,6 +91,8 @@ public class chukuFragment extends Fragment {
     EditText materialNameEditText;
     @BindView(R.id.material_type)
     EditText materialTypeEditText;
+    @BindView(R.id.material_unit)
+    EditText materialUnitEditText;
     @BindView(R.id.material_num)
     EditText materialNumEditText;
     @BindView(R.id.factory_name)
@@ -111,6 +115,8 @@ public class chukuFragment extends Fragment {
     ImageButton materialNameBtn;
     @BindView(R.id.image_btn_materialType)
     ImageButton materialTypeBtn;
+    @BindView(R.id.image_btn_materialUnit)
+    ImageButton materialUnitBtn;
     @BindView(R.id.image_btn_factoryName)
     ImageButton factoryNameBtn;
     @BindView(R.id.image_btn_chuku_project)
@@ -138,7 +144,6 @@ public class chukuFragment extends Fragment {
 
     private static final int CAMERA_PERMISSIOS_REQUEST_CODE = 100;
 
-    private int count = 1;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -217,6 +222,20 @@ public class chukuFragment extends Fragment {
             }
         });
 
+        materialUnitBtn.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    Set<String> set = new HashSet<>();
+                    for(MaterialInform materialInform : DataManagement.materialInforms) {
+                        set.add(materialInform.materialUnit);
+                    }
+                    showListPopupWindow(set.toArray(new String[set.size()]), materialUnitEditText);
+                }
+                return true;
+            }
+        });
+
         factoryNameBtn.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
@@ -279,6 +298,9 @@ public class chukuFragment extends Fragment {
                     for(UserInform userInform : DataManagement.userInforms) {
                         set.add(userInform.userName);
                     }
+                    for(PersonInform personInform : DataManagement.personInforms) {
+                        set.add(personInform.name);
+                    }
                     showListPopupWindow(set.toArray(new String[set.size()]), receiverNameEditText);
                 }
                 return true;
@@ -292,6 +314,9 @@ public class chukuFragment extends Fragment {
                     Set<String> set = new HashSet<>();
                     for(UserInform userInform : DataManagement.userInforms) {
                         set.add(userInform.userName);
+                    }
+                    for(PersonInform personInform : DataManagement.personInforms) {
+                        set.add(personInform.name);
                     }
                     showListPopupWindow(set.toArray(new String[set.size()]), projectMajorEditText);
                 }
@@ -351,6 +376,7 @@ public class chukuFragment extends Fragment {
                         & checkEditTextIsEmpty(materialIdentifierEditText)
                         & checkEditTextIsEmpty(materialNameEditText)
                         & checkEditTextIsEmpty(materialTypeEditText)
+                        & checkEditTextIsEmpty(materialUnitEditText)
                         & checkEditTextIsEmpty(materialNumEditText)
                         & checkEditTextIsEmpty(factoryNamEditText)
                         & checkEditTextIsEmpty(userOrganizationEditText)
@@ -364,7 +390,6 @@ public class chukuFragment extends Fragment {
                 } else {
                     ChukuActionInform backChukuInform = new ChukuActionInform();
                     backChukuInform.images = new ArrayList<>();
-                    backChukuInform.images.add("/sdf/sdf;");
                     //设置depotId
                     for(DepositoryInform depositoryInform : DataManagement.depositoryInforms) {
                         if(depositoryInform.depotName.equals(depotNameEditText.getText().toString())) {
@@ -390,7 +415,8 @@ public class chukuFragment extends Fragment {
                         if(materialInform.materialIdentifier.equals(backChukuInform.materialIdentifier)
                         && materialInform.factoryName.equals(backChukuInform.factoryName)
                         && materialInform.materialModel.equals(materialTypeEditText.getText().toString())
-                        && materialInform.factoryName.equals(factoryNamEditText.getText().toString())) {
+                        && materialInform.factoryName.equals(factoryNamEditText.getText().toString())
+                        && materialInform.materialUnit.equals(materialUnitEditText.getText().toString())) {
                              backChukuInform.materialId = materialInform.materialId;
                             break;
                         }
@@ -416,6 +442,56 @@ public class chukuFragment extends Fragment {
                         uploadButton.setClickable(true);
                         return;
                     }
+
+                    boolean isChanged = false;
+                    for(PersonInform personInform : DataManagement.personInforms) {
+                        if(personInform.name.equals(backChukuInform.applier)) {
+                            isChanged = true;
+                            break;
+                        }
+                    }
+                    if (isChanged) {
+                        new MaterialDialog.Builder(requireContext())
+                                .positiveText("确定")
+                                .negativeText("取消")
+                                .title("人物名称")
+                                .content("发现新的人物名称，是否添加? " + backChukuInform.applier)
+                                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                        PersonService.insertPersonInfo(backChukuInform.applier);
+                                        DataManagement.updatePersonInfo();
+                                    }
+                                })
+                                .show();
+                        uploadButton.setClickable(true);
+                        return;
+                    }
+                    isChanged = false;
+                    for(PersonInform personInform : DataManagement.personInforms) {
+                        if(personInform.name.equals(backChukuInform.director)) {
+                            isChanged = true;
+                            break;
+                        }
+                    }
+                    if (isChanged) {
+                        new MaterialDialog.Builder(requireContext())
+                                .positiveText("确定")
+                                .negativeText("取消")
+                                .title("人物名称")
+                                .content("发现新的人物名称，是否添加? " + backChukuInform.director)
+                                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                        PersonService.insertPersonInfo(backChukuInform.director);
+                                        DataManagement.updatePersonInfo();
+                                    }
+                                })
+                                .show();
+                        uploadButton.setClickable(true);
+                        return;
+                    }
+
                     //检查数量够不够
                     List<KucunInform> kucunInformList = KucunService.getKucunList(null, backChukuInform.materialId, backChukuInform.depotId, projectId);
                     if(kucunInformList.size() < 1) {
@@ -483,6 +559,7 @@ public class chukuFragment extends Fragment {
                         if(materialInform.materialIdentifier == list[i]) {
                             materialNameEditText.setText(materialInform.materialName);
                             materialTypeEditText.setText(materialInform.materialModel);
+                            materialUnitEditText.setText(materialInform.materialUnit);
                         }
                     }
                 }
@@ -508,6 +585,7 @@ public class chukuFragment extends Fragment {
         materialIdentifierEditText.setText("");
         materialNameEditText.setText("");
         materialTypeEditText.setText("");
+        materialUnitEditText.setText("");
         materialNumEditText.setText("");
         factoryNamEditText.setText("");
         timeEditText.setText("");

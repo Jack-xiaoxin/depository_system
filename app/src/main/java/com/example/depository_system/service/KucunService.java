@@ -152,4 +152,31 @@ public class KucunService {
             return null;
         }
     }
+
+//    public static String updateAlarmedNumber(
+//            String
+//    ) {
+//
+//    }
+
+    public static String deleteStoredInfo( String kucunId) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            if(kucunId != null && !kucunId.isEmpty()) {
+                jsonObject.put("stored_id", kucunId);
+            }
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+
+        String bodyString = ServiceBase.HttpBase("/deleteStoredInfo", "POST", jsonObject);
+        try {
+            JSONObject bodyDict = new JSONObject(bodyString);
+            String res = bodyDict.getString("data");
+            return res;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

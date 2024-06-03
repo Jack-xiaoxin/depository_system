@@ -22,6 +22,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
+import android.text.InputType;
 import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -51,6 +52,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.model.stream.HttpGlideUrlLoader;
 import com.example.depository_system.DataManagement;
 import com.example.depository_system.MainActivity;
 import com.example.depository_system.MainInterface;
@@ -59,11 +61,14 @@ import com.example.depository_system.adapters.ImageAdapter;
 import com.example.depository_system.frontInforms.FrontRukuInform;
 import com.example.depository_system.informs.DepositoryInform;
 import com.example.depository_system.informs.MaterialInform;
+import com.example.depository_system.informs.PersonInform;
 import com.example.depository_system.informs.ProjectInform;
 import com.example.depository_system.informs.RukuInform;
 import com.example.depository_system.informs.UserInform;
 import com.example.depository_system.service.DepositoryService;
+import com.example.depository_system.service.KucunService;
 import com.example.depository_system.service.MaterialService;
+import com.example.depository_system.service.PersonService;
 import com.example.depository_system.service.ProjectService;
 import com.example.depository_system.service.RukuService;
 import com.example.depository_system.service.ServiceBase;
@@ -101,6 +106,8 @@ public class rukuFragment extends Fragment {
 
     private EditText materialNumEditText;
 
+    private EditText materialUnitEditText;
+
     private EditText factoryNameEditText;
 
     private EditText timeEditText;
@@ -124,6 +131,7 @@ public class rukuFragment extends Fragment {
     private ImageButton materialIdentifier_btn;
     private ImageButton materialType_btn;
     private ImageButton factoryName_btn;
+    private ImageButton materialUnit_btn;
     private ImageButton time_btn;
     private ImageButton receiver_btn;
     private ImageButton accepter_btn;
@@ -154,6 +162,7 @@ public class rukuFragment extends Fragment {
         materialNameEditText = root.findViewById(R.id.material_name);
         materialTypeEditText = root.findViewById(R.id.material_type);
         materialNumEditText = root.findViewById(R.id.material_num);
+        materialUnitEditText = root.findViewById(R.id.material_unit);
         factoryNameEditText = root.findViewById(R.id.factory_name);
         timeEditText = root.findViewById(R.id.ruku_time);
         projectNameEditText = root.findViewById(R.id.project_name);
@@ -164,6 +173,7 @@ public class rukuFragment extends Fragment {
         materialName_btn = root.findViewById(R.id.image_btn_materialName);
         materialType_btn = root.findViewById(R.id.image_btn_materialType);
         factoryName_btn = root.findViewById(R.id.image_btn_factoryName);
+        materialUnit_btn = root.findViewById(R.id.image_btn_materialUnit);
         time_btn = root.findViewById(R.id.image_btn_time);
         receiver_btn = root.findViewById(R.id.image_btn_receiver);
         accepter_btn = root.findViewById(R.id.image_btn_accepter);
@@ -241,6 +251,20 @@ public class rukuFragment extends Fragment {
             }
         });
 
+        materialUnit_btn.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    Set<String> set = new HashSet<>();
+                    for(MaterialInform materialInform : DataManagement.materialInforms) {
+                        set.add(materialInform.materialUnit);
+                    }
+                    showListPopupWindow(set.toArray(new String[set.size()]), materialUnitEditText);
+                }
+                return true;
+            }
+        });
+
         factoryName_btn.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
@@ -303,6 +327,9 @@ public class rukuFragment extends Fragment {
                     for(UserInform userInform : DataManagement.userInforms) {
                         set.add(userInform.userName);
                     }
+                    for(PersonInform personInform : DataManagement.personInforms) {
+                        set.add(personInform.name);
+                    }
                     showListPopupWindow(set.toArray(new String[set.size()]), receiverEditText);
                 }
                 return true;
@@ -316,6 +343,9 @@ public class rukuFragment extends Fragment {
                     Set<String> set = new HashSet<>();
                     for(UserInform userInform : DataManagement.userInforms) {
                         set.add(userInform.userName);
+                    }
+                    for(PersonInform personInform : DataManagement.personInforms) {
+                        set.add(personInform.name);
                     }
                     showListPopupWindow(set.toArray(new String[set.size()]), acceptorEditText);
                 }
@@ -384,6 +414,7 @@ public class rukuFragment extends Fragment {
                 rukuInform.materialName = materialNameEditText.getText().toString();
                 rukuInform.materialType = materialTypeEditText.getText().toString();
                 rukuInform.materialNum = Integer.parseInt(materialNumEditText.getText().toString());
+                rukuInform.materialUnit = materialUnitEditText.getText().toString();
                 rukuInform.factoryName = factoryNameEditText.getText().toString();
                 rukuInform.time = timeEditText.getText().toString();
                 rukuInform.project = projectNameEditText.getText().toString();
@@ -436,12 +467,13 @@ public class rukuFragment extends Fragment {
                             "物料名称：" + backRukuInform.materialName + "\n" +
                             "物料编码：" + backRukuInform.materialIdentifier + "\n" +
                             "物料类型：" + backRukuInform.materialModel + "\n" +
-                            "厂家名称：" + backRukuInform.factoryName + "\n");
+                            "厂家名称：" + backRukuInform.factoryName + "\n" +
+                            "计量单位：" + backRukuInform.materialUnit);
                     normalDialog.setPositiveButton("确定",
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    boolean result = MaterialService.insertMaterial(backRukuInform.materialName, backRukuInform.materialIdentifier, backRukuInform.materialModel, backRukuInform.factoryName);
+                                    boolean result = MaterialService.insertMaterial(backRukuInform.materialName, backRukuInform.materialIdentifier, backRukuInform.materialModel, backRukuInform.factoryName, backRukuInform.materialUnit);
                                     if(result) {
                                         DataManagement.updateMaterial();
                                         Toast.makeText(requireContext(), "添加物料成功", Toast.LENGTH_SHORT).show();
@@ -451,6 +483,68 @@ public class rukuFragment extends Fragment {
                                 }
                             });
                     normalDialog.show();
+                    uploadBtn.setClickable(true);
+                    return;
+                }
+
+                boolean isChanged = true;
+                for(PersonInform personInform : DataManagement.personInforms) {
+                    if(personInform.name.equals(rukuInform.receiver)) {
+                        isChanged = false;
+                        break;
+                    }
+                }
+                for(UserInform userInform : DataManagement.userInforms) {
+                    if(userInform.userName.equals(rukuInform.receiver)) {
+                        isChanged = false;
+                        break;
+                    }
+                }
+                if (isChanged) {
+                    new MaterialDialog.Builder(requireContext())
+                            .positiveText("确定")
+                            .negativeText("取消")
+                            .title("人物名称")
+                            .content("发现新的人物名称，是否添加? " + rukuInform.receiver)
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    PersonService.insertPersonInfo(rukuInform.receiver);
+                                    DataManagement.updatePersonInfo();
+                                }
+                            })
+                            .show();
+                    uploadBtn.setClickable(true);
+                    return;
+                }
+
+                isChanged = true;
+                for(PersonInform personInform : DataManagement.personInforms) {
+                    if(personInform.name.equals(rukuInform.accepter)) {
+                        isChanged = false;
+                        break;
+                    }
+                }
+                for(UserInform userInform : DataManagement.userInforms) {
+                    if(userInform.userName.equals(rukuInform.accepter)) {
+                        isChanged = false;
+                        break;
+                    }
+                }
+                if (isChanged) {
+                    new MaterialDialog.Builder(requireContext())
+                            .positiveText("确定")
+                            .negativeText("取消")
+                            .title("人物名称")
+                            .content("发现新的人物名称，是否添加? " + rukuInform.accepter)
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    PersonService.insertPersonInfo(rukuInform.accepter);
+                                    DataManagement.updatePersonInfo();
+                                }
+                            })
+                            .show();
                     uploadBtn.setClickable(true);
                     return;
                 }
@@ -526,7 +620,7 @@ public class rukuFragment extends Fragment {
 
                 backRukuInform.images = list;
                 result[0] = RukuService.action(backRukuInform);
-                if (result[0].contains("0")) {
+                if (result[0].contains("入库成功")) {
                     DataManagement.updateAll();
                     MaterialDialog materialDialog = new MaterialDialog.Builder(requireContext())
                             .positiveText("确定")
@@ -535,6 +629,32 @@ public class rukuFragment extends Fragment {
                                 @Override
                                 public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                                     setEditTextEmpty();
+                                    if(result[0].contains("新增库存类型成功")) {
+                                        new MaterialDialog.Builder(requireContext())
+                                                .content("发现新的库存记录，请输入预警值：\n" +
+                                                        "仓库： " + backRukuInform.depotName + "\n" +
+                                                        "物料编码： " + backRukuInform.materialIdentifier + "\n" +
+                                                        "物料名称：" + backRukuInform.materialName + "\n" +
+                                                        "物料类型：" + backRukuInform.materialModel + "\n" +
+                                                        "计量单位：" + backRukuInform.materialUnit + "\n" +
+                                                        "入库项目：" + backRukuInform.projectName)
+                                                .inputType(InputType.TYPE_CLASS_NUMBER)
+                                                .input(null, "100", false, new MaterialDialog.InputCallback() {
+                                                    @Override
+                                                    public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+                                                        String str = dialog.getInputEditText().getText().toString();
+                                                        String strId = "";
+                                                        for(int i = 0; i < result[0].length(); i++) {
+                                                            char ch = result[0].charAt(i);
+                                                            if(ch <= '9' && ch >= '0') {
+                                                                strId += ch;
+                                                            }
+                                                        }
+                                                        KucunService.updateAlarmedNumber(strId, str);
+                                                    }
+                                                })
+                                                .show();
+                                    }
                                 }
                             })
                             .show();
@@ -640,6 +760,7 @@ public class rukuFragment extends Fragment {
                         if(materialInform.materialIdentifier == list[i]) {
                             materialNameEditText.setText(materialInform.materialName);
                             materialTypeEditText.setText(materialInform.materialModel);
+                            materialUnitEditText.setText(materialInform.materialUnit);
                         }
                     }
                 }
@@ -655,6 +776,7 @@ public class rukuFragment extends Fragment {
         materialNameEditText.setText("");
         materialTypeEditText.setText("");
         materialNumEditText.setText("");
+        materialUnitEditText.setText("");
         factoryNameEditText.setText("");
         timeEditText.setText("");
         projectNameEditText.setText("");

@@ -11,6 +11,8 @@ public class ChukuActionInform {
 
     public String materialIdentifier;
 
+    public String materialUnit;
+
     public String factoryName;
 
     public String applyDepartmentName;

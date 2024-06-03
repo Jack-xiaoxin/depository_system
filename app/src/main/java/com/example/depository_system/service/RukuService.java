@@ -13,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -29,6 +30,7 @@ public class RukuService {
             jsonObject.put("goods_name", rukuInform.materialName);
             jsonObject.put("goods_model", rukuInform.materialModel);
             jsonObject.put("goods_identifier", rukuInform.materialIdentifier);
+            jsonObject.put("goods_unit", rukuInform.materialUnit);
             jsonObject.put("depository_name", rukuInform.depotName);
             jsonObject.put("depository_id", rukuInform.depotId);
             jsonObject.put("factory_name", rukuInform.factoryName);
@@ -44,6 +46,15 @@ public class RukuService {
         }
 
         String response = ServiceBase.HttpBase("/inbound", "POST", jsonObject);
+        try {
+            JSONObject responseJson = new JSONObject(response);
+            String data = responseJson.getString("data");
+            return new String(data.getBytes("utf-8"), "utf-8");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         return response;
     }
 
@@ -57,7 +68,7 @@ public class RukuService {
             if (factoryName != null && !factoryName.isEmpty()) {
                 jsonObject.put("factory_name", factoryName);
             }
-            if(projectName != null && !projectName.isEmpty()) {
+            if (projectName != null && !projectName.isEmpty()) {
                 jsonObject.put("project_name", projectName);
             }
         } catch (JSONException e) {
@@ -93,6 +104,7 @@ public class RukuService {
                     itemInform.materialName = valueObject.getString("goods_name");
                     itemInform.materialModel = valueObject.getString("goods_model");
                     itemInform.materialIdentifier = valueObject.getString("goods_identifier");
+                    itemInform.materialUnit = valueObject.getString("goods_unit");
                     itemInform.factoryName = valueObject.getString("factory_name");
                     itemInform.number = valueObject.getInt("goods_number");
                     itemInform.inboundTime = valueObject.getString("inbound_time");
@@ -118,5 +130,31 @@ public class RukuService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static boolean deleteRukuMaterial(RukuInform rukuInform) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("goods_name", rukuInform.materialName);
+            jsonObject.put("goods_model", rukuInform.materialModel);
+            jsonObject.put("goods_identifier", rukuInform.materialIdentifier);
+            jsonObject.put("goods_unit", rukuInform.materialUnit);
+            jsonObject.put("depository_name", rukuInform.depotName);
+            jsonObject.put("factory_name", rukuInform.factoryName);
+            jsonObject.put("receiver", rukuInform.receiver);
+            jsonObject.put("checker", rukuInform.acceptor);
+            jsonObject.put("project_name", rukuInform.projectName);
+            jsonObject.put("goods_number", rukuInform.number);
+            jsonObject.put("inbound_identifier", rukuInform.inboundIdentifier);
+            jsonObject.put("time", rukuInform.time);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        String bodyString = ServiceBase.HttpBase("/inboundDelete", "POST", jsonObject);
+        if(bodyString.contains("成功")) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

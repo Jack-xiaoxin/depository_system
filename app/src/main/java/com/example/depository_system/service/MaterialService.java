@@ -17,6 +17,7 @@ public class MaterialService {
             String materialName,
             String materialModel,
             String materialIdentifier,
+            String materialUnit,
             String factoryName
     ) {
         List<MaterialInform> materialInforms = new ArrayList<>();
@@ -37,6 +38,9 @@ public class MaterialService {
             if (factoryName != null && !factoryName.isEmpty()) {
                 jsonObject.put("factory_name", factoryName);
             }
+            if (materialUnit != null && !materialUnit.isEmpty()) {
+                jsonObject.put("goods_unit", materialUnit);
+            }
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
@@ -53,6 +57,7 @@ public class MaterialService {
                 materialInform.materialName = singleObject.getString("goods_name");
                 materialInform.materialModel = singleObject.getString("goods_model");
                 materialInform.materialIdentifier = singleObject.getString("goods_identifier");
+                materialInform.materialUnit = singleObject.getString("goods_unit");
                 materialInform.factoryName = singleObject.getString("factory_name");
 
                 materialInforms.add(materialInform);
@@ -69,17 +74,20 @@ public class MaterialService {
             String materialName,
             String materialIdentifier,
             String materialType,
-            String factoryName) {
+            String factoryName,
+            String materialUnit) {
         if(materialName == null || materialName.isEmpty()) return false;
         if(materialIdentifier == null || materialIdentifier.isEmpty()) return false;
         if(materialType == null || materialType.isEmpty()) return false;
         if(factoryName == null || factoryName.isEmpty()) return false;
+        if(materialUnit == null || materialUnit.isEmpty()) return false;
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("goods_name", materialName);
             jsonObject.put("goods_model", materialType);
             jsonObject.put("goods_identifier", materialIdentifier);
             jsonObject.put("factory_name", factoryName);
+            jsonObject.put("goods_unit", materialUnit);
         } catch (JSONException e) {
             e.printStackTrace();
         }

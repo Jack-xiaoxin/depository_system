@@ -14,6 +14,8 @@ public class RukuRecordItemInform {
 
     public String materialIdentifier;
 
+    public String materialUnit;
+
     public String factoryName;
 
     public String receiver;

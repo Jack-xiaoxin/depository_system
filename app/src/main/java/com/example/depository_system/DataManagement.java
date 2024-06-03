@@ -1,9 +1,12 @@
 package com.example.depository_system;
 
+import android.app.Person;
+
 import com.example.depository_system.informs.DepartmentInform;
 import com.example.depository_system.informs.DepositoryInform;
 import com.example.depository_system.informs.KucunInform;
 import com.example.depository_system.informs.MaterialInform;
+import com.example.depository_system.informs.PersonInform;
 import com.example.depository_system.informs.ProjectInform;
 import com.example.depository_system.informs.RukuRecordInform;
 import com.example.depository_system.informs.UserInform;
@@ -11,6 +14,7 @@ import com.example.depository_system.service.DepartmentService;
 import com.example.depository_system.service.DepositoryService;
 import com.example.depository_system.service.KucunService;
 import com.example.depository_system.service.MaterialService;
+import com.example.depository_system.service.PersonService;
 import com.example.depository_system.service.ProjectService;
 import com.example.depository_system.service.UserService;
 
@@ -25,6 +29,7 @@ public class DataManagement {
     public static List<KucunInform> kucunInforms = new ArrayList<>();
     public static List<ProjectInform> projectInforms = new ArrayList<>();
     public static List<DepartmentInform> departmentInforms = new ArrayList<>();
+    public static List<PersonInform> personInforms = new ArrayList<>();
 
     public static UserInform userInform;
 
@@ -33,7 +38,7 @@ public class DataManagement {
     }
 
     public static void updateMaterial() {
-        materialInforms = MaterialService.getMaterialList(null, null, null, null, null);
+        materialInforms = MaterialService.getMaterialList(null, null, null, null, null, null);
     }
 
     public static void updateUserInfo() {
@@ -52,6 +57,10 @@ public class DataManagement {
         departmentInforms = DepartmentService.getDepartmentList(null);
     }
 
+    public static void updatePersonInfo() {
+        personInforms = PersonService.getPersonInfoList(null);
+    }
+
     public static void updateAll() {
         updateDepository();
         updateMaterial();
@@ -59,5 +68,6 @@ public class DataManagement {
         updateProjectInfo();
         updateKucunInfo();
         updateDepartmentInfo();
+        updatePersonInfo();
     }
 }

@@ -28,6 +28,8 @@ public class KucunInform {
 
     public String materialType;
 
+    public String materialUnit;
+
     public String factoryName;
 
     public void getMaterialInfo() {
@@ -37,6 +39,7 @@ public class KucunInform {
                 this.materialName = materialInform.materialName;
                 this.materialType = materialInform.materialModel;
                 this.factoryName = materialInform.factoryName;
+                this.materialUnit = materialInform.materialUnit;
                 break;
             }
         }

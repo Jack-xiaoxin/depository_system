@@ -2,6 +2,7 @@ package com.example.depository_system.adapters;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,8 @@ import com.example.depository_system.R;
 import com.example.depository_system.informs.ChukuRecordItemInform;
 import com.example.depository_system.informs.RukuRecordInform;
 import com.example.depository_system.informs.RukuRecordItemInform;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -57,7 +60,8 @@ public class ChukuMaterialAdapter extends BaseRecycleAdapter{
         itemHolder.materialType.setText("物资类型：" + mList.get(position).materialModel);
         itemHolder.materialNum.setText("物资数量：" + mList.get(position).number);
         itemHolder.materialFactory.setText("厂家：" + mList.get(position).factoryName);
-        itemHolder.time.setText(mList.get(position).outboundTime);
+        itemHolder.time.setText("时间：" + mList.get(position).outboundTime);
+        itemHolder.materialUnit.setText("计量单位：" + mList.get(position).materialUnit);
         itemHolder.receiverName.setText("领用人：" + mList.get(position).applier);
         itemHolder.projectName.setText("项目名称：" + mList.get(position).projectName);
         itemHolder.projectMajor.setText("项目负责人：" + mList.get(position).projectMajor);
@@ -65,6 +69,16 @@ public class ChukuMaterialAdapter extends BaseRecycleAdapter{
         itemHolder.depositoryName.setText("仓库：" + mList.get(position).depositoryName);
         itemHolder.recyclerView.setAdapter(new ImageAdapter_display(mList.get(position).images, handler));
         itemHolder.recyclerView.setLayoutManager(new GridLayoutManager(context,5));
+
+        itemHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                Message msg = new Message();
+                msg.obj = -100;
+                handler.sendMessage(msg);
+                return true;
+            }
+        });
     }
 
     class ItemHolder extends RecyclerView.ViewHolder {
@@ -76,6 +90,8 @@ public class ChukuMaterialAdapter extends BaseRecycleAdapter{
         TextView materialType;
         @BindView(R.id.chuku_order_material_identifier)
         TextView materialIdentifier;
+        @BindView(R.id.chuku_order_material_unit)
+        TextView materialUnit;
         @BindView(R.id.chuku_order_material_factory)
         TextView materialFactory;
         @BindView(R.id.chuku_order_material_num)

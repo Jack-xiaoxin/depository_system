@@ -73,7 +73,8 @@ public class RukuBatchAdapter extends BaseRecycleAdapter{
         itemHolder.materialName.setText("物资名称：" + mList.get(position).materialName);
         itemHolder.materialType.setText("物资型号：" + mList.get(position).materialModel);
         itemHolder.materialNum.setText("物资数量：" + mList.get(position).number);
-        itemHolder.factoryName.setText("工厂名称：" + mList.get(position).factoryName);
+        itemHolder.materialUnit.setText("计量单位：" + mList.get(position).materialUnit);
+        itemHolder.factoryName.setText("厂家名称：" + mList.get(position).factoryName);
         itemHolder.time.setText("时间：" + mList.get(position).time);
         itemHolder.receiver.setText("收货人：" + mList.get(position).receiver);
         itemHolder.accepter.setText("验收人：" + mList.get(position).acceptor);
@@ -103,6 +104,8 @@ public class RukuBatchAdapter extends BaseRecycleAdapter{
         TextView materialIdentifier;
         @BindView(R.id.ruku_order_material_num)
         TextView materialNum;
+        @BindView(R.id.ruku_order_material_unit)
+        TextView materialUnit;
         @BindView(R.id.ruku_factory_name)
         TextView factoryName;
         @BindView(R.id.ruku_time)

@@ -34,6 +34,8 @@ public class RukuInform {
 
     public String materialModel;
 
+    public String materialUnit;
+
     public String inboundIdentifier;
 
     public String depotId;

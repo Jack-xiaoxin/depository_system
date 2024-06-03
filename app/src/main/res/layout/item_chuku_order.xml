@@ -15,12 +15,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_marginLeft="15dp">
         <TextView
             android:id="@+id/chuku_order_id_value"
-            android:layout_width="0dp"
-            android:layout_weight="3"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:text="出库单号：XXXX XXXX XXXX XXXX"
@@ -28,9 +27,9 @@
             android:textSize="14sp" />
         <TextView
             android:id="@+id/chuku_time"
-            android:layout_width="0dp"
-            android:layout_weight="2"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
             android:text="时间：XXXX"
             android:textColor="@color/white"
             android:textSize="14sp"></TextView>
@@ -40,20 +39,19 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_marginLeft="15dp">
         <TextView
             android:id="@+id/chuku_department_name"
-            android:layout_width="0dp"
-            android:layout_weight="3"
+            android:layout_width="wrap_content"
+            android:layout_marginBottom="5dp"
             android:layout_height="wrap_content"
             android:text="领用单位：XXXXXXXX"
             android:textColor="@color/white"
             android:textSize="14sp" />
         <TextView
             android:id="@+id/chuku_project"
-            android:layout_width="0dp"
-            android:layout_weight="2"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="领用项目：XXXXXX"
             android:textColor="@color/white"

@@ -94,6 +94,7 @@ public class ChukuService {
                     itemInform.materialId = valueObject.getString("goods_id");
                     itemInform.materialName = valueObject.getString("goods_name");
                     itemInform.materialModel = valueObject.getString("goods_model");
+                    itemInform.materialUnit = valueObject.getString("goods_unit");
                     itemInform.factoryName = valueObject.getString("factory_name");
                     itemInform.number = valueObject.getInt("goods_number");
                     itemInform.materialIdentifier = valueObject.getString("goods_identifier");

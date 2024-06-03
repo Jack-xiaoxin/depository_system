@@ -83,12 +83,13 @@ public class KucunAdapter extends BaseRecycleAdapter{
         itemHolder.imageView.setImageDrawable(drawable);
         itemHolder.materialName.setText("物资名称：" + myMaterialInform.materialName);
         itemHolder.materialIdentifier.setText("物资编码：" + myMaterialInform.materialIdentifier);
-        itemHolder.materialType.setText("物资类型：" + myMaterialInform.materialModel);
+        itemHolder.materialType.setText("物资型号：" + myMaterialInform.materialModel);
         itemHolder.depositoryName.setText("仓库：" + myDepositoryInform.depotName);
         itemHolder.materialNum.setText("物资数量：" + String.valueOf(mList.get(position).kucunNumber));
         itemHolder.alertNumber.setText("预警数量：" + String.valueOf(mList.get(position).alarmNumber));
         itemHolder.factoryName.setText("厂家：" + myMaterialInform.factoryName);
         itemHolder.projectName.setText("入库项目：" + mList.get(position).projectName);
+        itemHolder.materialUnit.setText("计量单位：" + mList.get(position).materialUnit);
 
         itemHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -138,6 +139,24 @@ public class KucunAdapter extends BaseRecycleAdapter{
                                     .positiveText("修改")
                                     .theme(Theme.LIGHT)
                                     .show();
+                        } else if(menuItem.getItemId() == R.id.menu_item_modify_delete) {
+                            new MaterialDialog.Builder(itemHolder.itemView.getContext())
+                                    .title("删除库存记录")
+                                    .content("确认删除此库存记录吗？")
+                                    .positiveText("确认")
+                                    .negativeText("取消")
+                                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                        @Override
+                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                            KucunService.deleteStoredInfo(mList.get(position).kucunId);
+                                            DataManagement.updateKucunInfo();
+                                            Message msg = new Message();
+                                            msg.obj = 1001;
+                                            handler.sendMessage(msg);
+                                        }
+                                    })
+                                    .theme(Theme.LIGHT)
+                                    .show();
                         }
                         return false;
                     }
@@ -180,6 +199,8 @@ public class KucunAdapter extends BaseRecycleAdapter{
         TextView factoryName;
         @BindView(R.id.ruku_project)
         TextView projectName;
+        @BindView(R.id.kucun_material_unit)
+        TextView materialUnit;
 
         public ItemHolder(View itemView) {
             super(itemView);
