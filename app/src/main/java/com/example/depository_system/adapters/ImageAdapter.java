@@ -53,42 +53,44 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
         holder.imageView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                PopupMenu popupMenu = new PopupMenu(holder.itemView.getContext(), holder.imageView, Gravity.BOTTOM);
+                if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    PopupMenu popupMenu = new PopupMenu(holder.itemView.getContext(), holder.imageView, Gravity.BOTTOM);
 
-                // 添加菜单项
-                popupMenu.getMenuInflater().inflate(R.menu.bottom_menu, popupMenu.getMenu());
+                    // 添加菜单项
+                    popupMenu.getMenuInflater().inflate(R.menu.bottom_menu, popupMenu.getMenu());
 
-                // 设置菜单项点击监听器
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        // 处理菜单项的点击事件
-                        switch (item.getItemId()) {
-                            case R.id.menu_item_display:
-                                Message msg1 = new Message();
-//                                msg1.obj = 100+position;
-                                msg1.obj = imageUri;
-                                handler.sendMessage(msg1);
-                                return true;
-                            case R.id.menu_item_save:
-                                Message msg2 = new Message();
-                                msg2.obj = 1000+position;
-                                handler.sendMessage(msg2);
-                                return true;
-                            // 添加其他菜单项的处理逻辑
-                            case R.id.menu_item_delete:
-                                Message msg3 = new Message();
-                                msg3.obj = 10000+position;
-                                handler.sendMessage(msg3);
-                                return true;
+                    // 设置菜单项点击监听器
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            // 处理菜单项的点击事件
+                            switch (item.getItemId()) {
+                                case R.id.menu_item_display:
+                                    Message msg1 = new Message();
+//                                    msg1.obj = 100+position;
+                                    msg1.obj = imageUri;
+                                    msg1.arg1 = 100;
+                                    handler.sendMessage(msg1);
+                                    return true;
+                                case R.id.menu_item_save:
+                                    Message msg2 = new Message();
+                                    msg2.obj = 1000+position;
+                                    handler.sendMessage(msg2);
+                                    return true;
+                                // 添加其他菜单项的处理逻辑
+                                case R.id.menu_item_delete:
+                                    Message msg3 = new Message();
+                                    msg3.obj = 10000+position;
+                                    handler.sendMessage(msg3);
+                                    return true;
+                            }
+                            return false;
                         }
-                        return false;
-                    }
-                });
-
-                // 显示弹出式菜单
-                popupMenu.show();
-                return false;
+                    });
+                    // 显示弹出式菜单
+                    popupMenu.show();
+                }
+                return true;
             }
         });
     }

@@ -40,6 +40,8 @@ public class RukuInform {
 
     public String depotId;
 
+    public String inboundItemId;
+
     public List<Uri> imageUriList;
 
 }

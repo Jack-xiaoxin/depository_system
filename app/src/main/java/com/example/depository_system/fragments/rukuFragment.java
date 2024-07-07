@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,9 +15,12 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.FileUtils;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -45,6 +49,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.core.graphics.PathUtils;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -52,12 +57,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.model.stream.HttpGlideUrlLoader;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.depository_system.DataManagement;
 import com.example.depository_system.MainActivity;
 import com.example.depository_system.MainInterface;
 import com.example.depository_system.R;
 import com.example.depository_system.adapters.ImageAdapter;
+import com.example.depository_system.adapters.ImageAdapter_display;
 import com.example.depository_system.frontInforms.FrontRukuInform;
 import com.example.depository_system.informs.DepositoryInform;
 import com.example.depository_system.informs.MaterialInform;
@@ -79,10 +92,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.CopyOption;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -399,7 +419,10 @@ public class rukuFragment extends Fragment {
                         & checkEditTextIsEmpty(materialTypeEditText)
                         & checkEditTextIsEmpty(materialNumEditText)
                         & checkEditTextIsEmpty(factoryNameEditText)
-                        & checkEditTextIsEmpty(timeEditText);
+                        & checkEditTextIsEmpty(timeEditText)
+                        & checkEditTextIsEmpty(projectNameEditText)
+                        & checkEditTextIsEmpty(acceptorEditText)
+                        & checkEditTextIsEmpty(receiverEditText);
 
                 if (!isOk) {
                     Toast.makeText(requireContext(), "请填写必填项", Toast.LENGTH_SHORT).show();
@@ -727,8 +750,9 @@ public class rukuFragment extends Fragment {
             Log.d("kevin", "url" + photoUri);
             list.add(contentUri.toString());
             imageUriList.add(photoUri);
-            recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 5));
             recyclerView.setAdapter(new ImageAdapter(list, handler));
+            recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 5));
+            resetRecyclerViewHeight();
         }
     }
 
@@ -787,49 +811,57 @@ public class rukuFragment extends Fragment {
     private void updateImages() {
         recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 5));
         recyclerView.setAdapter(new ImageAdapter(list, handler));
+        resetRecyclerViewHeight();
     }
 
     private void save(int index) {
         Uri imageUri = imageUriList.get(index);
-        ContentResolver contentResolver = requireContext().getContentResolver();
-        InputStream inputStream = null;
-        OutputStream outputStream = null;
+        Glide.with(requireContext())
+                .downloadOnly()
+                .load(imageUri)
+                .listener(new RequestListener<File>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, @Nullable Object model, @NonNull Target<File> target, boolean isFirstResource) {
+                        Toast.makeText(requireContext(), "下载失败", Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
 
+                    @Override
+                    public boolean onResourceReady(@NonNull File resource, @NonNull Object model, Target<File> target, @NonNull DataSource dataSource, boolean isFirstResource) {
+                        saveToAlbum(requireContext(), resource.getAbsolutePath());
+                        return false;
+                    }
+                })
+                .into(new CustomTarget<File>() {
+                    @Override
+                    public void onResourceReady(@NonNull File resource, @Nullable Transition<? super File> transition) {
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                    }
+                });
+    }
+
+    private void saveToAlbum(Context context, String srcPath) {
+        Log.d("kevin", "123");
+        String dcimPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath();
+        File file = new File(dcimPath, "content_" + System.currentTimeMillis() + ".png");
         try {
-            inputStream = contentResolver.openInputStream(imageUri);
-            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-
-            if (bitmap != null) {
-                String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-                String imageFileName = "IMG_" + timestamp + ".jpg";
-
-                ContentValues values = new ContentValues();
-                values.put(MediaStore.Images.Media.DISPLAY_NAME, imageFileName);
-                values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
-                values.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_DCIM);
-
-                Uri imageUriSaved = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-                if (imageUriSaved != null) {
-                    outputStream = contentResolver.openOutputStream(imageUriSaved);
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-                    outputStream.close();
-                    // 图片保存到相册成功
+            InputStream inputStream = new FileInputStream(srcPath);
+            //要求android 8以上
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                if(Files.copy(inputStream, file.toPath(), new CopyOption[0]) > 0) {
+                    context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + file.getAbsolutePath())));
+                    Toast.makeText(context, "保存图片到相册成功", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, "保存图片到相册失败", Toast.LENGTH_SHORT).show();
                 }
             }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
         } catch (IOException e) {
-            e.printStackTrace();
-            // 图片保存到相册失败
-        } finally {
-            try {
-                if (inputStream != null) {
-                    inputStream.close();
-                }
-                if (outputStream != null) {
-                    outputStream.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            throw new RuntimeException(e);
         }
     }
 
@@ -841,5 +873,20 @@ public class rukuFragment extends Fragment {
         list.clear();
         imageUriList.clear();
         updateImages();
+    }
+
+    private void resetRecyclerViewHeight() {
+        RecyclerView.Adapter adapter = recyclerView.getAdapter();
+        int spanCount = ((GridLayoutManager) recyclerView.getLayoutManager()).getSpanCount();
+        int itemCount = adapter.getItemCount();
+
+        View itemView = recyclerView.getLayoutManager().getChildAt(0);
+        if(itemView != null) {
+            int itemHeight = itemView.getHeight();
+            int numRows = (int)Math.ceil((double) itemCount / spanCount);
+            int recyclerViewHeight = numRows * itemHeight;
+            recyclerView.getLayoutParams().height = recyclerViewHeight;
+            recyclerView.requestLayout();
+        }
     }
 }

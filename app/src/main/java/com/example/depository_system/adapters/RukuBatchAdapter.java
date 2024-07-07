@@ -9,10 +9,13 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -83,12 +86,30 @@ public class RukuBatchAdapter extends BaseRecycleAdapter{
         itemHolder.recyclerView.setAdapter(new ImageAdapter_display(mList.get(position).images, handler));
         itemHolder.recyclerView.setLayoutManager(new GridLayoutManager(context, 5));
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View view) {
-                Message msg = new Message();
-                msg.obj = position;
-                handler.sendMessage(msg);
+            public boolean onLongClick(View view) {
+                PopupMenu popupMenu = new PopupMenu(holder.itemView.getContext(), holder.itemView, Gravity.BOTTOM);
+                popupMenu.getMenuInflater().inflate(R.menu.bottom_menu_2, popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        if(menuItem.getItemId() == R.id.menu_item_modify) {
+                            Message msg = new Message();
+                            msg.obj = position;
+                            msg.arg1 = 100;
+                            handler.sendMessage(msg);
+                        } else if(menuItem.getItemId() == R.id.menu_item_delete) {
+                            Message msg = new Message();
+                            msg.obj = position;
+                            msg.arg1 = 101;
+                            handler.sendMessage(msg);
+                        }
+                        return false;
+                    }
+                });
+                popupMenu.show();
+                return false;
             }
         });
     }

@@ -75,6 +75,7 @@ public class ChukuBatchAdapter extends BaseRecycleAdapter{
         itemHolder.materialName.setText("物资名称：" + mList.get(position).materialName);
         itemHolder.materialType.setText("物资型号：" + mList.get(position).materialModel);
         itemHolder.materialNum.setText("物资数量：" + mList.get(position).number);
+        itemHolder.materialUnit.setText("计量单位：" + mList.get(position).materialUnit);
         itemHolder.factoryName.setText("厂家名称：" + mList.get(position).factoryName);
         itemHolder.time.setText("时间：" + mList.get(position).time);
         itemHolder.receiver.setText("领用人：" + mList.get(position).applier);
@@ -125,6 +126,8 @@ public class ChukuBatchAdapter extends BaseRecycleAdapter{
         TextView materialIdentifier;
         @BindView(R.id.chuku_order_material_num)
         TextView materialNum;
+        @BindView(R.id.chuku_order_material_unit)
+        TextView materialUnit;
         @BindView(R.id.chuku_order_material_factory)
         TextView factoryName;
         @BindView(R.id.chuku_department_name)

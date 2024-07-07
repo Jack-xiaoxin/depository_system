@@ -39,13 +39,17 @@
                 android:text="@string/ruku_image_tips"
                 android:textColor="@color/colorTextLinItem"
                 android:textSize="12sp" />
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/chuku_imageList"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:background="@drawable/border"></androidx.recyclerview.widget.RecyclerView>
+                android:layout_height="wrap_content">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/chuku_imageList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/border"></androidx.recyclerview.widget.RecyclerView>
+            </RelativeLayout>
 
             <Button
                 android:id="@+id/photo"

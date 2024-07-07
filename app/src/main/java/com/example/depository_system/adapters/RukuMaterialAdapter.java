@@ -28,6 +28,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.depository_system.DataManagement;
 import com.example.depository_system.R;
 import com.example.depository_system.informs.DepositoryInform;
+import com.example.depository_system.informs.RukuInform;
 import com.example.depository_system.informs.RukuRecordInform;
 import com.example.depository_system.informs.RukuRecordItemInform;
 import com.example.depository_system.service.RukuService;
@@ -96,6 +97,7 @@ public class RukuMaterialAdapter extends BaseRecycleAdapter{
         itemHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
+                Log.d("kevin", "long click rukuMaterialOrder");
                 PopupMenu popupMenu = new PopupMenu(holder.itemView.getContext(), holder.itemView, Gravity.BOTTOM);
                 popupMenu.getMenuInflater().inflate(R.menu.ruku_material_menu, popupMenu.getMenu());
 
@@ -111,8 +113,10 @@ public class RukuMaterialAdapter extends BaseRecycleAdapter{
                                     .onPositive(new MaterialDialog.SingleButtonCallback() {
                                         @Override
                                         public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                            RukuInform rukuInform = mList.get(position).toRukuInform();
+                                            RukuService.deleteRukuMaterial(rukuInform);
                                             Message msg = new Message();
-                                            msg.obj = -100 - position;
+                                            msg.obj = -3;
                                             handler.sendMessage(msg);
                                         }
                                     })
@@ -121,6 +125,7 @@ public class RukuMaterialAdapter extends BaseRecycleAdapter{
                         return true;
                     }
                 });
+                popupMenu.show();
                 return true;
             }
         });

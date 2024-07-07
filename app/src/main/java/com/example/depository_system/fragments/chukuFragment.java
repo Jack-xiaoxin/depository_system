@@ -11,8 +11,10 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -44,11 +46,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.depository_system.DataManagement;
 import com.example.depository_system.R;
 import com.example.depository_system.adapters.ImageAdapter;
 import com.example.depository_system.frontInforms.FrontRukuInform;
 import com.example.depository_system.informs.ChukuActionInform;
+import com.example.depository_system.informs.DepartmentInform;
 import com.example.depository_system.informs.DepositoryInform;
 import com.example.depository_system.informs.KucunInform;
 import com.example.depository_system.informs.MaterialInform;
@@ -57,6 +67,7 @@ import com.example.depository_system.informs.ProjectInform;
 import com.example.depository_system.informs.RukuInform;
 import com.example.depository_system.informs.UserInform;
 import com.example.depository_system.service.ChukuService;
+import com.example.depository_system.service.DepartmentService;
 import com.example.depository_system.service.DepositoryService;
 import com.example.depository_system.service.KucunService;
 import com.example.depository_system.service.MaterialService;
@@ -68,9 +79,12 @@ import com.example.depository_system.service.UserService;
 import com.example.depository_system.view.ImageActivity;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.CopyOption;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -346,7 +360,7 @@ public class chukuFragment extends Fragment {
                         updateImages();
                     } else if(indexMsg >= 1000 && indexMsg <= 1000+imageList.size()-1) {
                         int index = indexMsg - 1000;
-//                    save(index);
+                        save(index);
                     }
                 } else {
                     String imageUri = String.valueOf(msg.obj);
@@ -383,10 +397,10 @@ public class chukuFragment extends Fragment {
                         & checkEditTextIsEmpty(projectMajorEditText)
                         & checkEditTextIsEmpty(projectNameEditText)
                         & checkEditTextIsEmpty(timeEditText);
-
                 if(!isOk) {
                     Toast.makeText(requireContext(), "请填写必填项", Toast.LENGTH_SHORT).show();
                     depotNameEditText.requestFocus();
+                    uploadButton.setClickable(true);
                 } else {
                     ChukuActionInform backChukuInform = new ChukuActionInform();
                     backChukuInform.images = new ArrayList<>();
@@ -410,6 +424,32 @@ public class chukuFragment extends Fragment {
                     backChukuInform.number = Integer.parseInt(materialNumEditText.getText().toString());
                     backChukuInform.factoryName = factoryNamEditText.getText().toString();
                     backChukuInform.time = timeEditText.getText().toString();
+
+                    //
+                    boolean isDepartmentNameNew = true;
+                    for(DepartmentInform departmentInform : DataManagement.departmentInforms) {
+                        if(departmentInform.department_name.equals(backChukuInform.applyDepartmentName)) {
+                            isDepartmentNameNew = false;
+                            break;
+                        }
+                    }
+                    if(isDepartmentNameNew) {
+                        new MaterialDialog.Builder(context)
+                                .content("发现新的领用单位，是否添加？  " + backChukuInform.applyDepartmentName)
+                                .positiveText("确定")
+                                .negativeText("取消")
+                                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                        DepartmentService.insertDepartment(backChukuInform.applyDepartmentName);
+                                        DataManagement.updateDepartmentInfo();
+                                    }
+                                })
+                                .show();
+                        uploadButton.setClickable(true);
+                        return ;
+                    }
+
                     //设置materialId
                     for(MaterialInform materialInform : DataManagement.materialInforms) {
                         if(materialInform.materialIdentifier.equals(backChukuInform.materialIdentifier)
@@ -443,10 +483,16 @@ public class chukuFragment extends Fragment {
                         return;
                     }
 
-                    boolean isChanged = false;
+                    boolean isChanged = true;
                     for(PersonInform personInform : DataManagement.personInforms) {
                         if(personInform.name.equals(backChukuInform.applier)) {
-                            isChanged = true;
+                            isChanged = false;
+                            break;
+                        }
+                    }
+                    for(UserInform userInform : DataManagement.userInforms) {
+                        if(userInform.userName.equals(backChukuInform.applier)) {
+                            isChanged = false;
                             break;
                         }
                     }
@@ -467,10 +513,16 @@ public class chukuFragment extends Fragment {
                         uploadButton.setClickable(true);
                         return;
                     }
-                    isChanged = false;
+                    isChanged = true;
                     for(PersonInform personInform : DataManagement.personInforms) {
                         if(personInform.name.equals(backChukuInform.director)) {
-                            isChanged = true;
+                            isChanged = false;
+                            break;
+                        }
+                    }
+                    for(UserInform userInform : DataManagement.userInforms) {
+                        if(userInform.userName.equals(backChukuInform.director)) {
+                            isChanged = false;
                             break;
                         }
                     }
@@ -685,5 +737,56 @@ public class chukuFragment extends Fragment {
         imageList.clear();
         imageUriList.clear();
         updateImages();
+    }
+
+    private void save(int index) {
+        Uri imageUri = imageUriList.get(index);
+        Glide.with(requireContext())
+                .downloadOnly()
+                .load(imageUri)
+                .listener(new RequestListener<File>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, @Nullable Object model, @NonNull Target<File> target, boolean isFirstResource) {
+                        Toast.makeText(requireContext(), "下载失败", Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(@NonNull File resource, @NonNull Object model, Target<File> target, @NonNull DataSource dataSource, boolean isFirstResource) {
+                        saveToAlbum(requireContext(), resource.getAbsolutePath());
+                        return false;
+                    }
+                })
+                .into(new CustomTarget<File>() {
+                    @Override
+                    public void onResourceReady(@NonNull File resource, @Nullable Transition<? super File> transition) {
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                    }
+                });
+    }
+
+    private void saveToAlbum(Context context, String srcPath) {
+        Log.d("kevin", "123");
+        String dcimPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath();
+        File file = new File(dcimPath, "content_" + System.currentTimeMillis() + ".png");
+        try {
+            InputStream inputStream = new FileInputStream(srcPath);
+            //要求android 8以上
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                if(Files.copy(inputStream, file.toPath(), new CopyOption[0]) > 0) {
+                    context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + file.getAbsolutePath())));
+                    Toast.makeText(context, "保存图片到相册成功", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, "保存图片到相册失败", Toast.LENGTH_SHORT).show();
+                }
+            }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

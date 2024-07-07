@@ -29,11 +29,11 @@
     <string name="hint_input_factory_name" translatable="false">请输入厂家名称</string>
     <string name="ruku_input_time" translatable="false">*入库时间</string>
     <string name="hint_input_ruku_time" translatable="false">请输入入库时间</string>
-    <string name="ruku_project_name" translatable="false">入库项目名称</string>
+    <string name="ruku_project_name" translatable="false">*入库项目名称</string>
     <string name="hint_input_project_name" translatable="false">请输入入库项目名称</string>
-    <string name="ruku_receiver_name" translatable="false">入库收货人</string>
+    <string name="ruku_receiver_name" translatable="false">*入库收货人</string>
     <string name="hint_ruku_receiver_name" translatable="false">请输入收货人姓名</string>
-    <string name="ruku_accepter_name" translatable="false">入库验收人</string>
+    <string name="ruku_accepter_name" translatable="false">*入库验收人</string>
     <string name="hint_ruku_accepter_name" translatable="false">请输入验收人姓名</string>
     <string name="chuku_project_name" translatable="false">领用项目</string>
     <string name="hint_chuku_project_name" translatable="false">请输入领用项目</string>

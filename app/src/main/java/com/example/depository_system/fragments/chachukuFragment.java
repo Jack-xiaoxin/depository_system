@@ -2,9 +2,13 @@ package com.example.depository_system.fragments;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -28,6 +32,13 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.depository_system.DataManagement;
 import com.example.depository_system.R;
 import com.example.depository_system.adapters.ChukuMaterialAdapter;
@@ -53,7 +64,13 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.CopyOption;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
@@ -118,13 +135,13 @@ public class chachukuFragment extends Fragment {
                 super.handleMessage(msg);
                 int arg1 = (int)msg.arg1;
                 if(arg1 == 100 || arg1 == 101) {
+                    String imageUri = (String)msg.obj;
                     if(arg1 == 100) {
-                        String imageUri = (String)msg.obj;
                         Intent intent = new Intent(requireActivity(), ImageActivity.class);
                         intent.putExtra("imageUri", imageUri);
                         startActivity(intent);
                     } else if(arg1 == 101) {
-                        //Todo save image
+                        save(imageUri);
                     }
                 } else {
                     int index = (int)msg.obj;
@@ -457,4 +474,53 @@ public class chachukuFragment extends Fragment {
         return sdf.format(new Date(time));
     }
 
+    private void save(String uri) {
+        String imageUri = uri;
+        Glide.with(requireContext())
+                .downloadOnly()
+                .load(imageUri)
+                .listener(new RequestListener<File>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, @Nullable Object model, @NonNull Target<File> target, boolean isFirstResource) {
+                        Toast.makeText(requireContext(), "下载失败", Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(@NonNull File resource, @NonNull Object model, Target<File> target, @NonNull DataSource dataSource, boolean isFirstResource) {
+                        saveToAlbum(requireContext(), resource.getAbsolutePath());
+                        return false;
+                    }
+                })
+                .into(new CustomTarget<File>() {
+                    @Override
+                    public void onResourceReady(@NonNull File resource, @Nullable Transition<? super File> transition) {
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                    }
+                });
+    }
+    private void saveToAlbum(Context context, String srcPath) {
+        Log.d("kevin", "123");
+        String dcimPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath();
+        File file = new File(dcimPath, "content_" + System.currentTimeMillis() + ".png");
+        try {
+            InputStream inputStream = new FileInputStream(srcPath);
+            //要求android 8以上
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                if(Files.copy(inputStream, file.toPath(), new CopyOption[0]) > 0) {
+                    context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + file.getAbsolutePath())));
+                    Toast.makeText(context, "保存图片到相册成功", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, "保存图片到相册失败", Toast.LENGTH_SHORT).show();
+                }
+            }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

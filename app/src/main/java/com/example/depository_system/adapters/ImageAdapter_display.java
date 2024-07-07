@@ -45,37 +45,40 @@ public class ImageAdapter_display extends RecyclerView.Adapter<ImageAdapter_disp
         holder.imageView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                PopupMenu popupMenu = new PopupMenu(holder.itemView.getContext(), holder.imageView, Gravity.BOTTOM);
+                if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    PopupMenu popupMenu = new PopupMenu(holder.itemView.getContext(), holder.imageView, Gravity.BOTTOM);
 
-                // 添加菜单项
-                popupMenu.getMenuInflater().inflate(R.menu.bottom_menu_1, popupMenu.getMenu());
+                    // 添加菜单项
+                    popupMenu.getMenuInflater().inflate(R.menu.bottom_menu_1, popupMenu.getMenu());
 
-                // 设置菜单项点击监听器
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        // 处理菜单项的点击事件
-                        switch (item.getItemId()) {
-                            case R.id.menu_item_display:
-                                Message msg1 = new Message();
-                                msg1.obj = imageUri;
-                                msg1.arg1 = 100;
-                                handler.sendMessage(msg1);
-                                return true;
-                            case R.id.menu_item_save:
-                                Message msg2 = new Message();
-                                msg2.obj = imageUri;
-                                msg2.arg1 = 101;
-                                handler.sendMessage(msg2);
-                                return true;
+                    // 设置菜单项点击监听器
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            // 处理菜单项的点击事件
+                            switch (item.getItemId()) {
+                                case R.id.menu_item_display:
+                                    Message msg1 = new Message();
+                                    msg1.obj = imageUri;
+                                    msg1.arg1 = 100;
+                                    handler.sendMessage(msg1);
+                                    return true;
+                                case R.id.menu_item_save:
+                                    Message msg2 = new Message();
+                                    msg2.obj = imageUri;
+                                    msg2.arg1 = 101;
+                                    handler.sendMessage(msg2);
+                                    return true;
+                            }
+                            return false;
                         }
-                        return false;
-                    }
-                });
+                    });
 
-                // 显示弹出式菜单
-                popupMenu.show();
-                return false;
+                    // 显示弹出式菜单
+                    popupMenu.show();
+                    return false;
+                }
+                return true;
             }
         });
     }

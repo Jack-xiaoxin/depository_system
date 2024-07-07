@@ -164,7 +164,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chuku_material_imagelist"
         android:layout_below="@+id/chuku_time"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:layout_marginLeft="15dp"
         android:layout_toEndOf="@+id/chuku_image"
         android:layout_toRightOf="@+id/chuku_image"

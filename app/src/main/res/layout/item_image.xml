@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -9,14 +9,9 @@
         android:paddingRight="5dp"
         android:paddingLeft="5dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:minWidth="100dp"
-        android:minHeight="100dp"
-        android:maxWidth="120dp"
-        android:maxHeight="200dp"
-        android:scaleType="fitCenter"
-        tools:ignore="MissingConstraints">
+        android:layout_height="100dp"
+        android:scaleType="fitCenter">
 
     </ImageView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

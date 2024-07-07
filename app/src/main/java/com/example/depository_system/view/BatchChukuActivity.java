@@ -28,6 +28,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -54,6 +55,7 @@ import com.example.depository_system.informs.ProjectInform;
 import com.example.depository_system.informs.RukuInform;
 import com.example.depository_system.informs.UserInform;
 import com.example.depository_system.service.ChukuService;
+import com.example.depository_system.service.DepartmentService;
 import com.example.depository_system.service.KucunService;
 import com.example.depository_system.service.PersonService;
 import com.example.depository_system.service.ServiceBase;
@@ -71,6 +73,7 @@ public class BatchChukuActivity extends AppCompatActivity {
 
     private LinearLayout addAllLinearLayout;
     private LinearLayout addMaterialLinearLayout;
+    private Toolbar headerToolbar;
     private Button finishButton;
     private Button backButton;
     private Button addMaterialButton;
@@ -117,6 +120,9 @@ public class BatchChukuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_batch_chuku);
         context = this;
+
+        headerToolbar = findViewById(R.id.tb_base_title);
+        headerToolbar.setTitle("批量出库信息填写");
 
         addAllLinearLayout = findViewById(R.id.batch_chuku_add_all);
         addMaterialLinearLayout = findViewById(R.id.batch_chuku_add_material);
@@ -243,7 +249,7 @@ public class BatchChukuActivity extends AppCompatActivity {
                 chukuRecordItemInform.materialModel = materialTypeEditText.getText().toString();
                 chukuRecordItemInform.number = Integer.parseInt(materialNumEditText.getText().toString());
                 chukuRecordItemInform.projectName = projectEditText.getText().toString();
-                chukuRecordItemInform.projectMajor = projectEditText.getText().toString();
+                chukuRecordItemInform.projectMajor = projectMajorEditText.getText().toString();
                 chukuRecordItemInform.applier = receiverEditText.getText().toString();
                 chukuRecordItemInform.factoryName = factoryNameEditText.getText().toString();
                 chukuRecordItemInform.time = timeEditText.getText().toString();
@@ -290,6 +296,78 @@ public class BatchChukuActivity extends AppCompatActivity {
                 List<KucunInform> kucunInformList = KucunService.getKucunList(null, materialId, depositoryId,projectId);
                 if(kucunInformList.size() < 1) {
                     showAlertDialog("仓库、物料、项目的对应关系有问题，请检查");
+                    saveMaterialButton.setClickable(true);
+                    return;
+                }
+
+                boolean isDepartmentNameNew = true;
+                for(DepartmentInform departmentInform : DataManagement.departmentInforms) {
+                    if(departmentInform.department_name.equals(chukuRecordItemInform.departmentName)) {
+                        isDepartmentNameNew = false;
+                    }
+                }
+                if(isDepartmentNameNew) {
+                    new MaterialDialog.Builder(context)
+                            .content("发现新的领用单位，是否添加？  " + chukuRecordItemInform.departmentName)
+                            .positiveText("确定")
+                            .negativeText("取消")
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    DepartmentService.insertDepartment(chukuRecordItemInform.departmentName);
+                                    DataManagement.updateDepartmentInfo();
+                                }
+                            })
+                            .show();
+                    saveMaterialButton.setClickable(true);
+                    return ;
+                }
+
+                boolean isNewPerson = true;
+                for(PersonInform personInform : DataManagement.personInforms) {
+                    if(personInform.name.equals(chukuRecordItemInform.applier)) {
+                        isNewPerson = false;
+                        break;
+                    }
+                }
+                if (isNewPerson) {
+                    new MaterialDialog.Builder(context)
+                            .positiveText("确定")
+                            .negativeText("取消")
+                            .title("人物名称")
+                            .content("发现新的人物名称，是否添加? " + chukuRecordItemInform.applier)
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    PersonService.insertPersonInfo(chukuRecordItemInform.applier);
+                                    DataManagement.updatePersonInfo();
+                                }
+                            })
+                            .show();
+                    saveMaterialButton.setClickable(true);
+                    return;
+                }
+                isNewPerson = true;
+                for(PersonInform personInform : DataManagement.personInforms) {
+                    if(personInform.name.equals(chukuRecordItemInform.projectMajor)) {
+                        isNewPerson = false;
+                        break;
+                    }
+                }
+                if (isNewPerson) {
+                    new MaterialDialog.Builder(context)
+                            .positiveText("确定")
+                            .negativeText("取消")
+                            .title("人物名称")
+                            .content("发现新的人物名称，是否添加? " + chukuRecordItemInform.projectMajor)
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    PersonService.insertPersonInfo(chukuRecordItemInform.projectMajor);
+                                    DataManagement.updatePersonInfo();
+                                }
+                            })
+                            .show();
                     saveMaterialButton.setClickable(true);
                     return;
                 }
@@ -672,6 +750,7 @@ public class BatchChukuActivity extends AppCompatActivity {
             backChukuInform.number = chukuRecordItemInform.number;
             backChukuInform.factoryName = chukuRecordItemInform.factoryName;
             backChukuInform.time = chukuRecordItemInform.time;
+
             //设置materialId
             for(MaterialInform materialInform : DataManagement.materialInforms) {
                 if(materialInform.materialIdentifier.equals(backChukuInform.materialIdentifier)
@@ -684,54 +763,6 @@ public class BatchChukuActivity extends AppCompatActivity {
             }
             if(backChukuInform.materialId == null) {
                 showAlertDialog("没有此物料，请重新输入");
-                uploadButton.setClickable(true);
-                return;
-            }
-            boolean isChanged = false;
-            for(PersonInform personInform : DataManagement.personInforms) {
-                if(personInform.name.equals(backChukuInform.applier)) {
-                    isChanged = true;
-                    break;
-                }
-            }
-            if (isChanged) {
-                new MaterialDialog.Builder(this)
-                        .positiveText("确定")
-                        .negativeText("取消")
-                        .title("人物名称")
-                        .content("发现新的人物名称，是否添加? " + backChukuInform.applier)
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                PersonService.insertPersonInfo(backChukuInform.applier);
-                                DataManagement.updatePersonInfo();
-                            }
-                        })
-                        .show();
-                uploadButton.setClickable(true);
-                return;
-            }
-            isChanged = false;
-            for(PersonInform personInform : DataManagement.personInforms) {
-                if(personInform.name.equals(backChukuInform.director)) {
-                    isChanged = true;
-                    break;
-                }
-            }
-            if (isChanged) {
-                new MaterialDialog.Builder(this)
-                        .positiveText("确定")
-                        .negativeText("取消")
-                        .title("人物名称")
-                        .content("发现新的人物名称，是否添加? " + backChukuInform.director)
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                PersonService.insertPersonInfo(backChukuInform.director);
-                                DataManagement.updatePersonInfo();
-                            }
-                        })
-                        .show();
                 uploadButton.setClickable(true);
                 return;
             }

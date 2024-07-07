@@ -110,6 +110,7 @@ public class RukuService {
                     itemInform.inboundTime = valueObject.getString("inbound_time");
                     itemInform.projectName = valueObject.getString("project_name");
                     itemInform.depositoryId = valueObject.getString("depository_id");
+                    itemInform.inboundItemId = valueObject.getString("inbound_item_id");
 
                     JSONArray imageArray = valueObject.getJSONArray("images");
                     List<String> imgList = new ArrayList<>();
@@ -140,12 +141,15 @@ public class RukuService {
             jsonObject.put("goods_identifier", rukuInform.materialIdentifier);
             jsonObject.put("goods_unit", rukuInform.materialUnit);
             jsonObject.put("depository_name", rukuInform.depotName);
+            jsonObject.put("goods_id", rukuInform.materialId);
+            jsonObject.put("depository_id", rukuInform.depotId);
             jsonObject.put("factory_name", rukuInform.factoryName);
             jsonObject.put("receiver", rukuInform.receiver);
             jsonObject.put("checker", rukuInform.acceptor);
             jsonObject.put("project_name", rukuInform.projectName);
             jsonObject.put("goods_number", rukuInform.number);
             jsonObject.put("inbound_identifier", rukuInform.inboundIdentifier);
+            jsonObject.put("inbound_item_id", rukuInform.inboundItemId);
             jsonObject.put("time", rukuInform.time);
         } catch (JSONException e) {
             throw new RuntimeException(e);

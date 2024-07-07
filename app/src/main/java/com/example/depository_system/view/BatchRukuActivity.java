@@ -17,8 +17,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -38,10 +40,17 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListPopupWindow;
 import android.widget.Toast;
-import android.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.depository_system.DataManagement;
 import com.example.depository_system.R;
 import com.example.depository_system.adapters.ImageAdapter;
@@ -65,7 +74,12 @@ import com.example.depository_system.service.ServiceBase;
 import com.example.depository_system.service.UserService;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.CopyOption;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -82,6 +96,7 @@ public class BatchRukuActivity extends AppCompatActivity {
     private ImageButton imgFactoryBtn;
     private Button addMaterialBtn;
     private Button backBtn;
+    private Toolbar headerToolBar;
 
     private EditText factoryEditText;
     private String factoryName;
@@ -138,6 +153,9 @@ public class BatchRukuActivity extends AppCompatActivity {
         add_btn_frameLayout = findViewById(R.id.add_factory_framelayout);
         add_material_frameLayout = findViewById(R.id.add_material_framelayout);
 
+        headerToolBar = findViewById(R.id.tb_base_title);
+        headerToolBar.setTitle("批量入库信息填写");
+
         imgFactoryBtn = add_btn_frameLayout.findViewById(R.id.image_btn_factoryName);
         factoryEditText = add_btn_frameLayout.findViewById(R.id.editText_factory_name);
         addMaterialBtn = add_btn_frameLayout.findViewById(R.id.add_material_btn);
@@ -188,6 +206,13 @@ public class BatchRukuActivity extends AppCompatActivity {
         addMaterialBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(factoryEditText.getText().toString().length() <= 0 || timeEditText.getText().toString().length() <= 0) {
+                    new MaterialDialog.Builder(context)
+                            .content("厂家和入库时间不能为空")
+                            .positiveText("确定")
+                            .show();
+                    return;
+                }
                 add_btn_frameLayout.setVisibility(View.GONE);
                 add_material_frameLayout.setVisibility(View.VISIBLE);
                 clearEditText();
@@ -360,7 +385,10 @@ public class BatchRukuActivity extends AppCompatActivity {
                         & checkEditTextIsEmpty(materialIdentifierEditText)
                         & checkEditTextIsEmpty(materialNameEditText)
                         & checkEditTextIsEmpty(materialTypeEditText)
-                        & checkEditTextIsEmpty(materialNumEditText);
+                        & checkEditTextIsEmpty(materialNumEditText)
+                        & checkEditTextIsEmpty(projectNameEditText)
+                        & checkEditTextIsEmpty(acceptorEditText)
+                        & checkEditTextIsEmpty(receiverEditText);
 
                 if (!isOk) {
                     Toast.makeText(getApplicationContext(), "请填写必填项", Toast.LENGTH_SHORT).show();
@@ -379,7 +407,7 @@ public class BatchRukuActivity extends AppCompatActivity {
                 rukuInform.time = timeEditText.getText().toString();
                 rukuInform.projectName = projectNameEditText.getText().toString();
                 rukuInform.receiver = receiverEditText.getText().toString();
-                rukuInform.acceptor = receiverEditText.getText().toString();
+                rukuInform.acceptor = acceptorEditText.getText().toString();
                 rukuInform.factoryName = factoryEditText.getText().toString();
                 rukuInform.images = new ArrayList<>(list);
                 rukuInform.imageUriList = new ArrayList<>(imageUriList);
@@ -413,9 +441,13 @@ public class BatchRukuActivity extends AppCompatActivity {
         uploadBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                for(RukuInform rukuInform : rukuInforms) {
-                    uploadOnce(rukuInform);
+                if(rukuInforms.size() == 0) {
+                    new MaterialDialog.Builder(context)
+                            .content("未保存入库信息，无法批量入库")
+                            .positiveText("确定")
+                            .show();
                 }
+                uploadOnce(rukuInforms.get(0), 0);
             }
         });
 
@@ -574,8 +606,11 @@ public class BatchRukuActivity extends AppCompatActivity {
                 .show();
     }
 
-    private void deleteImages() {
-
+    private void deleteImages(List<Uri> imageUriList) {
+        for(Uri imageUri : imageUriList) {
+            ContentResolver contentResolver = getContentResolver();
+            int rowsDeleted = contentResolver.delete(imageUri, null, null);
+        }
     }
 
     private void clearEditText() {
@@ -602,10 +637,17 @@ public class BatchRukuActivity extends AppCompatActivity {
         acceptorEditText.setText(rukuInform.acceptor);
         receiverEditText.setText(rukuInform.receiver);
         list = rukuInform.images;
+        imageUriList = rukuInform.imageUriList;
         add_btn_frameLayout.setVisibility(View.GONE);
         add_material_frameLayout.setVisibility(View.VISIBLE);
         updateRecylerView();
         saveBtn.setText("修改");
+    }
+
+    private void deleteMaterial(RukuInform rukuInform) {
+        rukuInforms.remove(rukuInform);
+        deleteImages(rukuInform.imageUriList);
+        updateMaterialAdapters();
     }
 
     private void initHandler() {
@@ -615,27 +657,43 @@ public class BatchRukuActivity extends AppCompatActivity {
                 super.handleMessage(msg);
                 if(msg.obj instanceof Integer) {
                     int index = (int)msg.obj;
-                    if(index >= 0 && index <= rukuInforms.size()) {
-                        setMaterialInformAndDisplay(rukuInforms.get(index));
-                        indexFixing = index;
-                    } else if(index >= 10000 && index <= 10000+list.size()-1) {
-                        ContentResolver contentResolver = getContentResolver();
-                        int rowsDeleted = contentResolver.delete(imageUriList.get(index-10000), null, null);
-                        list.remove(index-10000);
-                        imageUriList.remove(index-10000);
-                        updateRecylerView();
+                    int arg = (int)msg.arg1;
+                    if(arg == 100 || arg == 101) {
+                        if(arg == 100) {
+                            setMaterialInformAndDisplay(rukuInforms.get(index));
+                            indexFixing = index;
+                        } else {
+                            deleteMaterial(rukuInforms.get(index));
+                        }
+                    } else {
+                         if(index >= 10000 && index <= 10000+list.size()-1) {
+                            ContentResolver contentResolver = getContentResolver();
+                            int rowsDeleted = contentResolver.delete(imageUriList.get(index-10000), null, null);
+                            list.remove(index-10000);
+                            imageUriList.remove(index-10000);
+                            updateRecylerView();
+                        } else if(index >= 1000 && index <= 1000 + list.size()-1) {
+                            save(index-1000);
+                        }
                     }
                 } else {
-                    String imageUri = String.valueOf(msg.obj);
-                    Intent intent = new Intent(context, ImageActivity.class);
-                    intent.putExtra("imageUri", imageUri);
-                    startActivity(intent);
+                    int arg1 = (int)msg.arg1;
+                    if(arg1 == 100 || arg1 == 101) {
+                        String imageUri = (String) msg.obj;
+                        if (arg1 == 100) {
+                            Intent intent = new Intent(context, ImageActivity.class);
+                            intent.putExtra("imageUri", imageUri);
+                            startActivity(intent);
+                        } else if (arg1 == 101) {
+                            save(imageUri);
+                        }
+                    }
                 }
             }
         };
     }
 
-    private void uploadOnce(RukuInform rukuInform) {
+    private void uploadOnce(RukuInform rukuInform, int index) {
         uploadBtn.setClickable(false);
         if (!checkRukuInform(rukuInform)) {
             Toast.makeText(context, "请填写必填项", Toast.LENGTH_SHORT).show();
@@ -668,7 +726,7 @@ public class BatchRukuActivity extends AppCompatActivity {
                     });
             normalDialog.show();
             uploadBtn.setClickable(true);
-            return;
+            return ;
         }
         for(MaterialInform materialInform : DataManagement.materialInforms) {
             if(materialInform.materialName.equals(rukuInform.materialName)
@@ -703,7 +761,7 @@ public class BatchRukuActivity extends AppCompatActivity {
                     });
             normalDialog.show();
             uploadBtn.setClickable(true);
-            return;
+            return ;
         }
         boolean isChanged = true;
         for(PersonInform personInform : DataManagement.personInforms) {
@@ -723,17 +781,17 @@ public class BatchRukuActivity extends AppCompatActivity {
                     .positiveText("确定")
                     .negativeText("取消")
                     .title("人物名称")
-                    .content("发现新的人物名称，是否添加? " + rukuInform.receiver)
+                    .content("发现新的人物名称，是否添加? " + rukuInform.acceptor)
                     .onPositive(new MaterialDialog.SingleButtonCallback() {
                         @Override
                         public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                            PersonService.insertPersonInfo(rukuInform.receiver);
+                            PersonService.insertPersonInfo(rukuInform.acceptor);
                             DataManagement.updatePersonInfo();
                         }
                     })
                     .show();
             uploadBtn.setClickable(true);
-            return;
+            return ;
         }
 
         isChanged = true;
@@ -754,17 +812,17 @@ public class BatchRukuActivity extends AppCompatActivity {
                     .positiveText("确定")
                     .negativeText("取消")
                     .title("人物名称")
-                    .content("发现新的人物名称，是否添加? " + rukuInform.acceptor)
+                    .content("发现新的人物名称，是否添加? " + rukuInform.receiver)
                     .onPositive(new MaterialDialog.SingleButtonCallback() {
                         @Override
                         public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                            PersonService.insertPersonInfo(rukuInform.acceptor);
+                            PersonService.insertPersonInfo(rukuInform.receiver);
                             DataManagement.updatePersonInfo();
                         }
                     })
                     .show();
             uploadBtn.setClickable(true);
-            return;
+            return ;
         }
 
         if(rukuInform.number <= 0) {
@@ -809,7 +867,7 @@ public class BatchRukuActivity extends AppCompatActivity {
                     });
             normalDialog.show();
             uploadBtn.setClickable(true);
-            return;
+            return ;
         }
         final String[] result = {""};
         rukuInform.isNew = false;
@@ -823,70 +881,151 @@ public class BatchRukuActivity extends AppCompatActivity {
                 uploadBtn.setClickable(true);
                 return ;
             } else {
-                new MaterialDialog.Builder(context)
-                        .positiveText("确定")
-                        .content("图片上传成功")
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                deleteImages();
-                            }
-                        })
-                        .show();
+//                new MaterialDialog.Builder(context)
+//                        .positiveText("确定")
+//                        .content("图片上传成功")
+//                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+//                            @Override
+//                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+//                                deleteImages();
+//                            }
+//                        })
+//                        .show();
             }
         }
         result[0] = RukuService.action(rukuInform);
         if (result[0].contains("入库成功")) {
             DataManagement.updateAll();
-            MaterialDialog materialDialog = new MaterialDialog.Builder(context)
-                    .positiveText("确定")
-                    .content("入库成功")
-                    .onPositive(new MaterialDialog.SingleButtonCallback() {
-                        @Override
-                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                            clearEditText();
-                            rukuInforms.remove(rukuInform);
-                            updateMaterialAdapters();
-                            if(result[0].contains("新增库存类型成功")) {
-                                new MaterialDialog.Builder(context)
-                                        .content("发现新的库存记录，请输入预警值：\n" +
-                                                "仓库： " + rukuInform.depotName + "\n" +
-                                                "物料编码： " + rukuInform.materialIdentifier + "\n" +
-                                                "物料名称：" + rukuInform.materialName + "\n" +
-                                                "物料类型：" + rukuInform.materialModel + "\n" +
-                                                "计量单位：" + rukuInform.materialUnit + "\n" +
-                                                "入库项目：" + rukuInform.projectName)
-                                        .inputType(InputType.TYPE_CLASS_NUMBER)
-                                        .input(null, "100", false, new MaterialDialog.InputCallback() {
-                                            @Override
-                                            public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
-                                                String str = dialog.getInputEditText().getText().toString();
-                                                String strId = "";
-                                                for(int i = 0; i < result[0].length(); i++) {
-                                                    char ch = result[0].charAt(i);
-                                                    if(ch <= '9' && ch >= '0') {
-                                                        strId += ch;
-                                                    }
-                                                }
-                                                KucunService.updateAlarmedNumber(strId, str);
-                                            }
-                                        })
-                                        .show();
+            rukuInforms.remove(rukuInform);
+            updateMaterialAdapters();
+
+            if(result[0].contains("新增库存类型成功")) {
+                new MaterialDialog.Builder(context)
+                        .content("发现新的库存记录，请输入预警值：\n" +
+                                "仓库： " + rukuInform.depotName + "\n" +
+                                "物料编码： " + rukuInform.materialIdentifier + "\n" +
+                                "物料名称：" + rukuInform.materialName + "\n" +
+                                "物料类型：" + rukuInform.materialModel + "\n" +
+                                "计量单位：" + rukuInform.materialUnit + "\n" +
+                                "入库项目：" + rukuInform.projectName)
+                        .inputType(InputType.TYPE_CLASS_NUMBER)
+                        .input(null, "100", false, new MaterialDialog.InputCallback() {
+                            @Override
+                            public void onInput(@NonNull MaterialDialog dialog, CharSequence input) {
+                                String str = dialog.getInputEditText().getText().toString();
+                                String strId = "";
+                                for(int i = 0; i < result[0].length(); i++) {
+                                    char ch = result[0].charAt(i);
+                                    if(ch <= '9' && ch >= '0') {
+                                        strId += ch;
+                                    }
+                                }
+                                KucunService.updateAlarmedNumber(strId, str);
                             }
-                        }
-                    })
-                    .show();
+                        })
+                        .show();
+            }
+
+            if(rukuInforms.size() > 0) {
+                uploadOnce(rukuInforms.get(0), 0);
+            } else {
+                MaterialDialog materialDialog = new MaterialDialog.Builder(context)
+                        .positiveText("确定")
+                        .content(String.format("批量入库成功"))
+                        .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                clearEditText();
+                            }
+                        })
+                        .show();
+            }
         }
         uploadBtn.setClickable(true);
     }
 
     private boolean checkRukuInform(RukuInform rukuInform) {
         if(rukuInform.depotName == null || rukuInform.depotName.isEmpty()) return false;
-        if(rukuInform.materialIdentifier == null || rukuInform.materialIdentifier.isEmpty()) return false;
-        if(rukuInform.materialName == null || rukuInform.materialName.isEmpty()) return false;
-        if(rukuInform.materialModel == null || rukuInform.materialModel.isEmpty()) return false;
-        if(rukuInform.factoryName == null || rukuInform.factoryName.isEmpty()) return false;
-        if(rukuInform.projectName == null || rukuInform.projectName.isEmpty()) return false;
+        if(rukuInform.time == null || rukuInform.time.isEmpty()) return false;
         return true;
+    }
+
+    private void save(int index) {
+        Uri imageUri = imageUriList.get(index);
+        Glide.with(context)
+                .downloadOnly()
+                .load(imageUri)
+                .listener(new RequestListener<File>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, @Nullable Object model, @NonNull Target<File> target, boolean isFirstResource) {
+                        Toast.makeText(context, "下载失败", Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(@NonNull File resource, @NonNull Object model, Target<File> target, @NonNull DataSource dataSource, boolean isFirstResource) {
+                        saveToAlbum(context, resource.getAbsolutePath());
+                        return false;
+                    }
+                })
+                .into(new CustomTarget<File>() {
+                    @Override
+                    public void onResourceReady(@NonNull File resource, @Nullable Transition<? super File> transition) {
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                    }
+                });
+    }
+
+    private void save(String imageUri) {
+        Glide.with(context)
+                .downloadOnly()
+                .load(imageUri)
+                .listener(new RequestListener<File>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, @Nullable Object model, @NonNull Target<File> target, boolean isFirstResource) {
+                        Toast.makeText(context, "下载失败", Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(@NonNull File resource, @NonNull Object model, Target<File> target, @NonNull DataSource dataSource, boolean isFirstResource) {
+                        saveToAlbum(context, resource.getAbsolutePath());
+                        return false;
+                    }
+                })
+                .into(new CustomTarget<File>() {
+                    @Override
+                    public void onResourceReady(@NonNull File resource, @Nullable Transition<? super File> transition) {
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                    }
+                });
+    }
+
+    private void saveToAlbum(Context context, String srcPath) {
+        Log.d("kevin", "123");
+        String dcimPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath();
+        File file = new File(dcimPath, "content_" + System.currentTimeMillis() + ".png");
+        try {
+            InputStream inputStream = new FileInputStream(srcPath);
+            //要求android 8以上
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                if(Files.copy(inputStream, file.toPath(), new CopyOption[0]) > 0) {
+                    context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + file.getAbsolutePath())));
+                    Toast.makeText(context, "保存图片到相册成功", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, "保存图片到相册失败", Toast.LENGTH_SHORT).show();
+                }
+            }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

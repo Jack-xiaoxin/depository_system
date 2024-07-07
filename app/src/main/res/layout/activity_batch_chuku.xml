@@ -5,7 +5,7 @@
     android:background="@color/mainBg"
     android:orientation="vertical">
 
-    <include layout="@layout/layout_toolbar_header_title" />
+    <include layout="@layout/layout_toolbar_header_title1" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -47,7 +47,6 @@
                     android:gravity="right|center_vertical"
                     android:hint="@string/hint_input_depository"
                     android:inputType="text"
-                    android:maxLength="25"
                     android:paddingRight="@dimen/card_add_item_margin_right"
                     android:textColor="@color/colorTextCardAddEdittext"
                     android:textColorHint="@color/colorTextHint"
@@ -95,7 +94,6 @@
                     android:gravity="right|center_vertical"
                     android:hint="@string/hint_chuku_project_name"
                     android:inputType="text"
-                    android:maxLength="18"
                     android:paddingRight="@dimen/card_add_item_margin_right"
                     android:textColor="@color/colorTextCardAddEdittext"
                     android:textColorHint="@color/colorTextHint"
@@ -142,7 +140,6 @@
                     android:gravity="right|center_vertical"
                     android:hint="@string/hint_chuku_project_major"
                     android:inputType="text"
-                    android:maxLength="18"
                     android:paddingRight="@dimen/card_add_item_margin_right"
                     android:textColor="@color/colorTextCardAddEdittext"
                     android:textColorHint="@color/colorTextHint"
@@ -190,7 +187,6 @@
                     android:gravity="right|center_vertical"
                     android:hint="@string/hint_chuku_user_organization"
                     android:inputType="text"
-                    android:maxLength="18"
                     android:paddingRight="@dimen/card_add_item_margin_right"
                     android:textColor="@color/colorTextCardAddEdittext"
                     android:textColorHint="@color/colorTextHint"
@@ -237,7 +233,6 @@
                     android:gravity="right|center_vertical"
                     android:hint="@string/hint_chuku_receiver_name"
                     android:inputType="text"
-                    android:maxLength="18"
                     android:paddingRight="@dimen/card_add_item_margin_right"
                     android:textColor="@color/colorTextCardAddEdittext"
                     android:textColorHint="@color/colorTextHint"
@@ -285,7 +280,6 @@
                     android:gravity="right|center_vertical"
                     android:hint="@string/hint_chuku_time"
                     android:inputType="time"
-                    android:maxLength="18"
                     android:paddingRight="@dimen/card_add_item_margin_right"
                     android:textColor="@color/colorTextCardAddEdittext"
                     android:textColorHint="@color/colorTextHint"
@@ -374,7 +368,6 @@
                     android:gravity="right|center_vertical"
                     android:hint="@string/hint_input_material_identifier"
                     android:inputType="text"
-                    android:maxLength="25"
                     android:paddingRight="@dimen/card_add_item_margin_right"
                     android:textColor="@color/colorTextCardAddEdittext"
                     android:textColorHint="@color/colorTextHint"
@@ -426,7 +419,6 @@
                     android:gravity="right|center_vertical"
                     android:hint="@string/hint_input_material_name"
                     android:inputType="text"
-                    android:maxLength="25"
                     android:paddingRight="@dimen/card_add_item_margin_right"
                     android:textColor="@color/colorTextCardAddEdittext"
                     android:textColorHint="@color/colorTextHint"
@@ -476,7 +468,6 @@
                     android:background="@null"
                     android:gravity="right|center_vertical"
                     android:hint="@string/hint_input_material_type"
-                    android:maxLength="10"
                     android:paddingRight="@dimen/card_add_item_margin_right"
                     android:textColor="@color/colorTextCardAddEdittext"
                     android:textColorHint="@color/colorTextHint"
@@ -529,7 +520,6 @@
                     android:gravity="right|center_vertical"
                     android:hint="@string/hint_output_material_num"
                     android:inputType="number"
-                    android:maxLength="18"
                     android:paddingRight="@dimen/card_add_item_margin_right"
                     android:textColor="@color/colorTextCardAddEdittext"
                     android:textColorHint="@color/colorTextHint"
@@ -569,7 +559,6 @@
                     android:background="@null"
                     android:gravity="right|center_vertical"
                     android:hint="@string/hint_input_material_unit"
-                    android:maxLength="10"
                     android:paddingRight="@dimen/card_add_item_margin_right"
                     android:textColor="@color/colorTextCardAddEdittext"
                     android:textColorHint="@color/colorTextHint"
@@ -624,7 +613,6 @@
                     android:gravity="right|center_vertical"
                     android:hint="@string/hint_input_factory_name"
                     android:inputType="text"
-                    android:maxLength="18"
                     android:paddingRight="@dimen/card_add_item_margin_right"
                     android:textColor="@color/colorTextCardAddEdittext"
                     android:textColorHint="@color/colorTextHint"
@@ -680,8 +668,5 @@
                 android:layout_height="wrap_content"
                 android:text="返回"></Button>
         </LinearLayout>
-
     </ScrollView>
-
-
 </LinearLayout>

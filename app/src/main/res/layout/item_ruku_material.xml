@@ -155,7 +155,6 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/charuku_image_list"
         android:layout_below="@+id/ruku_project"
-        android:layout_marginTop="10dp"
         android:layout_marginLeft="15dp"
         android:layout_toEndOf="@+id/ruku_image"
         android:layout_toRightOf="@+id/ruku_image"

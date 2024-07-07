@@ -37,4 +37,16 @@ public class DepartmentService {
         return departmentInforms;
     }
 
+    public static void insertDepartment(String departmentName) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            if (departmentName != null && !departmentName.isEmpty()) {
+                jsonObject.put("department_name", departmentName);
+            }
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        String bodyString = ServiceBase.HttpBase("/insertDepartment", "POST", jsonObject);
+    }
+
 }
