@@ -495,6 +495,18 @@ public class BatchRukuActivity extends AppCompatActivity {
                             materialUnitEditText.setText(materialInform.materialUnit);
                         }
                     }
+                } else if(editText.getId() == materialNameEditText.getId()) {
+                    List<MaterialInform> materialInforms = new ArrayList<>();
+                    for(MaterialInform materialInform : DataManagement.materialInforms) {
+                        if(editText.getText().toString().equals(materialInform.materialName)) {
+                            materialInforms.add(materialInform);
+                        }
+                        if(materialInforms.size() == 1) {
+                            materialIdentifierEditText.setText(materialInforms.get(0).materialIdentifier);
+                            materialTypeEditText.setText(materialInforms.get(0).materialModel);
+                            materialUnitEditText.setText(materialInforms.get(0).materialUnit);
+                        }
+                    }
                 } else if(editText.getId() == factoryEditText.getId()) {
                     for(RukuInform rukuInform : rukuInforms) {
                         rukuInform.factoryName = factoryEditText.getText().toString();
@@ -744,7 +756,7 @@ public class BatchRukuActivity extends AppCompatActivity {
             normalDialog.setMessage("发现新的物料，是否添加?\n" +
                     "物料名称：" + rukuInform.materialName + "\n" +
                     "物料编码：" + rukuInform.materialIdentifier + "\n" +
-                    "物料类型：" + rukuInform.materialModel + "\n" +
+                    "物料型号：" + rukuInform.materialModel + "\n" +
                     "厂家名称：" + rukuInform.factoryName + "\n");
             normalDialog.setPositiveButton("确定",
                     new DialogInterface.OnClickListener() {
@@ -905,7 +917,7 @@ public class BatchRukuActivity extends AppCompatActivity {
                                 "仓库： " + rukuInform.depotName + "\n" +
                                 "物料编码： " + rukuInform.materialIdentifier + "\n" +
                                 "物料名称：" + rukuInform.materialName + "\n" +
-                                "物料类型：" + rukuInform.materialModel + "\n" +
+                                "物料型号：" + rukuInform.materialModel + "\n" +
                                 "计量单位：" + rukuInform.materialUnit + "\n" +
                                 "入库项目：" + rukuInform.projectName)
                         .inputType(InputType.TYPE_CLASS_NUMBER)

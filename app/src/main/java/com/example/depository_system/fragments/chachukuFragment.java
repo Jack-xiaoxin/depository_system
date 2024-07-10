@@ -154,6 +154,11 @@ public class chachukuFragment extends Fragment {
                         showOrder();
                     } else if(index == -2) {
                         showEmpty();
+                    } else if(index == -3) {
+                        ChukuOrderAdapter adapter = new ChukuOrderAdapter(root.getContext(), chukuRecordInforms, handler);
+                        recyclerView.setAdapter(adapter);
+                        showOrder();
+                        update();
                     }
                 }
             }
@@ -204,6 +209,24 @@ public class chachukuFragment extends Fragment {
                             update();
                             return null;
                         }).build().show();
+            }
+        });
+
+        timeButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                new CardDatePickerDialog.Builder(root.getContext())
+                        .setTitle("选择时间")
+                        .showBackNow(false)
+                        .setDisplayType(new int[]{DateTimeConfig.YEAR,DateTimeConfig.MONTH})
+                        .setOnChoose("确定", aLong -> {
+                            String time = getDateFromMill2(aLong);
+                            date = time;
+                            timeButton.setText(time);
+                            update();
+                            return null;
+                        }).build().show();
+                return false;
             }
         });
 
@@ -263,6 +286,13 @@ public class chachukuFragment extends Fragment {
         return formattedDate;
     }
 
+    public String getDateFromMill2(long mill) {
+        Date date = new Date(mill);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+        String formattedDate = sdf.format(date);
+        return formattedDate;
+    }
+
     private void showListPopupWindow(String[] list, Button button) {
         Log.d("java", "showpopupwindow");
         ListPopupWindow listPopupWindow= new ListPopupWindow(requireContext());
@@ -309,6 +339,9 @@ public class chachukuFragment extends Fragment {
         recyclerView.setVisibility(View.GONE);
 
         orderTextView.setText("出库单号：" + chukuRecordInform.outboundIdentifier);
+        for(ChukuRecordItemInform item : chukuRecordInform.itemList) {
+            item.outboundIdentifier = chukuRecordInform.outboundIdentifier;
+        }
         recyclerView_material.setAdapter(new ChukuMaterialAdapter(root.getContext(), chukuRecordInform.itemList, handler));
         recyclerView_material.setLayoutManager(new LinearLayoutManager(root.getContext()));
         frameLayout.setVisibility(View.VISIBLE);

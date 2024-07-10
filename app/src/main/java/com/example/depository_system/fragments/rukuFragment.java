@@ -489,7 +489,7 @@ public class rukuFragment extends Fragment {
                     normalDialog.setMessage("发现新的物料，是否添加?\n" +
                             "物料名称：" + backRukuInform.materialName + "\n" +
                             "物料编码：" + backRukuInform.materialIdentifier + "\n" +
-                            "物料类型：" + backRukuInform.materialModel + "\n" +
+                            "物料型号：" + backRukuInform.materialModel + "\n" +
                             "厂家名称：" + backRukuInform.factoryName + "\n" +
                             "计量单位：" + backRukuInform.materialUnit);
                     normalDialog.setPositiveButton("确定",
@@ -658,7 +658,7 @@ public class rukuFragment extends Fragment {
                                                         "仓库： " + backRukuInform.depotName + "\n" +
                                                         "物料编码： " + backRukuInform.materialIdentifier + "\n" +
                                                         "物料名称：" + backRukuInform.materialName + "\n" +
-                                                        "物料类型：" + backRukuInform.materialModel + "\n" +
+                                                        "物料型号：" + backRukuInform.materialModel + "\n" +
                                                         "计量单位：" + backRukuInform.materialUnit + "\n" +
                                                         "入库项目：" + backRukuInform.projectName)
                                                 .inputType(InputType.TYPE_CLASS_NUMBER)
@@ -785,6 +785,20 @@ public class rukuFragment extends Fragment {
                             materialNameEditText.setText(materialInform.materialName);
                             materialTypeEditText.setText(materialInform.materialModel);
                             materialUnitEditText.setText(materialInform.materialUnit);
+                            factoryNameEditText.setText(materialInform.factoryName);
+                        }
+                    }
+                } else if(editText.getId() == materialNameEditText.getId()) {
+                    List<MaterialInform> materialInforms = new ArrayList<>();
+                    for(MaterialInform materialInform : DataManagement.materialInforms) {
+                        if(editText.getText().toString().equals(materialInform.materialName)) {
+                            materialInforms.add(materialInform);
+                        }
+                        if(materialInforms.size() == 1) {
+                            materialIdentifierEditText.setText(materialInforms.get(0).materialIdentifier);
+                            materialTypeEditText.setText(materialInforms.get(0).materialModel);
+                            materialUnitEditText.setText(materialInforms.get(0).materialUnit);
+                            factoryNameEditText.setText(materialInform.factoryName);
                         }
                     }
                 }

@@ -30,4 +30,6 @@ public class ChukuActionInform {
     public String outboundIdentifier;
 
     public List<String> images;
+
+    public String outboundItemId;
 }

@@ -573,6 +573,20 @@ public class BatchChukuActivity extends AppCompatActivity {
                             materialNameEditText.setText(materialInform.materialName);
                             materialTypeEditText.setText(materialInform.materialModel);
                             materialUnitEditText.setText(materialInform.materialUnit);
+                            factoryNameEditText.setText(materialInform.factoryName);
+                        }
+                    }
+                } else if(editText.getId() == materialNameEditText.getId()) {
+                    List<MaterialInform> materialInforms = new ArrayList<>();
+                    for(MaterialInform materialInform : DataManagement.materialInforms) {
+                        if(editText.getText().toString().equals(materialInform.materialName)) {
+                            materialInforms.add(materialInform);
+                        }
+                        if(materialInforms.size() == 1) {
+                            materialIdentifierEditText.setText(materialInforms.get(0).materialIdentifier);
+                            materialTypeEditText.setText(materialInforms.get(0).materialModel);
+                            materialUnitEditText.setText(materialInforms.get(0).materialUnit);
+                            factoryNameEditText.setText(materialInform.factoryName);
                         }
                     }
                 } else if(editText.getId() == depositoryEditText.getId()) {

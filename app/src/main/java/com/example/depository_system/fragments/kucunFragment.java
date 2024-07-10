@@ -116,7 +116,8 @@ public class kucunFragment extends Fragment {
                 } else if(index == -3) {
                     exportKucun();
                 } else if(index == 1001) {
-                    recyclerView.setAdapter(new KucunAdapter(requireContext(), DataManagement.kucunInforms, handler));
+                    update();
+                    recyclerView.setAdapter(new KucunAdapter(requireContext(), kucunInformList, handler));
                     recyclerView.setLayoutManager(new LinearLayoutManager(root.getContext()));
                     recyclerView.setVisibility(View.VISIBLE);
                 } else if(index == -4) {
@@ -127,7 +128,7 @@ public class kucunFragment extends Fragment {
                     } else {
                         emptyFrameLayout.setVisibility(View.GONE);
                         DataManagement.updateKucunInfo();
-                        recyclerView.setAdapter(new KucunAdapter(requireContext(), DataManagement.kucunInforms, handler));
+                        recyclerView.setAdapter(new KucunAdapter(requireContext(), kucunInformList, handler));
                         recyclerView.setLayoutManager(new LinearLayoutManager(root.getContext()));
                         recyclerView.setVisibility(View.VISIBLE);
                     }

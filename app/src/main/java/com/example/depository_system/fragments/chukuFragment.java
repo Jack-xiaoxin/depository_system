@@ -147,6 +147,8 @@ public class chukuFragment extends Fragment {
     Button photoButton;
     @BindView(R.id.chuku_imageList)
     RecyclerView recyclerView;
+    @BindView(R.id.image_btn_chuku_department)
+    ImageButton departmentButton;
 
     private View root;
     private Context context;
@@ -333,6 +335,20 @@ public class chukuFragment extends Fragment {
                         set.add(personInform.name);
                     }
                     showListPopupWindow(set.toArray(new String[set.size()]), projectMajorEditText);
+                }
+                return true;
+            }
+        });
+
+        departmentButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    Set<String> set = new HashSet<>();
+                    for(DepartmentInform departmentInform : DataManagement.departmentInforms) {
+                        set.add(departmentInform.department_name);
+                    }
+                    showListPopupWindow(set.toArray(new String[set.size()]), userOrganizationEditText);
                 }
                 return true;
             }
@@ -612,6 +628,20 @@ public class chukuFragment extends Fragment {
                             materialNameEditText.setText(materialInform.materialName);
                             materialTypeEditText.setText(materialInform.materialModel);
                             materialUnitEditText.setText(materialInform.materialUnit);
+                            factoryNamEditText.setText(materialInform.factoryName);
+                        }
+                    }
+                } else if(editText.getId() == materialNameEditText.getId()) {
+                    List<MaterialInform> materialInforms = new ArrayList<>();
+                    for(MaterialInform materialInform : DataManagement.materialInforms) {
+                        if(editText.getText().toString().equals(materialInform.materialName)) {
+                            materialInforms.add(materialInform);
+                        }
+                        if(materialInforms.size() == 1) {
+                            materialIdentifierEditText.setText(materialInforms.get(0).materialIdentifier);
+                            materialTypeEditText.setText(materialInforms.get(0).materialModel);
+                            materialUnitEditText.setText(materialInforms.get(0).materialUnit);
+                            factoryNamEditText.setText(materialInform.factoryName);
                         }
                     }
                 }

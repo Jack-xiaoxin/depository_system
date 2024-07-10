@@ -220,6 +220,24 @@ public class charukuFragment extends Fragment {
             }
         });
 
+        timeButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                new CardDatePickerDialog.Builder(root.getContext())
+                        .setTitle("选择时间")
+                        .showBackNow(false)
+                        .setDisplayType(new int[]{DateTimeConfig.YEAR,DateTimeConfig.MONTH})
+                        .setOnChoose("确定", aLong -> {
+                            String time = getDateFromMill2(aLong);
+                            date = time;
+                            timeButton.setText(time);
+                            update();
+                            return null;
+                        }).build().show();
+                return true;
+            }
+        });
+
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -272,6 +290,13 @@ public class charukuFragment extends Fragment {
     public String getDateFromMill(long mill) {
         Date date = new Date(mill);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedDate = sdf.format(date);
+        return formattedDate;
+    }
+
+    public String getDateFromMill2(long mill) {
+        Date date = new Date(mill);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
         String formattedDate = sdf.format(date);
         return formattedDate;
     }

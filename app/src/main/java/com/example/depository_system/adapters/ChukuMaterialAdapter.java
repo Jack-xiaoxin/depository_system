@@ -3,20 +3,30 @@ package com.example.depository_system.adapters;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.depository_system.R;
+import com.example.depository_system.informs.ChukuActionInform;
 import com.example.depository_system.informs.ChukuRecordItemInform;
+import com.example.depository_system.informs.RukuInform;
 import com.example.depository_system.informs.RukuRecordInform;
 import com.example.depository_system.informs.RukuRecordItemInform;
+import com.example.depository_system.service.ChukuService;
+import com.example.depository_system.service.RukuService;
 
 import org.w3c.dom.Text;
 
@@ -73,9 +83,36 @@ public class ChukuMaterialAdapter extends BaseRecycleAdapter{
         itemHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                Message msg = new Message();
-                msg.obj = -100;
-                handler.sendMessage(msg);
+                Log.d("kevin", "long click chukuMaterialOrder");
+                PopupMenu popupMenu = new PopupMenu(holder.itemView.getContext(), holder.itemView, Gravity.BOTTOM);
+                popupMenu.getMenuInflater().inflate(R.menu.ruku_material_menu, popupMenu.getMenu());
+
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        if(menuItem.getItemId() == R.id.menu_item_delete_ruku_material) {
+                            new MaterialDialog.Builder(context)
+                                    .title("删除出库记录")
+                                    .content("确认删除此出库记录吗？")
+                                    .positiveText("确认")
+                                    .negativeText("取消")
+                                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                        @Override
+                                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                            ChukuActionInform chukuInform = mList.get(position).toChukuActionInform();
+                                            if(ChukuService.deleteChukuMaterial(chukuInform)) {
+                                                Message msg = new Message();
+                                                msg.obj = -3;
+                                                handler.sendMessage(msg);
+                                            }
+                                        }
+                                    })
+                                    .show();
+                        }
+                        return true;
+                    }
+                });
+                popupMenu.show();
                 return true;
             }
         });

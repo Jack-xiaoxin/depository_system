@@ -51,7 +51,7 @@ public class ChukuService {
         JSONObject jsonObject = new JSONObject();
         try {
             if (outboundDate != null && !outboundDate.isEmpty()) {
-                jsonObject.put("outbound_date", outboundDate);
+                jsonObject.put("date", outboundDate);
             }
             if (applyDepartmentName != null && !applyDepartmentName.isEmpty()) {
                 jsonObject.put("apply_department_name", applyDepartmentName);
@@ -103,6 +103,8 @@ public class ChukuService {
                     itemInform.projectMajor = valueObject.getString("director");
                     itemInform.projectName = valueObject.getString("apply_project_name");
                     itemInform.depository_id = valueObject.getString("depository_id");
+                    itemInform.outboundItemId = valueObject.getString("outbound_item_id");
+                    itemInform.time = valueObject.getString("outbound_time");
                     for(DepositoryInform depositoryInform : DataManagement.depositoryInforms) {
                         if(depositoryInform.depotId.equals(itemInform.depository_id)) {
                             itemInform.depositoryName = depositoryInform.depotName;
@@ -128,5 +130,25 @@ public class ChukuService {
             e.printStackTrace();
         }
         return chukuRecordInformList;
+    }
+
+    public static boolean deleteChukuMaterial(ChukuActionInform chukuActionInform) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("depository_id", chukuActionInform.depotId);
+            jsonObject.put("goods_id", chukuActionInform.materialId);
+            jsonObject.put("time", chukuActionInform.time);
+            jsonObject.put("goods_number", chukuActionInform.number);
+            jsonObject.put("outbound_identifier", chukuActionInform.outboundIdentifier);
+            jsonObject.put("apply_project_name", chukuActionInform.applyProjectName);
+            jsonObject.put("apply_department_name", chukuActionInform.applyDepartmentName);
+            jsonObject.put("director", chukuActionInform.director);
+            jsonObject.put("applier", chukuActionInform.applier);
+            jsonObject.put("outbound_item_id", chukuActionInform.outboundItemId);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        String bodyString = ServiceBase.HttpBase("/outboundDelete", "POST", jsonObject);
+        return true;
     }
 }

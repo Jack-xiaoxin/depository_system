@@ -452,7 +452,7 @@
         <com.example.depository_system.view.DeleteEditText
             android:id="@+id/chuku_user_organization"
             android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_weight="10"
             android:layout_marginLeft="15dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
@@ -466,6 +466,17 @@
             android:textColor="@color/colorTextCardAddEdittext"
             android:textColorHint="@color/colorTextHint"
             android:textSize="15sp" />
+
+        <ImageButton
+            android:id="@+id/image_btn_chuku_department"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/ic_right_arrow"/>
 
     </LinearLayout>
 
