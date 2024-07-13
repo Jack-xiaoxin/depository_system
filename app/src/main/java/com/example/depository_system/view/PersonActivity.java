@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListPopupWindow;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -43,12 +44,17 @@ public class PersonActivity extends AppCompatActivity {
         reviewBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                List<UserInform> userInformList = UserService.getNewUserList();
-                List<String> list = new ArrayList<>();
-                for(UserInform userInform : userInformList) {
-                    list.add(userInform.userName + ": " + userInform.phoneNumber);
+                if (DataManagement.userInform.category != 0) {
+                    Toast.makeText(PersonActivity.this, "无权限进行审核", Toast.LENGTH_SHORT).show();
+                } else {
+                    List<UserInform> userInformList = UserService.getNewUserList();
+                    List<String> list = new ArrayList<>();
+                    for(UserInform userInform : userInformList) {
+                        list.add(userInform.userName + ": " + userInform.phoneNumber);
+                    }
+                    showListPopupWindow(list.toArray(new String[list.size()]), reviewBtn, userInformList);
                 }
-                showListPopupWindow(list.toArray(new String[list.size()]), reviewBtn, userInformList);
+
             }
         });
 

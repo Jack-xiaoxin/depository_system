@@ -29,7 +29,7 @@ public class RukuRecordItemInform {
 
     public String inboundTime;
 
-    public Integer number;
+    public double number;
     public String depositoryId;
     public String inboundIdentifier;
     public String inboundItemId;

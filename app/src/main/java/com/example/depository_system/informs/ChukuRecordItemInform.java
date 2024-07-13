@@ -24,7 +24,7 @@ public class ChukuRecordItemInform {
 
     public String outboundTime;
 
-    public Integer number;
+    public double number;
 
     public String projectName;
 

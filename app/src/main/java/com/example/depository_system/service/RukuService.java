@@ -106,7 +106,7 @@ public class RukuService {
                     itemInform.materialIdentifier = valueObject.getString("goods_identifier");
                     itemInform.materialUnit = valueObject.getString("goods_unit");
                     itemInform.factoryName = valueObject.getString("factory_name");
-                    itemInform.number = valueObject.getInt("goods_number");
+                    itemInform.number = valueObject.getDouble("goods_number");
                     itemInform.inboundTime = valueObject.getString("inbound_time");
                     itemInform.projectName = valueObject.getString("project_name");
                     itemInform.depositoryId = valueObject.getString("depository_id");

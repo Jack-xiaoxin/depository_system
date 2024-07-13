@@ -519,7 +519,7 @@
                     android:focusableInTouchMode="false"
                     android:gravity="right|center_vertical"
                     android:hint="@string/hint_output_material_num"
-                    android:inputType="number"
+                    android:inputType="numberDecimal"
                     android:paddingRight="@dimen/card_add_item_margin_right"
                     android:textColor="@color/colorTextCardAddEdittext"
                     android:textColorHint="@color/colorTextHint"
@@ -652,7 +652,7 @@
                 android:id="@+id/save_material_photo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="拍照">
+                android:text="上传图片">
             </Button>
 
             <Button

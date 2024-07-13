@@ -26,7 +26,7 @@ public class RukuInform {
 
     public List<String> images;
 
-    public Integer number;
+    public double number;
 
     public Boolean isNew;
 

@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -59,9 +61,13 @@ import com.example.depository_system.service.DepartmentService;
 import com.example.depository_system.service.KucunService;
 import com.example.depository_system.service.PersonService;
 import com.example.depository_system.service.ServiceBase;
+import com.example.depository_system.util.BottomDialog;
+import com.example.depository_system.util.DebounceClick;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -112,7 +118,11 @@ public class BatchChukuActivity extends AppCompatActivity {
     private List<String> images = new ArrayList<>();
     private List<Uri> imageUris = new ArrayList<>();
     private Uri photoUri;
-    private static final int CAMERA_PERMISSIOS_REQUEST_CODE = 104;
+    private static final int CAMERA_PERMISSION_REQUEST_CODE = 100;
+    private static final int GALLERY_PERMISSION_REQUEST_CODE = 201;
+
+    private static final int TAKE_PHOTO_CODE = 900;
+    private static final int CHOOSE_PHOTO_CODE = 990;
     private Handler handler;
     private int indexFixing = -1;
 
@@ -210,8 +220,23 @@ public class BatchChukuActivity extends AppCompatActivity {
 
         photoButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                requestCameraPermission();
+            public void onClick(View v) {
+                BottomDialog dialog = new BottomDialog(context, R.layout.dialog_bottom);
+                dialog.setOnClickListener(R.id.camera_select, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        requestCameraPermission();
+                        dialog.dismiss();
+                    }
+                });
+                dialog.setOnClickListener(R.id.photo_select, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        requestGalleryPermission();
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
             }
         });
 
@@ -247,7 +272,7 @@ public class BatchChukuActivity extends AppCompatActivity {
                 chukuRecordItemInform.materialIdentifier = materialIdentifierEditText.getText().toString();
                 chukuRecordItemInform.materialName = materialNameEditText.getText().toString();
                 chukuRecordItemInform.materialModel = materialTypeEditText.getText().toString();
-                chukuRecordItemInform.number = Integer.parseInt(materialNumEditText.getText().toString());
+                chukuRecordItemInform.number = Double.parseDouble(materialNumEditText.getText().toString());
                 chukuRecordItemInform.projectName = projectEditText.getText().toString();
                 chukuRecordItemInform.projectMajor = projectMajorEditText.getText().toString();
                 chukuRecordItemInform.applier = receiverEditText.getText().toString();
@@ -545,9 +570,11 @@ public class BatchChukuActivity extends AppCompatActivity {
             }
         });
 
+        DebounceClick debounceClick = new DebounceClick();
         uploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(debounceClick.isFastDoubleClick()) return ;
                 for(ChukuRecordItemInform chukuRecordItemInform : new ArrayList<>(chukuRecordItemInforms)) {
                     chukuOnce(chukuRecordItemInform);
                 }
@@ -642,9 +669,15 @@ public class BatchChukuActivity extends AppCompatActivity {
                 //设置相机应用保存照片的输出路径
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
                 //启动相机应用
-                startActivityForResult(takePictureIntent, 64);
+                startActivityForResult(takePictureIntent, TAKE_PHOTO_CODE);
             }
         }
+    }
+
+    public void dispatchChoosePhotoIntent() {
+        Intent intent = new Intent(Intent.ACTION_PICK, null);
+        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+        startActivityForResult(intent, CHOOSE_PHOTO_CODE);
     }
 
     private File createImageFile() throws IOException {
@@ -658,26 +691,36 @@ public class BatchChukuActivity extends AppCompatActivity {
 
     private void requestCameraPermission() {
         if(ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSIOS_REQUEST_CODE);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST_CODE);
         } else {
             dispatchTakePictureIntent();
+        }
+    }
+
+    private void requestGalleryPermission() {
+        if(ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, GALLERY_PERMISSION_REQUEST_CODE);
+        } else {
+            dispatchChoosePhotoIntent();
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == CAMERA_PERMISSIOS_REQUEST_CODE) {
+        if(requestCode == CAMERA_PERMISSION_REQUEST_CODE) {
             dispatchTakePictureIntent();
+        } else if(requestCode == GALLERY_PERMISSION_REQUEST_CODE){
+            dispatchChoosePhotoIntent();
         } else {
-            Toast.makeText(context, "没有获得相机权限", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "没有获得相应权限", Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 64 && resultCode == -1) {
+        if(requestCode == TAKE_PHOTO_CODE && resultCode == -1) {
             Log.d("kevin", "拍照成功");
             Uri contentUri = new Uri.Builder()
                     .scheme(ContentResolver.SCHEME_CONTENT)
@@ -688,8 +731,26 @@ public class BatchChukuActivity extends AppCompatActivity {
             Log.d("kevin", "url" + photoUri);
             images.add(contentUri.toString());
             imageUris.add(photoUri);
-            imageRecylerView.setLayoutManager(new GridLayoutManager(this, 5));
             imageRecylerView.setAdapter(new ImageAdapter(images, handler));
+            imageRecylerView.setLayoutManager(new GridLayoutManager(context, 5));
+        } else if(requestCode == CHOOSE_PHOTO_CODE && resultCode == -1 && data != null) {
+            try (InputStream inputStream = context.getContentResolver().openInputStream(data.getData());){
+                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                File file = createImageFile();
+                FileOutputStream out = new FileOutputStream(file);
+                if(bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)) {
+                    photoUri = FileProvider.getUriForFile(context, "com.example.android.fileprovider", file);
+                    images.add(photoUri.toString());
+                    imageUris.add(photoUri);
+                    imageRecylerView.setAdapter(new ImageAdapter(images, handler));
+                    imageRecylerView.setLayoutManager(new GridLayoutManager(context, 5));
+                } else {
+                    Toast.makeText(context, "图片上传失败", Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                Toast.makeText(context, "图片上传失败", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            }
         }
     }
 

@@ -8,9 +8,9 @@ public class KucunInform {
 
     public String materialId;
 
-    public Integer kucunNumber;
+    public double kucunNumber;
 
-    public Integer alarmNumber;
+    public double alarmNumber;
 
     public String updateTime;
 

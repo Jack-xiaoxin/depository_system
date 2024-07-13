@@ -76,11 +76,14 @@ import com.example.depository_system.service.ProjectService;
 import com.example.depository_system.service.RukuService;
 import com.example.depository_system.service.ServiceBase;
 import com.example.depository_system.service.UserService;
+import com.example.depository_system.util.BottomDialog;
+import com.example.depository_system.util.DebounceClick;
 import com.example.depository_system.view.ImageActivity;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.CopyOption;
@@ -158,8 +161,11 @@ public class chukuFragment extends Fragment {
     Uri photoUri;
     private Handler handler;
 
-    private static final int CAMERA_PERMISSIOS_REQUEST_CODE = 100;
+    private static final int CAMERA_PERMISSION_REQUEST_CODE = 100;
+    private static final int GALLERY_PERMISSION_REQUEST_CODE = 201;
 
+    private static final int TAKE_PHOTO_CODE = 900;
+    private static final int CHOOSE_PHOTO_CODE = 990;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -388,17 +394,34 @@ public class chukuFragment extends Fragment {
             }
         };
 
-        photoButton.setOnClickListener(new View.OnClickListener() {
+        photoButton .setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                requestCameraPermission();
+                BottomDialog dialog = new BottomDialog(requireContext(), R.layout.dialog_bottom);
+                dialog.setOnClickListener(R.id.camera_select, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        requestCameraPermission();
+                        dialog.dismiss();
+                    }
+                });
+                dialog.setOnClickListener(R.id.photo_select, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        requestGalleryPermission();
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
             }
         });
 
+        DebounceClick debounceClick = new DebounceClick();
         uploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                if(debounceClick.isFastDoubleClick()) return;
                 uploadButton.setClickable(false);
                 boolean isOk = true;
 
@@ -437,7 +460,7 @@ public class chukuFragment extends Fragment {
                     backChukuInform.applyDepartmentName = userOrganizationEditText.getText().toString();
                     backChukuInform.applier = receiverNameEditText.getText().toString();
                     backChukuInform.director = projectMajorEditText.getText().toString();
-                    backChukuInform.number = Integer.parseInt(materialNumEditText.getText().toString());
+                    backChukuInform.number = Double.parseDouble(materialNumEditText.getText().toString());
                     backChukuInform.factoryName = factoryNamEditText.getText().toString();
                     backChukuInform.time = timeEditText.getText().toString();
 
@@ -679,18 +702,28 @@ public class chukuFragment extends Fragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == CAMERA_PERMISSIOS_REQUEST_CODE) {
+        if(requestCode == CAMERA_PERMISSION_REQUEST_CODE) {
             dispatchTakePictureIntent();
+        } else if(requestCode == GALLERY_PERMISSION_REQUEST_CODE ){
+            dispatchChoosePhotoIntent();
         } else {
-            Toast.makeText(getContext(), "没有获得相机权限", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "没有获得相应权限", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void requestCameraPermission() {
         if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSIOS_REQUEST_CODE);
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST_CODE);
         } else {
             dispatchTakePictureIntent();
+        }
+    }
+
+    private void requestGalleryPermission() {
+        if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, GALLERY_PERMISSION_REQUEST_CODE);
+        } else {
+            dispatchChoosePhotoIntent();
         }
     }
 
@@ -710,9 +743,15 @@ public class chukuFragment extends Fragment {
                 //设置相机应用保存照片的输出路径
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
                 //启动相机应用
-                startActivityForResult(takePictureIntent, 80);
+                startActivityForResult(takePictureIntent, TAKE_PHOTO_CODE);
             }
         }
+    }
+
+    public void dispatchChoosePhotoIntent() {
+        Intent intent = new Intent(Intent.ACTION_PICK, null);
+        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+        startActivityForResult(intent, CHOOSE_PHOTO_CODE);
     }
 
     private File createImageFile() throws IOException {
@@ -723,19 +762,40 @@ public class chukuFragment extends Fragment {
         File imageFile = File.createTempFile(imageFileName, ".jpg", storageDir);
         return imageFile;
     }
+    @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 80 && resultCode == -1) {
+        if(requestCode == TAKE_PHOTO_CODE && resultCode == -1) {
             Log.d("kevin", "拍照成功");
             Uri contentUri = new Uri.Builder()
                     .scheme(ContentResolver.SCHEME_CONTENT)
                     .authority("com.example.android.fileprovider")
                     .path(photoUri.getPath())
                     .build();
-            imageUriList.add(photoUri);
+            Log.d("kevin", contentUri.toString());
+            Log.d("kevin", "url" + photoUri);
             imageList.add(contentUri.toString());
-            recyclerView.setLayoutManager(new GridLayoutManager(context, 5));
+            imageUriList.add(photoUri);
             recyclerView.setAdapter(new ImageAdapter(imageList, handler));
+            recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 5));
+        } else if(requestCode == CHOOSE_PHOTO_CODE && resultCode == -1 && data != null) {
+            try (InputStream inputStream = getContext().getContentResolver().openInputStream(data.getData());){
+                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                File file = createImageFile();
+                FileOutputStream out = new FileOutputStream(file);
+                if(bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)) {
+                    photoUri = FileProvider.getUriForFile(getContext(), "com.example.android.fileprovider", file);
+                    imageList.add(photoUri.toString());
+                    imageUriList.add(photoUri);
+                    recyclerView.setAdapter(new ImageAdapter(imageList, handler));
+                    recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 5));
+                } else {
+                    Toast.makeText(getContext(), "图片上传失败", Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                Toast.makeText(getContext(), "图片上传失败", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            }
         }
     }
 

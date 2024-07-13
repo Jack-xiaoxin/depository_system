@@ -29,6 +29,7 @@ import com.example.depository_system.informs.DepositoryInform;
 import com.example.depository_system.informs.RukuInform;
 import com.example.depository_system.informs.RukuRecordInform;
 import com.example.depository_system.informs.RukuRecordItemInform;
+import com.example.depository_system.util.NumberUtil;
 import com.example.depository_system.view.ImageActivity;
 
 import org.w3c.dom.Text;
@@ -75,7 +76,7 @@ public class RukuBatchAdapter extends BaseRecycleAdapter{
         itemHolder.materialIdentifier.setText("物资编码：" + mList.get(position).materialIdentifier);
         itemHolder.materialName.setText("物资名称：" + mList.get(position).materialName);
         itemHolder.materialType.setText("物资型号：" + mList.get(position).materialModel);
-        itemHolder.materialNum.setText("物资数量：" + mList.get(position).number);
+        itemHolder.materialNum.setText("物资数量：" + NumberUtil.DoubleToString(mList.get(position).number));
         itemHolder.materialUnit.setText("计量单位：" + mList.get(position).materialUnit);
         itemHolder.factoryName.setText("厂家名称：" + mList.get(position).factoryName);
         itemHolder.time.setText("时间：" + mList.get(position).time);

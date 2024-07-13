@@ -86,6 +86,8 @@ import com.example.depository_system.service.ProjectService;
 import com.example.depository_system.service.RukuService;
 import com.example.depository_system.service.ServiceBase;
 import com.example.depository_system.service.UserService;
+import com.example.depository_system.util.BottomDialog;
+import com.example.depository_system.util.DebounceClick;
 import com.example.depository_system.view.ImageActivity;
 
 import org.json.JSONException;
@@ -95,6 +97,7 @@ import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -144,7 +147,11 @@ public class rukuFragment extends Fragment {
 
     private Uri photoUri;
 
-    private static final int CAMERA_PERMISSIOS_REQUEST_CODE = 100;
+    private static final int CAMERA_PERMISSION_REQUEST_CODE = 100;
+    private static final int GALLERY_PERMISSION_REQUEST_CODE = 201;
+
+    private static final int TAKE_PHOTO_CODE = 900;
+    private static final int CHOOSE_PHOTO_CODE = 990;
 
     private ImageButton depotName_btn;
     private ImageButton materialName_btn;
@@ -206,7 +213,22 @@ public class rukuFragment extends Fragment {
         photoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                requestCameraPermission();
+                BottomDialog dialog = new BottomDialog(requireContext(), R.layout.dialog_bottom);
+                dialog.setOnClickListener(R.id.camera_select, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        requestCameraPermission();
+                        dialog.dismiss();
+                    }
+                });
+                dialog.setOnClickListener(R.id.photo_select, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        requestGalleryPermission();
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
             }
         });
 
@@ -407,10 +429,13 @@ public class rukuFragment extends Fragment {
             }
         };
 //
+        DebounceClick debounceClick = new DebounceClick();
         uploadBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                uploadBtn.setClickable(false);
+                if(debounceClick.isFastDoubleClick()) return;
+                uploadBtn.setEnabled(false);
+                Log.d("kevin", "setClickable false");
                 boolean isOk = true;
 
                 isOk = checkEditTextIsEmpty(depotNameEditText)
@@ -427,7 +452,7 @@ public class rukuFragment extends Fragment {
                 if (!isOk) {
                     Toast.makeText(requireContext(), "请填写必填项", Toast.LENGTH_SHORT).show();
                     depotNameEditText.requestFocus();
-                    uploadBtn.setClickable(true);
+                    uploadBtn.setEnabled(true);
                     return ;
                 }
 
@@ -436,7 +461,7 @@ public class rukuFragment extends Fragment {
                 rukuInform.materialIdentifier = materialIdentifierEditText.getText().toString();
                 rukuInform.materialName = materialNameEditText.getText().toString();
                 rukuInform.materialType = materialTypeEditText.getText().toString();
-                rukuInform.materialNum = Integer.parseInt(materialNumEditText.getText().toString());
+                rukuInform.materialNum = Double.parseDouble(materialNumEditText.getText().toString());
                 rukuInform.materialUnit = materialUnitEditText.getText().toString();
                 rukuInform.factoryName = factoryNameEditText.getText().toString();
                 rukuInform.time = timeEditText.getText().toString();
@@ -470,8 +495,8 @@ public class rukuFragment extends Fragment {
                                 }
                             });
                     normalDialog.show();
-                    uploadBtn.setClickable(true);
-                    return;
+                    uploadBtn.setEnabled(true);
+                    return ;
                 }
                 for(MaterialInform materialInform : DataManagement.materialInforms) {
                     if(materialInform.materialName.equals(backRukuInform.materialName)
@@ -506,8 +531,8 @@ public class rukuFragment extends Fragment {
                                 }
                             });
                     normalDialog.show();
-                    uploadBtn.setClickable(true);
-                    return;
+                    uploadBtn.setEnabled(true);
+                    return ;
                 }
 
                 boolean isChanged = true;
@@ -537,8 +562,8 @@ public class rukuFragment extends Fragment {
                                 }
                             })
                             .show();
-                    uploadBtn.setClickable(true);
-                    return;
+                    uploadBtn.setEnabled(true);
+                    return ;
                 }
 
                 isChanged = true;
@@ -568,8 +593,8 @@ public class rukuFragment extends Fragment {
                                 }
                             })
                             .show();
-                    uploadBtn.setClickable(true);
-                    return;
+                    uploadBtn.setEnabled(true);
+                    return ;
                 }
 
                 if(backRukuInform.number <= 0) {
@@ -582,7 +607,7 @@ public class rukuFragment extends Fragment {
                         }
                     });
                     normalDialog.show();
-                    uploadBtn.setClickable(true);
+                    uploadBtn.setEnabled(true);
                     return ;
                 }
 
@@ -613,8 +638,8 @@ public class rukuFragment extends Fragment {
                                 }
                             });
                     normalDialog.show();
-                    uploadBtn.setClickable(true);
-                    return;
+                    uploadBtn.setEnabled(true);
+                    return ;
                 }
                 final String[] result = {""};
                 backRukuInform.isNew = false;
@@ -625,7 +650,7 @@ public class rukuFragment extends Fragment {
                                 .positiveText("确定")
                                 .content("图片上传失败，请重新提交入库")
                                 .show();
-                        uploadBtn.setClickable(true);
+                        uploadBtn.setEnabled(true);
                         return ;
                     } else {
                         new MaterialDialog.Builder(requireContext())
@@ -682,7 +707,8 @@ public class rukuFragment extends Fragment {
                             })
                             .show();
                 }
-                uploadBtn.setClickable(true);
+                uploadBtn.setEnabled(true);
+                return ;
             }
         });
         return root;
@@ -704,9 +730,15 @@ public class rukuFragment extends Fragment {
                 //设置相机应用保存照片的输出路径
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
                 //启动相机应用
-                startActivityForResult(takePictureIntent, 60);
+                startActivityForResult(takePictureIntent, TAKE_PHOTO_CODE);
             }
         }
+    }
+
+    public void dispatchChoosePhotoIntent() {
+        Intent intent = new Intent(Intent.ACTION_PICK, null);
+        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+        startActivityForResult(intent, CHOOSE_PHOTO_CODE);
     }
 
     private File createImageFile() throws IOException {
@@ -720,26 +752,36 @@ public class rukuFragment extends Fragment {
 
     private void requestCameraPermission() {
         if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSIOS_REQUEST_CODE);
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST_CODE);
         } else {
             dispatchTakePictureIntent();
+        }
+    }
+
+    private void requestGalleryPermission() {
+        if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, GALLERY_PERMISSION_REQUEST_CODE);
+        } else {
+            dispatchChoosePhotoIntent();
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == CAMERA_PERMISSIOS_REQUEST_CODE) {
+        if(requestCode == CAMERA_PERMISSION_REQUEST_CODE) {
             dispatchTakePictureIntent();
+        } else if(requestCode == GALLERY_PERMISSION_REQUEST_CODE){
+            dispatchChoosePhotoIntent();
         } else {
-            Toast.makeText(getContext(), "没有获得相机权限", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "没有获得相应权限", Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 60 && resultCode == -1) {
+        if(requestCode == TAKE_PHOTO_CODE && resultCode == -1) {
             Log.d("kevin", "拍照成功");
             Uri contentUri = new Uri.Builder()
                             .scheme(ContentResolver.SCHEME_CONTENT)
@@ -753,6 +795,25 @@ public class rukuFragment extends Fragment {
             recyclerView.setAdapter(new ImageAdapter(list, handler));
             recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 5));
             resetRecyclerViewHeight();
+        } else if(requestCode == CHOOSE_PHOTO_CODE && resultCode == -1 && data != null) {
+            try (InputStream inputStream = getContext().getContentResolver().openInputStream(data.getData());){
+                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                File file = createImageFile();
+                FileOutputStream out = new FileOutputStream(file);
+                if(bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)) {
+                    photoUri = FileProvider.getUriForFile(getContext(), "com.example.android.fileprovider", file);
+                    list.add(photoUri.toString());
+                    imageUriList.add(photoUri);
+                    recyclerView.setAdapter(new ImageAdapter(list, handler));
+                    recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 5));
+                    resetRecyclerViewHeight();
+                } else {
+                    Toast.makeText(getContext(), "图片上传失败", Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                Toast.makeText(getContext(), "图片上传失败", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            }
         }
     }
 

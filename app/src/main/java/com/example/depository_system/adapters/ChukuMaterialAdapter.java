@@ -27,6 +27,7 @@ import com.example.depository_system.informs.RukuRecordInform;
 import com.example.depository_system.informs.RukuRecordItemInform;
 import com.example.depository_system.service.ChukuService;
 import com.example.depository_system.service.RukuService;
+import com.example.depository_system.util.NumberUtil;
 
 import org.w3c.dom.Text;
 
@@ -68,7 +69,7 @@ public class ChukuMaterialAdapter extends BaseRecycleAdapter{
         itemHolder.materialIdentifier.setText("物资编码：" + mList.get(position).materialIdentifier);
         itemHolder.materialName.setText("物资名称：" + mList.get(position).materialName);
         itemHolder.materialType.setText("物资类型：" + mList.get(position).materialModel);
-        itemHolder.materialNum.setText("物资数量：" + mList.get(position).number);
+        itemHolder.materialNum.setText("物资数量：" + NumberUtil.DoubleToString(mList.get(position).number));
         itemHolder.materialFactory.setText("厂家：" + mList.get(position).factoryName);
         itemHolder.time.setText("时间：" + mList.get(position).outboundTime);
         itemHolder.materialUnit.setText("计量单位：" + mList.get(position).materialUnit);

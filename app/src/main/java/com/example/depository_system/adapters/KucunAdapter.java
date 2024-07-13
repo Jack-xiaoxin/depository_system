@@ -29,6 +29,7 @@ import com.example.depository_system.informs.DepositoryInform;
 import com.example.depository_system.informs.KucunInform;
 import com.example.depository_system.informs.MaterialInform;
 import com.example.depository_system.service.KucunService;
+import com.example.depository_system.util.NumberUtil;
 
 import java.util.List;
 
@@ -85,8 +86,8 @@ public class KucunAdapter extends BaseRecycleAdapter{
         itemHolder.materialIdentifier.setText("物资编码：" + myMaterialInform.materialIdentifier);
         itemHolder.materialType.setText("物资型号：" + myMaterialInform.materialModel);
         itemHolder.depositoryName.setText("仓库：" + myDepositoryInform.depotName);
-        itemHolder.materialNum.setText("物资数量：" + String.valueOf(mList.get(position).kucunNumber));
-        itemHolder.alertNumber.setText("预警数量：" + String.valueOf(mList.get(position).alarmNumber));
+        itemHolder.materialNum.setText("物资数量：" + NumberUtil.DoubleToString(mList.get(position).kucunNumber));
+        itemHolder.alertNumber.setText("预警数量：" + NumberUtil.DoubleToString(mList.get(position).alarmNumber));
         itemHolder.factoryName.setText("厂家：" + myMaterialInform.factoryName);
         itemHolder.projectName.setText("入库项目：" + mList.get(position).projectName);
         itemHolder.materialUnit.setText("计量单位：" + mList.get(position).materialUnit);

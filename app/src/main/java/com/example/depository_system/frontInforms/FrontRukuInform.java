@@ -14,7 +14,7 @@ public class FrontRukuInform {
 
     public String materialType;
 
-    public int materialNum;
+    public double materialNum;
 
     public String materialUnit;
 

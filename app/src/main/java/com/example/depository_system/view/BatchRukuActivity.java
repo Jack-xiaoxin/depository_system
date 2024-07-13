@@ -17,6 +17,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.net.Uri;
@@ -72,10 +74,13 @@ import com.example.depository_system.service.ProjectService;
 import com.example.depository_system.service.RukuService;
 import com.example.depository_system.service.ServiceBase;
 import com.example.depository_system.service.UserService;
+import com.example.depository_system.util.BottomDialog;
+import com.example.depository_system.util.DebounceClick;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.CopyOption;
@@ -89,7 +94,10 @@ import java.util.Set;
 
 public class BatchRukuActivity extends AppCompatActivity {
 
-    private static final int CAMERA_PERMISSIOS_REQUEST_CODE = 100;
+    private static final int CAMERA_PERMISSION_REQUEST_CODE = 100;
+    private static final int GALLERY_PERMISSION_REQUEST_CODE = 201;
+    private static final int TAKE_PHOTO_CODE = 900;
+    private static final int CHOOSE_PHOTO_CODE = 990;
 
     private LinearLayout add_btn_frameLayout;
     private LinearLayout add_material_frameLayout;
@@ -362,8 +370,23 @@ public class BatchRukuActivity extends AppCompatActivity {
 
         photoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                requestCameraPermission();
+            public void onClick(View v) {
+                BottomDialog dialog = new BottomDialog(context, R.layout.dialog_bottom);
+                dialog.setOnClickListener(R.id.camera_select, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        requestCameraPermission();
+                        dialog.dismiss();
+                    }
+                });
+                dialog.setOnClickListener(R.id.photo_select, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        requestGalleryPermission();
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
             }
         });
 
@@ -403,7 +426,7 @@ public class BatchRukuActivity extends AppCompatActivity {
                 rukuInform.materialModel = materialTypeEditText.getText().toString();
                 rukuInform.materialIdentifier = materialIdentifierEditText.getText().toString();
                 rukuInform.materialUnit = materialUnitEditText.getText().toString();
-                rukuInform.number = Integer.parseInt(materialNumEditText.getText().toString());
+                rukuInform.number = Double.parseDouble(materialNumEditText.getText().toString());
                 rukuInform.time = timeEditText.getText().toString();
                 rukuInform.projectName = projectNameEditText.getText().toString();
                 rukuInform.receiver = receiverEditText.getText().toString();
@@ -438,9 +461,11 @@ public class BatchRukuActivity extends AppCompatActivity {
             }
         });
 
+        DebounceClick debounceClick = new DebounceClick();
         uploadBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(debounceClick.isFastDoubleClick()) return;
                 if(rukuInforms.size() == 0) {
                     new MaterialDialog.Builder(context)
                             .content("未保存入库信息，无法批量入库")
@@ -540,9 +565,15 @@ public class BatchRukuActivity extends AppCompatActivity {
                 //设置相机应用保存照片的输出路径
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
                 //启动相机应用
-                startActivityForResult(takePictureIntent, 61);
+                startActivityForResult(takePictureIntent, TAKE_PHOTO_CODE);
             }
         }
+    }
+
+    public void dispatchChoosePhotoIntent() {
+        Intent intent = new Intent(Intent.ACTION_PICK, null);
+        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+        startActivityForResult(intent, CHOOSE_PHOTO_CODE);
     }
 
     private File createImageFile() throws IOException {
@@ -556,26 +587,36 @@ public class BatchRukuActivity extends AppCompatActivity {
 
     private void requestCameraPermission() {
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSIOS_REQUEST_CODE);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST_CODE);
         } else {
             dispatchTakePictureIntent();
+        }
+    }
+
+    private void requestGalleryPermission() {
+        if(ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, GALLERY_PERMISSION_REQUEST_CODE);
+        } else {
+            dispatchChoosePhotoIntent();
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == CAMERA_PERMISSIOS_REQUEST_CODE) {
+        if(requestCode == CAMERA_PERMISSION_REQUEST_CODE) {
             dispatchTakePictureIntent();
+        } else if(requestCode == GALLERY_PERMISSION_REQUEST_CODE){
+            dispatchChoosePhotoIntent();
         } else {
-            Toast.makeText(this, "没有获得相机权限", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "没有获得相应权限", Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 61 && resultCode == -1) {
+        if(requestCode == TAKE_PHOTO_CODE && resultCode == -1) {
             Log.d("kevin", "拍照成功");
             Uri contentUri = new Uri.Builder()
                     .scheme(ContentResolver.SCHEME_CONTENT)
@@ -586,7 +627,26 @@ public class BatchRukuActivity extends AppCompatActivity {
             Log.d("kevin", "url" + photoUri);
             list.add(contentUri.toString());
             imageUriList.add(photoUri);
-            updateRecylerView();
+            recyclerView.setAdapter(new ImageAdapter(list, handler));
+            recyclerView.setLayoutManager(new GridLayoutManager(context, 5));
+        } else if(requestCode == CHOOSE_PHOTO_CODE && resultCode == -1 && data != null) {
+            try (InputStream inputStream = context.getContentResolver().openInputStream(data.getData());){
+                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                File file = createImageFile();
+                FileOutputStream out = new FileOutputStream(file);
+                if(bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)) {
+                    photoUri = FileProvider.getUriForFile(context, "com.example.android.fileprovider", file);
+                    list.add(photoUri.toString());
+                    imageUriList.add(photoUri);
+                    recyclerView.setAdapter(new ImageAdapter(list, handler));
+                    recyclerView.setLayoutManager(new GridLayoutManager(context, 5));
+                } else {
+                    Toast.makeText(context, "图片上传失败", Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                Toast.makeText(context, "图片上传失败", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            }
         }
     }
 

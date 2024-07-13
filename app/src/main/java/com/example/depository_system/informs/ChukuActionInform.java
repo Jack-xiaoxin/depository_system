@@ -23,7 +23,7 @@ public class ChukuActionInform {
 
     public String director;
 
-    public Integer number;
+    public double number;
 
     public String time;
 

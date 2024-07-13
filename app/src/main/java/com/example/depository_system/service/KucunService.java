@@ -48,8 +48,8 @@ public class KucunService {
 
                 kucunInform.kucunId = singleObject.getString("stored_id");
                 kucunInform.materialId = singleObject.getString("goods_id");
-                kucunInform.kucunNumber = singleObject.getInt("stored_number");
-                kucunInform.alarmNumber = singleObject.getInt("alarm_number");
+                kucunInform.kucunNumber = singleObject.getDouble("stored_number");
+                kucunInform.alarmNumber = singleObject.getDouble("alarm_number");
                 kucunInform.updateTime = singleObject.getString("update_time");
                 kucunInform.depotId = singleObject.getString("depository_id");
                 kucunInform.projectId = singleObject.getString("project_id");
@@ -81,8 +81,8 @@ public class KucunService {
 
                 kucunInform.kucunId = singleObject.getString("stored_id");
                 kucunInform.materialId = singleObject.getString("goods_id");
-                kucunInform.kucunNumber = singleObject.getInt("stored_number");
-                kucunInform.alarmNumber = singleObject.getInt("alarm_number");
+                kucunInform.kucunNumber = singleObject.getDouble("stored_number");
+                kucunInform.alarmNumber = singleObject.getDouble("alarm_number");
                 kucunInform.updateTime = singleObject.getString("update_time");
 
                 kucunInforms.add(kucunInform);
